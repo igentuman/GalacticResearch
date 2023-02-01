@@ -1,6 +1,6 @@
 package igentuman.galacticresearch.common.entity;
 
-import igentuman.galacticresearch.network.GuiProxy;
+import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,19 +8,20 @@ import java.util.List;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType;
 import micdoodle8.mods.galacticraft.api.entity.IWorldTransferCallback;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
+import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
+import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
-import micdoodle8.mods.galacticraft.planets.mars.util.MarsUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -30,6 +31,8 @@ import static igentuman.galacticresearch.RegistryHandler.SATELLITE_ROCKET;
 public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketType, IInventory, IWorldTransferCallback {
     public EnumRocketType rocketType;
     public float rumble;
+    public BlockPos mcsPos = new BlockPos(0,0,0);
+    public String mission;
 
     public EntitySatelliteRocket(World par1World) {
         super(par1World);
@@ -65,12 +68,24 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         return new ItemStack(SATELLITE_ROCKET, 1, 0);
     }
 
+    public void updateMCSPos() {
+        TileEntityLandingPad pad = (TileEntityLandingPad) getLandingPad();
+        if(pad == null) return;
+        for (ILandingPadAttachable te : pad.getConnectedTiles()) {
+            if (te instanceof TileMissionControlStation) {
+                mcsPos = ((TileMissionControlStation) te).getPos();
+            }
+        }
+    }
+
     public void onUpdate() {
+        if(this.launchPhase != EnumLaunchPhase.LAUNCHED.ordinal() && this.launchPhase != EnumLaunchPhase.IGNITED.ordinal()) {
+            updateMCSPos();
+        }
         if (this.launchPhase >= EnumLaunchPhase.LAUNCHED.ordinal() && this.hasValidFuel()) {
             double motionScalar = (double)(this.timeSinceLaunch / 250.0F);
             motionScalar = Math.min(motionScalar, 1.0D);
-            double modifier = (double)this.getCargoFilledAmount();
-            motionScalar *= 5.0D / modifier;
+            motionScalar *= 5.0D;
             if (this.launchPhase != EnumLaunchPhase.LANDING.ordinal() && motionScalar != 0.0D) {
                 this.motionY = -motionScalar * Math.cos((double)(this.rotationPitch - 180.0F) / 57.29577951308232D);
             }
@@ -173,22 +188,48 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
     }
 
     public void onReachAtmosphere() {
-
+        TileMissionControlStation te = getMCS();
+        if(te != null) {
+            te.setMissionInfo(mission, 1);
+        }
+        setDead();
     }
 
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
         return false;
     }
 
+    public void setMission(String name)
+    {
+        mission = name;
+    }
+
+    public TileMissionControlStation getMCS()
+    {
+        TileEntityLandingPad pad = (TileEntityLandingPad) getLandingPad();
+        if(pad == null) {
+            return (TileMissionControlStation) world.getTileEntity(mcsPos);
+        }
+        for (ILandingPadAttachable te : pad.getConnectedTiles()) {
+            if (te instanceof TileMissionControlStation) {
+                return  (TileMissionControlStation) te;
+            }
+        }
+        return null;
+    }
+
     protected void writeEntityToNBT(NBTTagCompound nbt) {
         if (!this.world.isRemote) {
             nbt.setInteger("Type", this.rocketType.getIndex());
+            nbt.setIntArray("mcsPos", new int[] {mcsPos.getX(), mcsPos.getY(), mcsPos.getZ()});
             super.writeEntityToNBT(nbt);
         }
     }
 
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         this.rocketType = EnumRocketType.values()[nbt.getInteger("Type")];
+        int[] raw = nbt.getIntArray("mcsPos");
+        this.mcsPos = new BlockPos(raw[0],raw[1], raw[2]);
         super.readEntityFromNBT(nbt);
     }
 
@@ -201,13 +242,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
     }
 
     public void onWorldTransferred(World world) {
-        if (this.targetVec != null) {
-            this.setPosition((double)((float)this.targetVec.getX() + 0.5F), (double)(this.targetVec.getY() + 800), (double)((float)this.targetVec.getZ() + 0.5F));
-            this.setLaunchPhase(EnumLaunchPhase.LANDING);
-        } else {
-            this.setDead();
-        }
-
+        this.setDead();
     }
 
     public int getRocketTier() {
@@ -215,7 +250,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
     }
 
     public int getPreLaunchWait() {
-        return 20;
+        return 5;
     }
 
     public List<ItemStack> getItemsDropped(List<ItemStack> droppedItemList) {

@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.client.gui;
 
 import igentuman.galacticresearch.GalacticResearch;
+import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.container.ContainerMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.network.GRPacketSimple;
@@ -36,16 +37,15 @@ public class GuiMissionControlStation extends GuiContainerGC {
     private GuiButtonImage btnUp;
     private GuiButtonImage btnDown;
     private GuiButtonImage btnHelp;
+    private GuiButton activateBtn;
 
     private GuiElementInfoRegion electricInfoRegion;
     private GuiElementInfoRegion helpRegion;
-    private GuiElementInfoRegion researchedRegion;
 
     public GuiMissionControlStation(InventoryPlayer par1InventoryPlayer, TileMissionControlStation tile) {
         super(new ContainerMissionControlStation(par1InventoryPlayer, tile));
         this.electricInfoRegion = new GuiElementInfoRegion(guiLeft + 30, guiTop + 167, 64, 9, new ArrayList(), this.width, this.height, this);
         this.helpRegion = new GuiElementInfoRegion(guiLeft + 154, guiTop + 164, 12, 12, new ArrayList(), this.width, this.height, this);
-        this.researchedRegion = new GuiElementInfoRegion(guiLeft + 140, guiTop + 164, 12, 12, new ArrayList(), this.width, this.height, this);
         this.tile = tile;
         this.ySize = 201;
     }
@@ -54,17 +54,26 @@ public class GuiMissionControlStation extends GuiContainerGC {
     {
         if(selectedButton != null && selectedButton.isMouseOver()) {
             if(selectedButton.id == 4) return;
-            actionPerformed(selectedButton);
+            btnClick(selectedButton);
+            selectedButton = null;
+        }
+        if(tile.rocketState != 1) {
+            activateBtn.enabled = false;
+        } else {
+            activateBtn.enabled = true;
         }
     }
 
-    protected void actionPerformed(GuiButton par1GuiButton) {
-        switch(par1GuiButton.id) {
+    protected void btnClick(GuiButton btn) {
+        switch(btn.id) {
             case 0:
                 GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.PREV_MISSION_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
                 break;
             case 1:
                 GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.NEXT_MISSION_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
+                break;
+            case 3:
+                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.ACTIVATE_MISSION_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
                 break;
             default:
         }
@@ -79,6 +88,7 @@ public class GuiMissionControlStation extends GuiContainerGC {
         this.buttonList.add(btnUp = new GuiButtonImage(0, xpos, ypos, size, size, 176, 83, 12, guiTexture));
         this.buttonList.add(btnDown = new GuiButtonImage(1, xpos, ypos+26, size, size, 176, 59, 12, guiTexture));
         this.buttonList.add(btnHelp = new GuiButtonImage(2, xpos+147, guiTop + 164, 13, 14, 176, 109, 0, guiTexture));
+        this.buttonList.add(activateBtn = new GuiButton(3, (this.width - this.xSize) / 2 + 6, guiTop + 141, 90, 20,  GCCoreUtil.translate("gui.mission_control_station.activate")));
     }
 
     private void addHelpRegion()
@@ -130,10 +140,23 @@ public class GuiMissionControlStation extends GuiContainerGC {
         if(curMission.isEmpty()) {
             curMission = "none";
         }
-        String status = tile.getMissonStatus(tile.currentMission);
-        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission"), 22, 26, 4210752);
+        String status = tile.getMissionStatusKey(tile.currentMission);
+        int info =  tile.getMissionInfo(tile.currentMission);
+        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission"), 22, 25, 4210752);
         this.fontRenderer.drawString(I18n.format("gui."+curMission+".name"), 22, 39, 4210752);
-        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission_status", I18n.format(status)), 22, 52, 4210752);
+        String st = I18n.format(status, tile.getMissonPercent(tile.currentMission));
+        if(info < ModConfig.machines.satellite_mission_duration*20 && info > -1) {
+            st +="%";
+        }
+        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission_status", st), 22, 53, 4210752);
+
+        if(tile.rocketState == -1) {
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.no_rocket"), 6, 130, 4210752);
+        } else if(tile.rocketState == 0) {
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_not_ready"), 6, 130, 4210752);
+        } else {
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_ready"), 6, 130, 4210752);
+        }
         tickButtons();
     }
 

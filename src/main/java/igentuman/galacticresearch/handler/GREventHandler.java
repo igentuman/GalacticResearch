@@ -1,8 +1,14 @@
 package igentuman.galacticresearch.handler;
 
 import igentuman.galacticresearch.GalacticResearch;
+import igentuman.galacticresearch.common.tile.TileMissionControlStation;
+import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
+import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
+import micdoodle8.mods.galacticraft.core.event.EventLandingPadRemoval;
+import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityLaunchController;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -20,6 +26,26 @@ public class GREventHandler
         {
             GalacticResearch.pHandler.onPlayerUpdate((EntityPlayerMP) entityLiving);
             return;
+        }
+    }
+
+    @SubscribeEvent
+    public void onLandingPadRemoved(EventLandingPadRemoval event)
+    {
+        TileEntity tile = event.world.getTileEntity(event.pos);
+
+        if (tile instanceof IFuelDock)
+        {
+            IFuelDock dock = (IFuelDock) tile;
+
+            for (ILandingPadAttachable connectedTile : dock.getConnectedTiles())
+            {
+                if (connectedTile instanceof TileMissionControlStation)
+                {
+                    event.allow = false;
+                    return;
+                }
+            }
         }
     }
 

@@ -161,6 +161,12 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                         machine.nextMission();
                     }
                     break;
+                case ACTIVATE_MISSION_BUTTON:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.activateMission();
+                    }
+                    break;
             }
 
         }
@@ -184,6 +190,7 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
 
         PREV_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         NEXT_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        ACTIVATE_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_UP_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_DOWN_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_LEFT_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),

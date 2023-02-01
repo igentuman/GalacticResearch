@@ -21,9 +21,9 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
 
-       /* if (transformedName.equals("micdoodle8.mods.galacticraft.core.client.screen.GameScreenCelestial")) {
-            return Reflectors.reflectClass(basicClass, transformedName, GameScreenCelestialReflector.class.getName());
-        }*/
+        if (transformedName.equals("micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad")) {
+            return Reflectors.reflectClass(basicClass, transformedName, TileEntityLandingPadReflector.class.getName());
+        }
 
 
         return basicClass;

@@ -80,6 +80,12 @@ public class ModConfig {
     public static class Machines {
         @Config.Name("satellite_rocket_schematic_id")
         public int satellite_rocket_schematic_id = 9261;
+
+        @Config.Name("satellite_mission_duration")
+        @Config.Comment({
+                "How long it takes to unlock planets (seconds)"
+        })
+        public int satellite_mission_duration = 120;
     }
 
     public static class Research {
