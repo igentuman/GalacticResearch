@@ -1,0 +1,12 @@
+[
+{
+  "modid": "galacticresearch",
+  "name": "Galactic Research",
+  "description": "Planet research.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "authorList": ["igentuman"],
+  "logoFile": "assets/galacticresearch/logo.png",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/galactic-research"
+}
+]

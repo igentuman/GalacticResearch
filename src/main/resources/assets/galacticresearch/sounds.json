@@ -1,0 +1,4 @@
+{
+	"active_boring": {"category": "block", "sounds": [{"name": "galacticresearch:active_boring", "stream": false}]},
+	"active_motor": {"category": "block", "sounds": [{"name": "galacticresearch:active_motor", "stream": false}]}
+}

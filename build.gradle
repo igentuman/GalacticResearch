@@ -1,0 +1,123 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+repositories {
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    maven {
+        name = "CurseForge"
+        url = "https://www.cursemaven.com"
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.0.0"
+group = "igentuman.galacticresearch"
+archivesBaseName = "GalacticResearch"
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url 'https://minecraft.curseforge.com/api/maven/'
+    }
+    maven {url "http://maven.blamejared.com"}
+    maven {url "http://dvs1.progwml6.com/files/maven"}
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
+    maven {
+        name = "mcmoddev"
+        url = "https://maven.mcmoddev.com"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev/"
+    }
+}
+minecraft {
+    version = "1.12.2-14.23.5.2847"
+    runDir = "run"
+    mappings = "stable_39"
+}
+configurations {
+    shade
+    compile.extendsFrom(shade)
+}
+dependencies {
+    shade "com.github.MJaroslav.Reflectors:library:v4"
+    compileOnly "org.jetbrains:annotations:17.0.0"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
+    deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
+    deobfProvided "mezz.jei:jei_1.12.2:${jei_version}:api"
+    implementation "mezz.jei:jei_1.12.2:${jei_version}"
+    runtime "mezz.jei:jei_1.12.2:${jei_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+extractAnnotationsJar.enabled = false
+
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mc_version", "1.12.2"
+
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from project.zipTree(dep)
+    }
+    manifest {
+        attributes([
+                "Specification-Title": "galacticresearch",
+                "Specification-Vendor": "igentuman",
+                "Specification-Version": "1",
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" : "igentuman",
+                "FMLAT": "galacticresearch_at.cfg",
+                "FMLCorePlugin": "igentuman.galacticresearch.reflection.ReflectorsPlugin",
+                "FMLCorePluginContainsFMLMod": "true",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')

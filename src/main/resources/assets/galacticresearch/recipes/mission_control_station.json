@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DYD",
+    "XZX",
+    "VGV"
+  ],
+  "key": {
+    "G": {
+      "item": "galacticraftcore:view_screen"
+    },
+    "X": {
+      "item": "galacticraftcore:telemetry"
+    },
+    "V": {
+      "item": "galacticraftcore:aluminum_wire",
+      "data": 0
+    },
+    "Z": {
+      "type": "forge:ore_dict",
+      "ore": "waferAdvanced"
+    },
+    "Y": {
+      "type": "forge:ore_dict",
+      "ore": "compressedAluminum"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "compressedTin"
+    }
+  },
+  "result": {
+    "item": "galacticresearch:mission_control_station"
+  }
+}
