@@ -3,6 +3,7 @@ package igentuman.galacticresearch.common.block;
 
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
+import igentuman.galacticresearch.common.tile.TileTelescope;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -12,7 +13,9 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -25,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 public class BlockMissionControlStation extends BlockHorizontal {
 
@@ -97,6 +101,50 @@ public class BlockMissionControlStation extends BlockHorizontal {
         String[] parts = I18n.format("description.mission_control_station", 123).split("\\\\n");
         for(String line: parts) {
             currentTooltip.add(TextFormatting.AQUA + line);
+        }
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if(tile != null)
+        {
+            if(tile instanceof TileMissionControlStation)
+            {
+                ItemStack item = new ItemStack(Item.getItemFromBlock(this));
+                NBTTagCompound compound = new NBTTagCompound();
+                if(!((TileMissionControlStation) tile).missionsData.isEmpty())
+                {
+
+                    compound.setString("missionsData", ((TileMissionControlStation) tile).missionsData);
+                }
+                item.setTagCompound(compound);
+                this.spawnAsEntity(worldIn, pos, item);
+            }
+        }
+    }
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return ItemStack.EMPTY.getItem();
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if(!worldIn.isRemote) {
+            if(stack != null && tile != null)
+            {
+                if(stack.hasTagCompound() && tile instanceof TileMissionControlStation)
+                {
+                    if(stack.getTagCompound().hasKey("missionsData"))
+                    {
+                        String missionsData = stack.getTagCompound().getString("missionsData");
+                        ((TileMissionControlStation) tile).missionsData = missionsData;
+                        ((TileMissionControlStation) tile).unserializeMissionData();
+                    }
+                }
+            }
         }
     }
 }

@@ -244,7 +244,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         return world.getBlockState(pos).getValue(BlockTelescope.FACING).getOpposite();
     }
 
-    private void serializeMissionData()
+    public void serializeMissionData()
     {
         String tmp = "";
         for(String m: missionsDataMap.keySet()) {
@@ -283,7 +283,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         return "gui.mission.progress";
     }
 
-    private void unserializeMissionData()
+    public void unserializeMissionData()
     {
         missionsDataMap.clear();
         String[] missions = missionsData.split(";");

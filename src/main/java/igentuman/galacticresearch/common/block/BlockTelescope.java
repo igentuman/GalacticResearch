@@ -13,7 +13,11 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -26,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 public class BlockTelescope extends BlockHorizontal {
 
@@ -98,6 +103,49 @@ public class BlockTelescope extends BlockHorizontal {
         String[] parts = I18n.format("description.telescope").split("\\\\n");
         for(String line: parts) {
             currentTooltip.add(TextFormatting.AQUA + line);
+        }
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if(tile != null)
+        {
+            if(tile instanceof TileTelescope)
+            {
+                ItemStack item = new ItemStack(Item.getItemFromBlock(this));
+                NBTTagCompound compound = new NBTTagCompound();
+                if(!((TileTelescope) tile).researchedBodies.isEmpty())
+                {
+
+                    compound.setString("researchedBodies", ((TileTelescope) tile).researchedBodies);
+                }
+                item.setTagCompound(compound);
+                this.spawnAsEntity(worldIn, pos, item);
+            }
+        }
+    }
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return ItemStack.EMPTY.getItem();
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if(!worldIn.isRemote) {
+            if(stack != null && tile != null)
+            {
+                if(stack.hasTagCompound() && tile instanceof TileTelescope)
+                {
+                    if(stack.getTagCompound().hasKey("researchedBodies"))
+                    {
+                        String researchedBodies = stack.getTagCompound().getString("researchedBodies");
+                        ((TileTelescope) tile).researchedBodies = researchedBodies;
+                    }
+                }
+            }
         }
     }
 }
