@@ -21,7 +21,7 @@ public class DimensionProvider {
     public int[] getUnlockedDimensions()
     {
         int[] unlocked = ModConfig.research.unlocked_dimensions;
-        String[] bodies = te.getResearchedBodies();
+        String[] bodies = te.getMissions();
         List<Integer> researched = new ArrayList<>();
         for (String b: bodies) {
             for(int dim: getDimensionsByBodyName(b)) {

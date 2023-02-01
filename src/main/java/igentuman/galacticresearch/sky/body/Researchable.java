@@ -72,7 +72,7 @@ public class Researchable implements ISkyBody {
             speed = r.nextInt(20);
         }
 
-        return Math.min(5, speed);
+        return Math.max(5, speed);
     }
 
     public int getX()

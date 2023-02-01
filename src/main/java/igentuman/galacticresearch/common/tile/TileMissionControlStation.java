@@ -33,12 +33,12 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public String researchedBodies = "";
+    public String missions = "";
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public String targetPlanet = "";
+    public String currentMission = "";
 
     public DimensionProvider dimensionProvider;
 
@@ -54,9 +54,9 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         dimensionProvider = new DimensionProvider(this);
     }
 
-    public String[] getPlanetsForSatellite()
+    public void fetchMissions()
     {
-        return getTelescope().getResearchedBodies();
+        missions = getTelescope().getResearchedBodies();
     }
 
     public boolean isSatteliteRocketFound()
@@ -95,6 +95,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             if(getEnergyStoredGC() < 100) {
                 return;
             }
+            fetchMissions();
         }
     }
 
@@ -114,9 +115,55 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         return telescope;
     }
 
-    public String[] getResearchedBodies()
+    public void nextMission()
     {
-        return Arrays.stream(researchedBodies.split(",")).filter(val -> !val.isEmpty()).toArray(String[]::new);
+        String[] tmp = getMissions();
+        boolean f = false;
+        for(String m: tmp) {
+            if(currentMission.isEmpty() || f) {
+                currentMission = m;
+                return;
+            }
+            if(currentMission == m) {
+                f = true;
+            }
+        }
+        currentMission = "";
+    }
+
+    public void prevMission()
+    {
+        String[] tmp = getMissions();
+        int i = 0;
+        for(String m: tmp) {
+            if(currentMission.isEmpty()) {
+                currentMission = m;
+            }
+            if(currentMission == m) {
+                try {
+                    currentMission = tmp[i-1];
+                    return;
+                } catch (Exception e){
+                    currentMission = "";
+                    return;
+                }
+            }
+            i++;
+        }
+        currentMission = "";
+    }
+
+    public String getMissonStatus(String mission)
+    {
+        if(mission.isEmpty()) {
+            return "mission.idle";
+        }
+        return "sdfsd";
+    }
+
+    public String[] getMissions()
+    {
+        return Arrays.stream(missions.split(",")).filter(val -> !val.isEmpty()).toArray(String[]::new);
     }
 
     public boolean shouldUseEnergy() {
@@ -134,13 +181,15 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.dimension = nbt.getInteger("dimension");
-        this.researchedBodies = nbt.getString("researchedBodies");
+        this.currentMission = nbt.getString("currentMission");
+        this.missions = nbt.getString("missions");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setInteger("dimension", this.dimension);
-        nbt.setString("researchedBodies", this.researchedBodies);
+        nbt.setString("currentMission", this.currentMission);
+        nbt.setString("missions", this.missions);
         return nbt;
     }
 

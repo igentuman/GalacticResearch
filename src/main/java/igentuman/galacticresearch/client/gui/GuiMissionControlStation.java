@@ -29,25 +29,17 @@ import java.util.List;
 import java.util.Map;
 
 
-public class GuiMissionControlStation extends GuiContainerGC implements GuiElementDropdown.IDropboxCallback {
+public class GuiMissionControlStation extends GuiContainerGC {
     private static final ResourceLocation guiTexture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/container/mission_control_station.png");
     private final TileMissionControlStation tile;
 
     private GuiButtonImage btnUp;
     private GuiButtonImage btnDown;
-    private GuiButtonImage btnLeft;
-    private GuiButtonImage btnRight;
-    private GuiButton btnMultiplier;
     private GuiButtonImage btnHelp;
-    private GuiButtonImage btnTelescope;
-    private Map<String,GuiButtonImage> planets = new HashMap<>();
-    private GuiElementDropdown targetPlanet;
 
     private GuiElementInfoRegion electricInfoRegion;
     private GuiElementInfoRegion helpRegion;
     private GuiElementInfoRegion researchedRegion;
-    private GuiButtonImage btnResearched;
-    private int cannotEditTimer;
 
     public GuiMissionControlStation(InventoryPlayer par1InventoryPlayer, TileMissionControlStation tile) {
         super(new ContainerMissionControlStation(par1InventoryPlayer, tile));
@@ -66,53 +58,14 @@ public class GuiMissionControlStation extends GuiContainerGC implements GuiEleme
         }
     }
 
-    public void onIntruderInteraction() {
-        this.cannotEditTimer = 50;
-    }
-
-    public boolean canBeClickedBy(GuiElementDropdown dropdown, EntityPlayer player) {
-        return true;
-    }
-
-    public void onSelectionChanged(GuiElementDropdown dropdown, int selection) {
-        if (dropdown.equals(this.targetPlanet)) {
-            this.tile.targetPlanet = String.valueOf(selection);
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(PacketSimpleMars.EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{1, tile.getPos(), this.tile.targetPlanet}));
-        }
-
-    }
-
-    public int getInitialSelection(GuiElementDropdown dropdown) {
-        return dropdown.equals(this.targetPlanet) ? Integer.parseInt(tile.targetPlanet) : 0;
-    }
-
-    public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected) {
-/*        if (checkbox.equals(this.enablePadRemovalButton)) {
-            this.launchController.launchPadRemovalDisabled = !newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(PacketSimpleMars.EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{3, this.launchController.getPos(), this.launchController.launchPadRemovalDisabled ? 1 : 0}));
-        } else if (checkbox.equals(this.launchWhenCheckbox)) {
-            this.launchController.launchSchedulingEnabled = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(PacketSimpleMars.EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{4, this.launchController.getPos(), this.launchController.launchSchedulingEnabled ? 1 : 0}));
-        }*/
-
-    }
-
     protected void actionPerformed(GuiButton par1GuiButton) {
         switch(par1GuiButton.id) {
             case 0:
-                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.TELESCOPE_UP_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
+                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.PREV_MISSION_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
                 break;
             case 1:
-                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.TELESCOPE_DOWN_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
+                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.NEXT_MISSION_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
                 break;
-            case 2:
-                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.TELESCOPE_LEFT_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
-                break;
-            case 3:
-                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.TELESCOPE_RIGHT_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
-                break;
-            case 4:
-                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.TELESCOPE_MULTIPLIER_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
             default:
         }
     }
@@ -120,50 +73,19 @@ public class GuiMissionControlStation extends GuiContainerGC implements GuiEleme
 
     public void initButtons()
     {
-        int xpos = guiLeft+142;
-        int ypos = guiTop+40;
+        int xpos = guiLeft+7;
+        int ypos = guiTop+24;
         int size = 12;
-        int padding = 6;
-        this.buttonList.add(btnUp = new GuiButtonImage(0, xpos, ypos-size-padding, size, size, 176, 83, 12, guiTexture));
-        this.buttonList.add(btnDown = new GuiButtonImage(1, xpos, ypos+size+padding, size, size, 176, 59, 12, guiTexture));
-        this.buttonList.add(btnLeft = new GuiButtonImage(2, xpos-size-padding, ypos, size, size, 176, 11, 12, guiTexture));
-        this.buttonList.add(btnRight = new GuiButtonImage(3, xpos+size+padding, ypos, size, size, 176, 35, 12, guiTexture));
-        this.buttonList.add(btnHelp = new GuiButtonImage(5, xpos+size, guiTop + 164, 13, 14, 176, 109, 0, guiTexture));
-        this.buttonList.add(btnResearched = new GuiButtonImage(6, xpos-2, guiTop + 164, 12, 14, 0, 233, 0, guiTexture));
-        this.buttonList.add(btnResearched = new GuiButtonImage(6, xpos-2, guiTop + 164, 12, 14, 0, 233, 0, guiTexture));
-
-    }
-
-    public void updateResearchedData()
-    {
-        List<String> lines = new ArrayList();
-        lines.add(GCCoreUtil.translate("gui.telescope.researched"));
-        String[] bodies = tile.getResearchedBodies();
-        for(String name: bodies) {
-            lines.add(GCCoreUtil.translate("gui."+name+".name"));
-        }
-        if(bodies.length == 0) {
-            lines.add(GCCoreUtil.translate("gui.telescope.researched.none"));
-        }
-
-        this.researchedRegion.tooltipStrings = lines;
-    }
-    private void addResearchedRegion()
-    {
-        updateResearchedData();
-        this.researchedRegion.xPosition = guiLeft + 140;
-        this.researchedRegion.yPosition = guiTop + 164;
-        this.researchedRegion.parentWidth = this.width;
-        this.researchedRegion.parentHeight = this.height;
-
-        this.infoRegions.add(this.researchedRegion);
+        this.buttonList.add(btnUp = new GuiButtonImage(0, xpos, ypos, size, size, 176, 83, 12, guiTexture));
+        this.buttonList.add(btnDown = new GuiButtonImage(1, xpos, ypos+26, size, size, 176, 59, 12, guiTexture));
+        this.buttonList.add(btnHelp = new GuiButtonImage(2, xpos+147, guiTop + 164, 13, 14, 176, 109, 0, guiTexture));
     }
 
     private void addHelpRegion()
     {
         List<String> help = new ArrayList();
-        help.add(GCCoreUtil.translate("gui.help.desc.0"));
-        help.add(GCCoreUtil.translate("gui.help.desc.1"));
+        help.add(GCCoreUtil.translate("gui.help.mcs.desc.0"));
+        help.add(GCCoreUtil.translate("gui.help.mcs.desc.1"));
 
         this.helpRegion.tooltipStrings = help;
         this.helpRegion.xPosition = guiLeft + 154;
@@ -189,33 +111,29 @@ public class GuiMissionControlStation extends GuiContainerGC implements GuiEleme
         List<String> batterySlotDesc = new ArrayList();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 9, (this.height - this.ySize) / 2 + 26, 18, 18, batterySlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 9, (this.height - this.ySize) / 2 + 165, 18, 18, batterySlotDesc, this.width, this.height, this));
 
     }
 
     public void initGui() {
         super.initGui();
-
-        this.targetPlanet = new GuiElementDropdown(3, this, guiLeft + 52, guiTop + 52, new String[]{});
         addElectricInfoRegion();
         addHelpRegion();
-        addResearchedRegion();
         initButtons();
     }
-
-    private int scale(double value, double maxValue)
-    {
-        return (int)(maxValue/100*value);
-    }
-
 
 
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 
-        this.fontRenderer.drawString(GCCoreUtil.translate("gui.telescope"), 60, 10, 4210752);
-
-        this.fontRenderer.drawString(I18n.format("gui.telescope.status"), 8, 141, 4210752);
-        updateResearchedData();
+        this.fontRenderer.drawString(GCCoreUtil.translate("gui.mission_control_station"), 10, 10, 4210752);
+        String curMission =tile.currentMission;
+        if(curMission.isEmpty()) {
+            curMission = "none";
+        }
+        String status = tile.getMissonStatus(tile.currentMission);
+        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission"), 22, 26, 4210752);
+        this.fontRenderer.drawString(I18n.format("gui."+curMission+".name"), 22, 39, 4210752);
+        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission_status", I18n.format(status)), 22, 52, 4210752);
         tickButtons();
     }
 

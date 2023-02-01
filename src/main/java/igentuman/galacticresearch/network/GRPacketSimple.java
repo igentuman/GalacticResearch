@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.network;
 
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import io.netty.buffer.ByteBuf;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
@@ -148,6 +149,18 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                         machine.changeMultiplier();
                     }
                     break;
+                case PREV_MISSION_BUTTON:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.prevMission();
+                    }
+                    break;
+                case NEXT_MISSION_BUTTON:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.nextMission();
+                    }
+                    break;
             }
 
         }
@@ -169,6 +182,8 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
 
     public static enum EnumSimplePacket {
 
+        PREV_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        NEXT_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_UP_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_DOWN_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_LEFT_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),

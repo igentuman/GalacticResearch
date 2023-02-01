@@ -182,7 +182,7 @@ public class GuiTelescope extends GuiContainerGC {
     {
         List<String> lines = new ArrayList();
         lines.add(GCCoreUtil.translate("gui.telescope.researched"));
-        String[] bodies = tile.getResearchedBodies();
+        String[] bodies = tile.getResearchedBodiesArray();
         for(String name: bodies) {
             lines.add(GCCoreUtil.translate("gui."+name+".name"));
         }

@@ -209,9 +209,14 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
 
     }
 
-    public String[] getResearchedBodies()
+    public String[] getResearchedBodiesArray()
     {
         return Arrays.stream(researchedBodies.split(",")).filter(val -> !val.isEmpty()).toArray(String[]::new);
+    }
+
+    public String getResearchedBodies()
+    {
+        return researchedBodies;
     }
 
     public boolean shouldUseEnergy() {
