@@ -3,6 +3,7 @@ package igentuman.galacticresearch.common;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ISidedProxy;
 import igentuman.galacticresearch.RegistryHandler;
+import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.schematic.SchematicSatelliteRocket;
 import igentuman.galacticresearch.network.TileProcessUpdatePacket;
 import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
@@ -62,7 +63,7 @@ public class CommonProxy implements ISidedProxy {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-
+        MinecraftForge.EVENT_BUS.register(new SpaceCapabilityHandler());
     }
 
     @Override

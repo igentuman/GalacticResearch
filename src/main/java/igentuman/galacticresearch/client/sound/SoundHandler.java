@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static igentuman.galacticresearch.GalacticResearch.MODID;
 
 
-@Mod.EventBusSubscriber(modid = MODID)
+@Mod.EventBusSubscriber(modid = MODID, value = Side.CLIENT)
 @SideOnly(Side.CLIENT)
 public class SoundHandler {
 

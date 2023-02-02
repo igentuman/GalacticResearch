@@ -12,6 +12,7 @@ gui.mission_control_station.activate=Activate Mission
 gui.mission_control_station.no_rocket=No Rocket on Pad
 gui.mission_control_station.rocket_not_ready=Rocket Is Not Yet Ready
 gui.mission_control_station.rocket_ready=Rocket Is Ready
+gui.celestial_selection.advise=To unlock celestial bodies, you need to send Satellite Rockets first
 description.mission_control_station=Controls Rocket Trajectory
 gui.help.desc.0=Use control buttons to search planets on sky
 gui.help.desc.1=Keep planet in focus area to collect data

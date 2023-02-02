@@ -1,27 +1,30 @@
 package igentuman.galacticresearch.common.capability;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PlayerSpaceData implements ISpaceData {
 
-	protected BlockPos satelliteStationPos;
+	public String unlocked_missions = "";
+
+	public List<String> getUnlockedMissions()
+	{
+		if(unlocked_missions.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return Arrays.asList(unlocked_missions.split(","));
+	}
 	
 	@Override
 	public NBTTagCompound writeNBT(NBTTagCompound nbt) {
-		nbt.setIntArray("satellite_station_pos", new int[]{
-				satelliteStationPos.getX(),
-				satelliteStationPos.getY(),
-				satelliteStationPos.getZ()
-		});
+		nbt.setString("unlocked_missions", unlocked_missions);
 		return nbt;
 	}
 
 	public void readNBT(NBTTagCompound nbt) {
-		int[] pos = nbt.getIntArray("satellite_station_pos");
-		if(pos.length == 3) {
-			satelliteStationPos = new BlockPos(pos[0], pos[1], pos[2]);
-		}
+		unlocked_missions = nbt.getString("unlocked_missions");
 	}
 }

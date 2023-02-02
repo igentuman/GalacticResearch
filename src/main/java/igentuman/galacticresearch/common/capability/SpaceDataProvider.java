@@ -1,7 +1,7 @@
 package igentuman.galacticresearch.common.capability;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -32,7 +32,14 @@ public class SpaceDataProvider implements ICapabilitySerializable<NBTBase> {
 	
 	@Override
 	public NBTBase serializeNBT() {
-		return SpaceCapabilityHandler.PLAYER_SPACE_DATA.writeNBT(spaceData, null);
+		try {
+			return SpaceCapabilityHandler.PLAYER_SPACE_DATA.writeNBT(spaceData, null);
+		} catch (NullPointerException exception) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			spaceData.writeNBT(nbt);
+			return nbt;
+		}
+
 	}
 	
 	@Override

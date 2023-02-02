@@ -40,8 +40,8 @@ import java.util.List;
 
 import static igentuman.galacticresearch.GalacticResearch.MODID;
 
-@Mod.EventBusSubscriber
-@SideOnly(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = MODID, value = Side.CLIENT)
+
 public class ClientProxy extends CommonProxy {
 
     private void replaceModelDefault(ModelBakeEvent event, String resLoc, String objLoc, List<String> visibleGroups, Class<? extends ModelTransformWrapper> clazz, IModelState parentState, String... variants)
