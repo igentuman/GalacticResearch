@@ -9,7 +9,6 @@ import java.util.List;
 @Config(modid = GalacticResearch.MODID)
 public class ModConfig {
     public static ResearchSystemSettings researchSystem= new ResearchSystemSettings();
-    public static Research research = new Research();
     public static Machines machines = new Machines();
 
     public static class ResearchSystemSettings {
@@ -25,7 +24,7 @@ public class ModConfig {
         public String[] researchable_bodies = new String[]{
                 "mercury, 1, 100, 16, -13, sun",
                 "venus, 2, 70, 20, -31, sun",
-                "earth, 3, 50, 16, 0, sun",
+                "overworld, 3, 50, 16, 0, sun",
                 "moon, 1, 10, 28, -28, earth",
                 "mars, 4, 30, 20, -29, sun",
                 "asteroids, 5, 30, 16, -30, sun",
@@ -40,8 +39,14 @@ public class ModConfig {
                 "List of body nameKey's which are will be researched by default"
         })
         public String[] default_researched_bodies = new String[]{
-            "earth"
+                "overworld"
         };
+
+        @Config.Name("required_observation_time")
+        @Config.Comment({
+                "How long (seconds) you need to track and observe body in telescope to collect data "
+        })
+        public int required_observation_time = 45;
 
         protected SkyItem parseBodyLine(String line)
         {
@@ -88,36 +93,5 @@ public class ModConfig {
         public int satellite_mission_duration = 120;
     }
 
-    public static class Research {
-
-        @Config.Name("research_mode")
-        @Config.Comment({
-                "telescope - use telescope only to unlock planets.",
-                "satellite - by only sending satellites into Space",
-                "combined - by observing planets in telescope and sending satellites after observation"
-        })
-        public String research_mode = "combined";
-
-        @Config.Name("required_observation_time")
-        @Config.Comment({
-                "How long (seconds) you need to track and observe body in telescope to collect data "
-        })
-        public int required_observation_time = 45;
-
-        @Config.Name("enable_telescope_assistant")
-        @Config.Comment({
-                "Telescope assistant will advise direction of solar bodies in telescope GUI"
-        })
-        public boolean enable_telescope_assistant = false;
-
-        @Config.Name("unlocked_dimensions")
-        @Config.Comment({
-                "List of dimension IDs what are unlocked(researched) by default"
-        })
-        public int[] unlocked_dimensions = new int[]{
-                0,
-                -27
-        };
-    }
 
 }

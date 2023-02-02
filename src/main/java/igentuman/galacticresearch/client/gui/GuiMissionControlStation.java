@@ -38,6 +38,7 @@ public class GuiMissionControlStation extends GuiContainerGC {
     private GuiButtonImage btnDown;
     private GuiButtonImage btnHelp;
     private GuiButton activateBtn;
+    private GuiButton analyzeDataBtn;
 
     private GuiElementInfoRegion electricInfoRegion;
     private GuiElementInfoRegion helpRegion;
@@ -53,7 +54,6 @@ public class GuiMissionControlStation extends GuiContainerGC {
     private void tickButtons()
     {
         if(selectedButton != null && selectedButton.isMouseOver()) {
-            if(selectedButton.id == 4) return;
             btnClick(selectedButton);
             selectedButton = null;
         }
@@ -75,6 +75,9 @@ public class GuiMissionControlStation extends GuiContainerGC {
             case 3:
                 GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.ACTIVATE_MISSION_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
                 break;
+            case 4:
+                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.ANALYZE_DATA_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
+                break;
             default:
         }
     }
@@ -87,8 +90,9 @@ public class GuiMissionControlStation extends GuiContainerGC {
         int size = 12;
         this.buttonList.add(btnUp = new GuiButtonImage(0, xpos, ypos, size, size, 176, 83, 12, guiTexture));
         this.buttonList.add(btnDown = new GuiButtonImage(1, xpos, ypos+26, size, size, 176, 59, 12, guiTexture));
-        this.buttonList.add(btnHelp = new GuiButtonImage(2, xpos+147, guiTop + 164, 13, 14, 176, 109, 0, guiTexture));
-        this.buttonList.add(activateBtn = new GuiButton(3, (this.width - this.xSize) / 2 + 6, guiTop + 141, 90, 20,  GCCoreUtil.translate("gui.mission_control_station.activate")));
+        this.buttonList.add(btnHelp = new GuiButtonImage(2, xpos+149, guiTop + 164, 13, 14, 176, 109, 0, guiTexture));
+        this.buttonList.add(activateBtn = new GuiButton(3, (this.width - this.xSize) / 2 + 7, guiTop + 141, 90, 20,  GCCoreUtil.translate("gui.mission_control_station.activate")));
+        this.buttonList.add(analyzeDataBtn = new GuiButton(4, (this.width - this.xSize) / 2 + 7, guiTop + 87, 161, 20,  GCCoreUtil.translate("gui.mission_control_station.analyze")));
     }
 
     private void addHelpRegion()
@@ -98,7 +102,7 @@ public class GuiMissionControlStation extends GuiContainerGC {
         help.add(GCCoreUtil.translate("gui.help.mcs.desc.1"));
 
         this.helpRegion.tooltipStrings = help;
-        this.helpRegion.xPosition = guiLeft + 154;
+        this.helpRegion.xPosition = guiLeft + 156;
         this.helpRegion.yPosition = guiTop + 164;
         this.helpRegion.parentWidth = this.width;
         this.helpRegion.parentHeight = this.height;
@@ -151,11 +155,11 @@ public class GuiMissionControlStation extends GuiContainerGC {
         this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission_status", st), 22, 53, 4210752);
 
         if(tile.rocketState == -1) {
-            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.no_rocket"), 6, 130, 4210752);
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.no_rocket"), 7, 130, 4210752);
         } else if(tile.rocketState == 0) {
-            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_not_ready"), 6, 130, 4210752);
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_not_ready"), 7, 130, 4210752);
         } else {
-            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_ready"), 6, 130, 4210752);
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_ready"), 7, 130, 4210752);
         }
         tickButtons();
     }

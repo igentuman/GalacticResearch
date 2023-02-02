@@ -1,9 +1,14 @@
 package igentuman.galacticresearch.common.tile;
 
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.block.BlockTelescope;
+import igentuman.galacticresearch.common.capability.ISpaceData;
+import igentuman.galacticresearch.common.capability.PlayerSpaceData;
+import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.data.DimensionProvider;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import igentuman.galacticresearch.network.GRPacketSimple;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
@@ -14,18 +19,23 @@ import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
+import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.miccore.Annotations;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Level;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -65,15 +75,53 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     )
     public int rocketState;
 
-    public boolean launchPadRemovalDisabled = true;
-
-
-
     public TileMissionControlStation() {
         super("container.mission_control_staion.name");
         this.storage.setMaxExtract(45.0F);
         this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
         dimensionProvider = new DimensionProvider(this);
+    }
+
+    public static String removeLastChar(String s) {
+        return (s == null || s.length() == 0)
+                ? ""
+                : (s.substring(0, s.length() - 1));
+    }
+
+    public void playerAnalyzeData(EntityPlayer player)
+    {
+        try {
+            EntityPlayerMP playerBaseClient = PlayerUtil.getPlayerBaseServerFromPlayerUsername(player.getName(), true);
+
+            PlayerSpaceData cap = playerBaseClient.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
+
+            if (cap == null) {
+                GalacticResearch.instance.logger.log(Level.WARN, "Analyze missions capability error");
+                return;
+            }
+            String tmp = "";
+            for (String mission : getMissions()) {
+                if (isMissionComplete(mission)) {
+                    tmp += mission + ",";
+                    if (!cap.getUnlockedMissions().contains(mission)) {
+                        cap.addMission(mission);
+                        player.addExperience(10);
+                        String planetLocalized = I18n.format("gui."+mission+".name");
+                        player.sendMessage(new TextComponentString(I18n.format("message.analyzed.planet", planetLocalized)));
+                    }
+                }
+            }
+            cap.unlocked_missions = removeLastChar(tmp);
+            GalacticResearch.packetPipeline.sendTo(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.SYNC_PLAYER_SPACE_DATA, GCCoreUtil.getDimensionID(player.world), new Object[] { cap.unlocked_missions }), (EntityPlayerMP) player);
+
+        } catch (NullPointerException e) {
+            GalacticResearch.instance.logger.log(Level.ERROR, "Analyze missions capability error");
+        }
+    }
+
+    public boolean isMissionComplete(String name)
+    {
+        return getMissionInfo(name) >= ModConfig.machines.satellite_mission_duration*20;
     }
 
     public void fetchMissions()

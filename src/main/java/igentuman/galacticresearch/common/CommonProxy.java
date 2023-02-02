@@ -11,7 +11,6 @@ import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.recipe.NasaWorkbenchRecipe;
-import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -63,7 +62,7 @@ public class CommonProxy implements ISidedProxy {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new SpaceCapabilityHandler());
+        SpaceCapabilityHandler.register();
     }
 
     @Override

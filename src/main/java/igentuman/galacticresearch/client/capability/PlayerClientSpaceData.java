@@ -1,6 +1,6 @@
-package igentuman.galacticresearch.common.capability;
+package igentuman.galacticresearch.client.capability;
 
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.lang.ref.WeakReference;
@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlayerSpaceData implements ISpaceData {
+public class PlayerClientSpaceData implements ISpaceData {
 
 	public String unlocked_missions = "";
-	private WeakReference<EntityPlayerMP> player;
+	private WeakReference<EntityPlayerSP> player;
 
 	public List<String> getUnlockedMissions()
 	{
@@ -21,18 +21,14 @@ public class PlayerSpaceData implements ISpaceData {
 		return Arrays.asList(unlocked_missions.split(","));
 	}
 
-	public void setPlayer(WeakReference<EntityPlayerMP> player)
+	public void setPlayer(WeakReference<EntityPlayerSP> player)
 	{
 		this.player = player;
 	}
 
 	public void addMission(String name)
 	{
-		if(getUnlockedMissions().contains(name)) return;
-		if(!unlocked_missions.isEmpty()) {
-			unlocked_missions += ",";
-		}
-		unlocked_missions += name;
+		unlocked_missions += ","+name;
 	}
 	
 	@Override

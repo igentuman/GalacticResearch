@@ -172,7 +172,7 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                         looseCounter = 100;
                     }
                     observationTime++;
-                    if(observationTime/20 >= ModConfig.research.required_observation_time) {
+                    if(observationTime/20 >= ModConfig.researchSystem.required_observation_time) {
                         researchedBodies += ","+curObserveBody;
                         observationTime = 0;
                         curObserveBody = "";
@@ -194,7 +194,7 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
             observationTime = 0;
             return 0;
         }
-        return (int)(100/(float)ModConfig.research.required_observation_time*((float)observationTime/20));
+        return (int)(100/(float)ModConfig.researchSystem.required_observation_time*((float)observationTime/20));
     }
 
     public void update() {

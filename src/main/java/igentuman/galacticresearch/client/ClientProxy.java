@@ -1,7 +1,7 @@
 package igentuman.galacticresearch.client;
 
 import com.google.common.collect.ImmutableList;
-import igentuman.galacticresearch.RegistryHandler;
+import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.client.model.ItemModelSatelliteRocket;
 import igentuman.galacticresearch.client.render.entity.RenderSatelliteRocket;
 import igentuman.galacticresearch.client.sound.SoundHandler;
@@ -9,19 +9,14 @@ import igentuman.galacticresearch.common.CommonProxy;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import igentuman.galacticresearch.network.TileProcessUpdatePacket;
-import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
-import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.model.IModelState;
@@ -63,6 +58,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
+        SpaceClientCapabilityHandler.register();
         super.postInit(event);
     }
 

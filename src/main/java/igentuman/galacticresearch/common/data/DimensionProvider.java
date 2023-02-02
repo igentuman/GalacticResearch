@@ -17,27 +17,6 @@ public class DimensionProvider {
         this.te = te;
     }
 
-    //where satellites can be sent
-    public int[] getUnlockedDimensions()
-    {
-        int[] unlocked = ModConfig.research.unlocked_dimensions;
-        String[] bodies = te.getMissions();
-        List<Integer> researched = new ArrayList<>();
-        for (String b: bodies) {
-            for(int dim: getDimensionsByBodyName(b)) {
-                researched.add(dim);
-            }
-        }
-        int i = 0;
-        int[] dims = new int[unlocked.length+researched.size()];
-        for(int d: unlocked) {
-            dims[i] = d;
-            i++;
-        }
-
-        return dims;
-    }
-
     public int[] getDimensionsByBodyName(String name)
     {
         for(SkyItem b: GalacticResearch.skyModel.getBodies()) {

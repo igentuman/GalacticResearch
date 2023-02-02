@@ -1,8 +1,9 @@
 package igentuman.galacticresearch.client.gui;
 
 import com.google.common.collect.Lists;
-import igentuman.galacticresearch.common.capability.PlayerSpaceData;
-import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
+import igentuman.galacticresearch.ModConfig;
+import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
+import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
 import micdoodle8.mods.galacticraft.api.galaxies.*;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
@@ -22,33 +23,33 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 		super(mapMode, possibleBodies, canCreateStations);
 	}
 
+	private boolean isUnlocked(String name, PlayerClientSpaceData stats)
+	{
+		return stats.getUnlockedMissions().contains(name) ||
+				Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name);
+	}
+
 	@Override
 	public void initGui() {
 		final Minecraft minecraft = FMLClientHandler.instance().getClient();
 		final EntityPlayerSP player = minecraft.player;
 		final EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
-		PlayerSpaceData stats = null;
+		PlayerClientSpaceData stats = null;
 
 		if (player != null) {
-			stats = (PlayerSpaceData) playerBaseClient.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
+			stats = playerBaseClient.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
 		}
 		this.bodiesToRender.clear();
 
 		for (Planet planet : GalaxyRegistry.getRegisteredPlanets().values()) {
-			if (stats.getUnlockedMissions().contains(planet.getName())) {
+			if (isUnlocked(planet.getName(), stats)) {
 				this.bodiesToRender.add(planet);
 			}
 		}
 
 		for (Moon moon : GalaxyRegistry.getRegisteredMoons().values()) {
-			if (stats.getUnlockedMissions().contains(moon.getParentPlanet().getName()) && stats.getUnlockedMissions().contains(moon.getName())) {
+			if (isUnlocked(moon.getParentPlanet().getName(), stats) && isUnlocked(moon.getName(), stats)) {
 				this.bodiesToRender.add(moon);
-			}
-		}
-
-		for (Satellite satellite : GalaxyRegistry.getRegisteredSatellites().values()) {
-			if (stats.getUnlockedMissions().contains(satellite.getParentPlanet().getName())) {
-				this.bodiesToRender.add(satellite);
 			}
 		}
 
@@ -67,10 +68,10 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 		final EntityPlayerSP player = minecraft.player;
 		final EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
 
-		PlayerSpaceData stats = null;
+		PlayerClientSpaceData stats = null;
 
 		if (player != null) {
-			stats = (PlayerSpaceData) playerBaseClient.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
+			stats = playerBaseClient.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
 		}
 
 		if (object instanceof Planet) {

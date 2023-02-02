@@ -21,8 +21,10 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,6 +43,12 @@ public class BlockTelescope extends BlockHorizontal {
         this.setTranslationKey("telescope");
         this.setRegistryName(GalacticResearch.MODID, "telescope");
         this.setCreativeTab(CreativeTabs.DECORATIONS);
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+        return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.6D, 1.0D);
     }
 
     @NotNull

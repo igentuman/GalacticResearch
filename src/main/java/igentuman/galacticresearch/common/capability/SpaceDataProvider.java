@@ -1,5 +1,6 @@
 package igentuman.galacticresearch.common.capability;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -8,13 +9,18 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 
-public class SpaceDataProvider implements ICapabilitySerializable<NBTBase> {
+public class SpaceDataProvider implements ICapabilitySerializable<NBTTagCompound> {
 
-	private final ISpaceData spaceData;
+	private final PlayerSpaceData spaceData;
+	private EntityPlayerMP owner;
 
-	public SpaceDataProvider() {
-		spaceData = new PlayerSpaceData();
+	public SpaceDataProvider(EntityPlayerMP owner) {
+		this.owner = owner;
+		spaceData = SpaceCapabilityHandler.PLAYER_SPACE_DATA.getDefaultInstance();
+		spaceData.setPlayer(new WeakReference<>(this.owner));
+
 	}
 	
 	@Override
@@ -31,19 +37,14 @@ public class SpaceDataProvider implements ICapabilitySerializable<NBTBase> {
 	}
 	
 	@Override
-	public NBTBase serializeNBT() {
-		try {
-			return SpaceCapabilityHandler.PLAYER_SPACE_DATA.writeNBT(spaceData, null);
-		} catch (NullPointerException exception) {
-			NBTTagCompound nbt = new NBTTagCompound();
-			spaceData.writeNBT(nbt);
-			return nbt;
-		}
-
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		spaceData.writeNBT(nbt);
+		return nbt;
 	}
 	
 	@Override
-	public void deserializeNBT(NBTBase nbt) {
-		SpaceCapabilityHandler.PLAYER_SPACE_DATA.readNBT(spaceData, null, nbt);
+	public void deserializeNBT(NBTTagCompound nbt) {
+		spaceData.readNBT(nbt);
 	}
 }

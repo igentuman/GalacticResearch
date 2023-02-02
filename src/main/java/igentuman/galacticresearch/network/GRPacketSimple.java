@@ -1,15 +1,23 @@
 package igentuman.galacticresearch.network;
 
+import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
+import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
+import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import io.netty.buffer.ByteBuf;
+import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
+import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
+import micdoodle8.mods.galacticraft.api.galaxies.Moon;
+import micdoodle8.mods.galacticraft.api.galaxies.Planet;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.NetworkUtil;
 import micdoodle8.mods.galacticraft.core.network.PacketBase;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,12 +29,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
     private GRPacketSimple.EnumSimplePacket type;
@@ -87,9 +93,18 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void handleClientSide(EntityPlayer entityPlayer) {
-
+        PlayerClientSpaceData stats = null;
+        if (entityPlayer instanceof EntityPlayerSP) {
+            stats = entityPlayer.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
+        }
+        switch (this.type) {
+            case SYNC_PLAYER_SPACE_DATA:
+                stats.unlocked_missions = (String) data.get(0);
+                break;
+        }
     }
 
     public void handleServerSide(EntityPlayer player) {
@@ -167,6 +182,12 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                         machine.activateMission();
                     }
                     break;
+                case ANALYZE_DATA_BUTTON:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.playerAnalyzeData(playerBase);
+                    }
+                    break;
             }
 
         }
@@ -188,9 +209,11 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
 
     public static enum EnumSimplePacket {
 
+        SYNC_PLAYER_SPACE_DATA(Side.CLIENT, String.class),
         PREV_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         NEXT_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         ACTIVATE_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        ANALYZE_DATA_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_UP_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_DOWN_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_LEFT_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
