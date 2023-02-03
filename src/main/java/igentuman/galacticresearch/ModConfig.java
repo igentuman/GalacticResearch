@@ -4,6 +4,7 @@ import igentuman.galacticresearch.sky.SkyItem;
 import net.minecraftforge.common.config.Config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Config(modid = GalacticResearch.MODID)
@@ -90,7 +91,65 @@ public class ModConfig {
         @Config.Comment({
                 "How long it takes to unlock planets (seconds)"
         })
-        public int satellite_mission_duration = 120;
+        public int satellite_mission_duration = 20;
+
+        @Config.Name("mining_rocket_schematic_id")
+        public int mining_rocket_schematic_id = 9262;
+
+        @Config.Name("mining_mission_duration")
+        @Config.Comment({
+                "How long it takes to mine resources in space (seconds)"
+        })
+        public int mining_mission_duration = 20;
+
+        @Config.Name("mining_mission_minimal_resources")
+        @Config.Comment({
+                "In stacks"
+        })
+        public int mining_mission_minimal_resources = 20;
+
+        @Config.Name("mining_mission_maximal_resources")
+        @Config.Comment({
+                "In stacks (limit 27)"
+        })
+        public int mining_mission_maximal_resources = 45;
+
+
+        @Config.Name("mining_asteroids_popularity")
+        @Config.Comment({
+                "How often such asteroids for mining missions will appear in sky",
+                "Range 0 - 100. 100 means 10 times per day. 1 means 1 asteroid per 10 days"
+        })
+        public int mining_asteroids_popularity = 10;
+
+        @Config.Name("mining_missions_per_mcs")
+        @Config.Comment({
+                "How many incomplete mining missions can mcs store"
+        })
+        public int mining_missions_per_mcs = 3;
+
+        @Config.Name("mineable_resources")
+        @Config.Comment({
+                "Define minable resource and priority",
+                "Format: I:\"modname:blockname\"=123"
+        })
+        public HashMap<String, Integer> mineable_resources = new HashMap<String, Integer>() {
+            {
+                put("minecraft:diamond_ore", 30);
+                put("minecraft:gold_ore", 10);
+                put("galacticraftcore:fallen_meteor", 30);
+                put("minecraft:emerald_ore", 5);
+                put("galacticraftplanets:asteroids_block:4", 30);
+                put("galacticraftplanets:asteroids_block:3", 10);
+                put("galacticraftplanets:asteroids_block:5", 10);
+                put("galacticraftplanets:mars:2", 20);
+                put("galacticraftcore:basic_block_moon:2", 20);
+                put("galacticraftcore:basic_block_moon:1", 10);
+                put("galacticraftcore:basic_block_moon", 10);
+                put("galacticraftcore:basic_block_moon:6", 20);
+                put("galacticraftplanets:venus:10", 10);
+            }
+        };
     }
 
 

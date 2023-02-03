@@ -1,9 +1,8 @@
 package igentuman.galacticresearch.common.entity;
 
+import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.List;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType;
 import micdoodle8.mods.galacticraft.api.entity.IWorldTransferCallback;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
@@ -25,20 +24,24 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-import static igentuman.galacticresearch.RegistryHandler.SATELLITE_ROCKET;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketType, IInventory, IWorldTransferCallback, IGRAutoRocket {
+import static igentuman.galacticresearch.RegistryHandler.MINING_ROCKET;
+
+public class EntityMiningRocket extends EntityAutoRocket implements IRocketType, IInventory, IWorldTransferCallback, IGRAutoRocket {
     public EnumRocketType rocketType;
     public float rumble;
     public BlockPos mcsPos = new BlockPos(0,0,0);
     public String mission;
 
-    public EntitySatelliteRocket(World par1World) {
+    public EntityMiningRocket(World par1World) {
         super(par1World);
+        this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         this.setSize(0.98F, 2.0F);
     }
 
-    public EntitySatelliteRocket(World par1World, double par2, double par4, double par6, EnumRocketType rocketType) {
+    public EntityMiningRocket(World par1World, double par2, double par4, double par6, EnumRocketType rocketType) {
         super(par1World, par2, par4, par6);
         this.rocketType = rocketType;
         this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
@@ -50,7 +53,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
     }
 
     public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(SATELLITE_ROCKET, 1, 0);
+        return new ItemStack(MINING_ROCKET, 1, 0);
     }
 
     public void updateMCSPos() {
@@ -172,6 +175,8 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         }
     }
 
+    public int miningCounter = 0;
+
     public void onReachAtmosphere() {
         if (this.world.isRemote)
         {
@@ -182,7 +187,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         if(te != null) {
             te.setMissionInfo(mission, 1);
         }
-        setDead();
+        miningCounter = ModConfig.machines.mining_mission_duration*20;
     }
 
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
@@ -228,7 +233,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
     }
 
     public int getSizeInventory() {
-        return this.rocketType == null ? 0 : this.rocketType.getInventorySpace();
+        return 54;
     }
 
     public void onWorldTransferred(World world) {
@@ -245,7 +250,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
 
     public List<ItemStack> getItemsDropped(List<ItemStack> droppedItemList) {
         super.getItemsDropped(droppedItemList);
-        ItemStack rocket = new ItemStack(SATELLITE_ROCKET, 1, 0);
+        ItemStack rocket = new ItemStack(MINING_ROCKET, 1, 0);
         rocket.setTagCompound(new NBTTagCompound());
         rocket.getTagCompound().setInteger("RocketFuel", this.fuelTank.getFluidAmount());
         droppedItemList.add(rocket);

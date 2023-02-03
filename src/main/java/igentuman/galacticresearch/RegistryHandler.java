@@ -1,6 +1,7 @@
 package igentuman.galacticresearch;
 
 import igentuman.galacticresearch.common.block.*;
+import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.item.*;
 import igentuman.galacticresearch.common.tile.*;
@@ -37,12 +38,16 @@ public class RegistryHandler {
     @ObjectHolder("galacticresearch:satellite_rocket")
     public static ItemSatelliteRocket SATELLITE_ROCKET = new ItemSatelliteRocket("satellite_rocket");
 
+    @ObjectHolder("galacticresearch:mining_rocket")
+    public static ItemMiningRocket MINING_ROCKET = new ItemMiningRocket("mining_rocket");
+
     @ObjectHolder("galacticresearch:probe")
     public static Item ITEM_PROBE = new Item().setRegistryName("probe").setTranslationKey("probe");
 
     public static void registerEntities() {
         ResourceLocation registryName = new ResourceLocation(GalacticResearch.MODID, "satellite_rocket");
         EntityRegistry.registerModEntity(registryName, EntitySatelliteRocket.class, "satellite_rocket", 14, GalacticResearch.instance, 150, 1, false);
+        EntityRegistry.registerModEntity(registryName, EntityMiningRocket.class, "mining_rocket", 15, GalacticResearch.instance, 150, 1, false);
     }
 
     @SubscribeEvent
@@ -66,6 +71,7 @@ public class RegistryHandler {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(SATELLITE_ROCKET);
+        event.getRegistry().register(MINING_ROCKET);
         event.getRegistry().register(ITEM_PROBE);
         event.getRegistry().register(new ItemBlock(MISSION_CONTROL_STATION).setRegistryName(MISSION_CONTROL_STATION.getRegistryName()));
         event.getRegistry().register(new ItemBlock(TELESCOPE).setRegistryName(TELESCOPE.getRegistryName()));
@@ -78,6 +84,7 @@ public class RegistryHandler {
         registerItemModel(Item.getItemFromBlock(TELESCOPE), 0, "inventory");
         registerItemModel(ITEM_PROBE, 0, "inventory");
         registerItemModel(SATELLITE_ROCKET, 0, "inventory");
+        registerItemModel(MINING_ROCKET, 0, "inventory");
         //ClientRegistry.bindTileEntitySpecialRenderer(TileDrill.class, new DrillTESR());
     }
 

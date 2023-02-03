@@ -43,3 +43,4 @@ gui.overworld.name=Earth
 gui.telescope.researched=Researched:
 gui.telescope.researched.none=None
 item.satellite_rocket.name=Satellite Rocket
+item.mining_rocket.name=Mining Rocket

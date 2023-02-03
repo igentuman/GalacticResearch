@@ -2,10 +2,13 @@ package igentuman.galacticresearch.client;
 
 import com.google.common.collect.ImmutableList;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
+import igentuman.galacticresearch.client.model.ItemModelMiningRocket;
 import igentuman.galacticresearch.client.model.ItemModelSatelliteRocket;
+import igentuman.galacticresearch.client.render.entity.RenderMiningRocket;
 import igentuman.galacticresearch.client.render.entity.RenderSatelliteRocket;
 import igentuman.galacticresearch.client.sound.SoundHandler;
 import igentuman.galacticresearch.common.CommonProxy;
+import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import igentuman.galacticresearch.network.TileProcessUpdatePacket;
@@ -66,6 +69,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         RenderingRegistry.registerEntityRenderingHandler(EntitySatelliteRocket.class, (RenderManager manager) -> new RenderSatelliteRocket(manager));
+        RenderingRegistry.registerEntityRenderingHandler(EntityMiningRocket.class, (RenderManager manager) -> new RenderMiningRocket(manager));
         MinecraftForge.EVENT_BUS.register(this);
         OBJLoader.INSTANCE.addDomain(MODID);
     }
@@ -74,11 +78,13 @@ public class ClientProxy extends CommonProxy {
     @SideOnly(Side.CLIENT)
     public void onModelBakeEvent(ModelBakeEvent event) {
         replaceModelDefault(event, "satellite_rocket", "satellite_rocket.obj", ImmutableList.of("Rocket"), ItemModelSatelliteRocket.class, TRSRTransformation.identity());
+        replaceModelDefault(event, "mining_rocket", "mining_rocket.obj", ImmutableList.of("Rocket"), ItemModelMiningRocket.class, TRSRTransformation.identity());
     }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void loadTextures(TextureStitchEvent.Pre event) {
+        registerTexture(event, "mining_rocket");
         registerTexture(event, "satellite_rocket");
     }
 

@@ -6,12 +6,9 @@ import igentuman.galacticresearch.common.block.BlockTelescope;
 import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.data.DimensionProvider;
-import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import igentuman.galacticresearch.common.entity.IGRAutoRocket;
 import igentuman.galacticresearch.integration.computer.IComputerIntegration;
 import igentuman.galacticresearch.network.GRPacketSimple;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Callback;
-import li.cil.oc.api.machine.Context;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
@@ -37,7 +34,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Level;
 
@@ -241,8 +237,8 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         if(r == null) {
             return false;
         }
-        if(r instanceof EntitySatelliteRocket) {
-            ((EntitySatelliteRocket) r).setMission(currentMission);
+        if(r instanceof IGRAutoRocket) {
+            ((IGRAutoRocket) r).setMission(currentMission);
         }
 
         r.autoLaunchSetting = EntityAutoRocket.EnumAutoLaunch.INSTANT;
