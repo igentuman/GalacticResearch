@@ -7,6 +7,7 @@ import igentuman.galacticresearch.network.GRChannelHandler;
 import igentuman.galacticresearch.network.GuiProxy;
 import igentuman.galacticresearch.network.ModPacketHandler;
 import igentuman.galacticresearch.sky.SkyModel;
+import igentuman.galacticresearch.util.GRHooks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -37,6 +38,7 @@ public class GalacticResearch
     public static MinecraftServer server;
     public static SkyModel skyModel;
     public static GRChannelHandler packetPipeline;
+    public static GRHooks hooks = new GRHooks();
 
     @SidedProxy(serverSide ="igentuman.galacticresearch.common.CommonProxy", clientSide ="igentuman.galacticresearch.client.ClientProxy")
     public static ISidedProxy proxy;
@@ -53,8 +55,7 @@ public class GalacticResearch
         MinecraftForge.EVENT_BUS.register(new RegistryHandler());
         MinecraftForge.EVENT_BUS.register(this);
         ModPacketHandler.registerMessages(MODID);
-
-        //MinecraftForge.EVENT_BUS.register(new DveinsRecipes());
+        hooks.hookPreInit();
     }
 
     @EventHandler
@@ -78,6 +79,7 @@ public class GalacticResearch
 
     @EventHandler
     public void init(FMLInitializationEvent event)  {
+        hooks.hookInit();
         proxy.init(event);
         logger.info("Starting Initialization.");
         ConfigManager.sync(MODID, Config.Type.INSTANCE);
@@ -88,6 +90,7 @@ public class GalacticResearch
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        hooks.hookPostInit();
         proxy.postInit(event);
     }
 

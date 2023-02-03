@@ -59,6 +59,13 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev/"
     }
+    maven {
+        name 'opencomputers'
+        url 'https://maven.cil.li/'
+    }
+    maven {
+        url 'https://maven.zerono.it'
+    }
 }
 minecraft {
     version = "1.12.2-14.23.5.2847"
@@ -74,6 +81,8 @@ dependencies {
     compileOnly "org.jetbrains:annotations:17.0.0"
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
+    deobfCompile "curse.maven:cc-tweaked-282001:2992872"
+    deobfCompile "li.cil.oc:OpenComputers:${oc_version}"
     deobfProvided "mezz.jei:jei_1.12.2:${jei_version}:api"
     implementation "mezz.jei:jei_1.12.2:${jei_version}"
     runtime "mezz.jei:jei_1.12.2:${jei_version}"

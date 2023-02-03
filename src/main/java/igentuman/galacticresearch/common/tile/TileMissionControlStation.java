@@ -3,12 +3,15 @@ package igentuman.galacticresearch.common.tile;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.block.BlockTelescope;
-import igentuman.galacticresearch.common.capability.ISpaceData;
 import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.data.DimensionProvider;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import igentuman.galacticresearch.integration.computer.IComputerIntegration;
 import igentuman.galacticresearch.network.GRPacketSimple;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
@@ -34,13 +37,61 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Level;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class TileMissionControlStation extends TileBaseElectricBlockWithInventory implements ISidedInventory, ILandingPadAttachable {
+public class TileMissionControlStation extends TileBaseElectricBlockWithInventory implements ISidedInventory, ILandingPadAttachable, IComputerIntegration {
+
+    @Override
+    public String[] getMethods() {
+        return new String[] {"getComponentName", "getMissionsInfo","selectMission", "activateMission"};
+    }
+
+    public String getComponentName()
+    {
+        return "mission_control_station";
+    }
+
+    @Override
+    public Object[] invoke(int method, Object[] args) throws NoSuchMethodException {
+        switch (method) {
+            case 0:
+                return new Object[] {getComponentName()};
+            case 1:
+                return getMissionsInfo();
+            case 2:
+                return selectMission(args);
+            case 3:
+                return activateMission(args);
+            default:
+                throw new NoSuchMethodException();
+        }
+    }
+
+    public Object[] getMissionsInfo()
+    {
+        return new Object[] {missionsDataMap};
+    }
+
+    public Object[] selectMission(Object[] args)
+    {
+        String name = (String) args[0];
+        boolean result = false;
+        if(Arrays.asList(getMissions()).contains(name)) {
+            currentMission = name;
+            result = true;
+        }
+        return new Object[] {result};
+    }
+
+    public Object[] activateMission(Object[] args)
+    {
+        return new Object[] {activateMission()};
+    }
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -111,7 +162,6 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
                     }
                 }
             }
-            cap.unlocked_missions = removeLastChar(tmp);
             GalacticResearch.packetPipeline.sendTo(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.SYNC_PLAYER_SPACE_DATA, GCCoreUtil.getDimensionID(player.world), new Object[] { cap.unlocked_missions }), (EntityPlayerMP) player);
 
         } catch (NullPointerException e) {
@@ -182,19 +232,22 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         if(!world.isRemote) serializeMissionData();
     }
 
-    public void activateMission()
+    public boolean activateMission()
     {
+        if(rocketState != 1) return false;
         EntityAutoRocket r = getRocket();
         if(r == null) {
-            return;
+            return false;
         }
         if(r instanceof EntitySatelliteRocket) {
             ((EntitySatelliteRocket) r).setMission(currentMission);
         }
+
         r.autoLaunchSetting = EntityAutoRocket.EnumAutoLaunch.INSTANT;
 
         r.setLaunchPhase(EntitySpaceshipBase.EnumLaunchPhase.IGNITED);
         setMissionInfo(currentMission, 0);
+        return true;
     }
 
     public int getMissonPercent(String name)

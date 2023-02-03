@@ -8,6 +8,7 @@ import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.sky.body.ISkyBody;
 import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.sky.body.Star;
+import igentuman.galacticresearch.util.WorldUtil;
 import micdoodle8.mods.galacticraft.core.client.gui.container.GuiContainerGC;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion;
 import micdoodle8.mods.galacticraft.core.energy.EnergyDisplayHelper;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static igentuman.galacticresearch.common.tile.TileTelescope.viewportSize;
 
 
 public class GuiTelescope extends GuiContainerGC {
@@ -80,8 +83,6 @@ public class GuiTelescope extends GuiContainerGC {
             default:
         }
     }
-
-    public static int viewportSize = 112;
 
     public boolean isVisible(ISkyBody body)
     {
@@ -147,8 +148,11 @@ public class GuiTelescope extends GuiContainerGC {
 
             mc.getTextureManager().bindTexture(res.getTexture());
             GlStateManager.disableDepth();
-
-            this.drawTexturedModalRect(x, y, 0, res.yTexOffset(), Math.min(viewportBondX, res.getSize()), Math.min(viewportBondY, res.getSize()));
+            int yOffset = res.yTexOffset();
+            if(res.getBody().getName().equals("moon")) {
+                yOffset = WorldUtil.getMoonPhase() * 32;
+            }
+            this.drawTexturedModalRect(x, y, 0, yOffset, Math.min(viewportBondX, res.getSize()), Math.min(viewportBondY, res.getSize()));
             GlStateManager.enableDepth();
         }
     }

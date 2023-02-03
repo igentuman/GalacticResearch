@@ -6,11 +6,12 @@ import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.sky.body.Star;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SkyModel {
-    public static int width = 1500;
-    public static int height = 1500;
+    public static int width = 1200;
+    public static int height = 1200;
     private static int starsDensity = 5000;
     public long seed;
     private Star[] stars;
@@ -23,7 +24,6 @@ public class SkyModel {
 
     private SkyModel()
     {
-
     }
 
     public void setSeed(long seed)
@@ -42,7 +42,6 @@ public class SkyModel {
     public void initBodies()
     {
         bodies = ModConfig.researchSystem.getListOfResearchable();
-
         //TODO add an event
         for (SkyItem body: bodies) {
             body.init();
@@ -60,29 +59,26 @@ public class SkyModel {
         return researchables;
     }
 
-    public SkyItem getCurrentBody(int dim)
+    public SkyItem getBodyByDIM(int dim)
     {
-        if(dim == curDim && currentBody != null) {
-            return currentBody;
-        }
-        curDim = dim;
         for(SkyItem b: getBodies()) {
-            for(int d: b.getDimensions()) {
-                if(d == dim) {
-                    currentBody = b;
-                }
+            if(Arrays.stream(b.getDimensions()).anyMatch(v -> v == dim)) {
+                return b;
             }
         }
-        return currentBody;
+        return null;
     }
 
     public List<Researchable> getObjectsToResearch(int dim)
     {
         List<Researchable> res = new ArrayList<>();
         for(Researchable r: getResearchables()) {
-            if(getCurrentBody(dim).getParent().equals(r.getBody().parent) ||
-                    getCurrentBody(dim).getName().equals(r.getBody().parent)
+            SkyItem b = getBodyByDIM(dim);
+            if(b == null) return res;
+            if(b.getParent().equals(r.getBody().parent) ||
+                    b.getName().equals(r.getBody().parent)
             ) {
+                if(b.getName().equals(r.getBody().getName())) continue;
                 res.add(r);
             }
         }

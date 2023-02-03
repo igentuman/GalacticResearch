@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -87,6 +88,16 @@ public class BlockMissionControlStation extends BlockHorizontal {
     }
 
     @Override
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        this.onBlockHarvested(world, pos, state, player);
+        if(player.isCreative()) {
+            world.setBlockToAir(pos);
+            return true;
+        }
+        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+    }
+
+    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity te = worldIn.getTileEntity(pos);
 
@@ -128,6 +139,7 @@ public class BlockMissionControlStation extends BlockHorizontal {
                 }
                 item.setTagCompound(compound);
                 this.spawnAsEntity(worldIn, pos, item);
+                worldIn.removeTileEntity(pos);
             }
         }
     }

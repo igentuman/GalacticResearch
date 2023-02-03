@@ -21,4 +21,9 @@ public class WorldUtil {
     {
         return GalacticResearch.server.getEntityWorld().getTotalWorldTime();
     }
+
+    public static int getMoonPhase()
+    {
+        return GalacticResearch.server.getEntityWorld().getMoonPhase();
+    }
 }

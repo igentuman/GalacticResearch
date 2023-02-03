@@ -71,7 +71,6 @@ public class Researchable implements ISkyBody {
             Random r = new Random(SkyModel.get().seed+nameToSeed()+body.getRarity());
             speed = r.nextInt(20);
         }
-
         return Math.max(5, speed);
     }
 

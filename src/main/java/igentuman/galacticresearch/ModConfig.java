@@ -25,7 +25,7 @@ public class ModConfig {
                 "mercury, 1, 100, 16, -13, sun",
                 "venus, 2, 70, 20, -31, sun",
                 "overworld, 3, 50, 16, 0, sun",
-                "moon, 1, 10, 28, -28, earth",
+                "moon, 1, 10, 32, -28, overworld",
                 "mars, 4, 30, 20, -29, sun",
                 "asteroids, 5, 30, 16, -30, sun",
                 "jupiter, 6, 30, 32, -15;-1501, sun",

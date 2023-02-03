@@ -13,6 +13,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,6 +45,30 @@ public class BlockTelescope extends BlockHorizontal {
         this.setTranslationKey("telescope");
         this.setRegistryName(GalacticResearch.MODID, "telescope");
         this.setCreativeTab(CreativeTabs.DECORATIONS);
+        this.setTickRandomly(false);
+    }
+
+    public void updateCmp(World worldIn, BlockPos pos, IBlockState state) {
+        worldIn.updateComparatorOutputLevel(pos, this);
+    }
+
+    public int tickRate(World worldIn) {
+        return 1;
+    }
+
+    @Override
+    public boolean hasComparatorInputOverride(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
+        return getResearchProgressForComparator(worldIn, pos);
+    }
+
+    public int getResearchProgressForComparator(World worldIn, BlockPos pos) {
+        TileTelescope te = (TileTelescope) worldIn.getTileEntity(pos);
+        return (int) Math.ceil((double) te.getObservationProgress() / 7);
     }
 
     @Override
@@ -130,6 +156,7 @@ public class BlockTelescope extends BlockHorizontal {
                 }
                 item.setTagCompound(compound);
                 this.spawnAsEntity(worldIn, pos, item);
+                worldIn.removeTileEntity(pos);
             }
         }
     }

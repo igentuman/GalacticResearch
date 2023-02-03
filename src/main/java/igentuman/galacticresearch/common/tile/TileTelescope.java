@@ -1,16 +1,16 @@
 package igentuman.galacticresearch.common.tile;
 
 import igentuman.galacticresearch.ModConfig;
-import igentuman.galacticresearch.client.gui.GuiTelescope;
 import igentuman.galacticresearch.common.block.BlockTelescope;
+import igentuman.galacticresearch.integration.computer.IComputerIntegration;
 import igentuman.galacticresearch.sky.SkyModel;
-import igentuman.galacticresearch.sky.body.ISkyBody;
 import igentuman.galacticresearch.sky.body.Researchable;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
 import micdoodle8.mods.miccore.Annotations;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,19 +19,65 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-public class TileTelescope extends TileBaseElectricBlockWithInventory implements ISidedInventory {
+public class TileTelescope extends TileBaseElectricBlockWithInventory implements ISidedInventory, IComputerIntegration {
+
+    public static int viewportSize = 112;
+    
+    @Override
+    public String[] getMethods() {
+        return new String[]{"getComponentName", "getObservationStatus", "getResearchedBodies", "rotateTelescope"};
+    }
+
+    @Override
+    public Object[] invoke(int method, Object[] args) throws NoSuchMethodException {
+        switch (method) {
+            case 0:
+                return new Object[] {getComponentName()};
+            case 1:
+                return getObservationStatus();
+            case 2:
+                return new Object[] {getResearchedBodies().split(",")};
+            case 3:
+                return rotateTelescope(args);
+            default:
+                throw new NoSuchMethodException();
+        }
+    }
+
+    public String getComponentName()
+    {
+        return "telescope";
+    }
+
+    public Object[] getObservationStatus()
+    {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("object", curObserveBody);
+        data.put("relative_x", curBodyRelativeX);
+        data.put("relative_y", curBodyRelativeY);
+        data.put("progress", getObservationProgress());
+        return new Object[] {data};
+    }
+
+    public Object[] rotateTelescope(Object[] args)
+    {
+        deltaX = ((Double) args[0]).intValue();
+        deltaY = ((Double) args[1]).intValue();
+        return new Object[] {true};
+    }
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public int xAngle = GuiTelescope.viewportSize/2;
+    public int xAngle = viewportSize/2;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public int yAngle = GuiTelescope.viewportSize/2;
+    public int yAngle = viewportSize/2;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -52,6 +98,16 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
             targetSide = Side.CLIENT
     )
     public String curObserveBody = "";
+
+    @Annotations.NetworkedField(
+            targetSide = Side.CLIENT
+    )
+    public int curBodyRelativeY = 0;
+
+    @Annotations.NetworkedField(
+            targetSide = Side.CLIENT
+    )
+    public int curBodyRelativeX = 0;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -119,7 +175,7 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                 xAngle -= movementAmplifier;
                 deltaX+= movementAmplifier;
             }
-            xAngle = (int) Math.min(SkyModel.width - GuiTelescope.viewportSize*1.5, Math.max(GuiTelescope.viewportSize/2, xAngle));
+            xAngle = (int) Math.min(SkyModel.width - viewportSize*1.5, Math.max(viewportSize/2, xAngle));
         }
         if (deltaY != 0) {
             if (deltaY > 0) {
@@ -129,7 +185,7 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                 yAngle -= movementAmplifier;
                 deltaY+= movementAmplifier;
             }
-            yAngle = (int) Math.min(SkyModel.height - GuiTelescope.viewportSize*1.5, Math.max(GuiTelescope.viewportSize/2, yAngle));
+            yAngle = (int) Math.min(SkyModel.height - viewportSize*1.5, Math.max(viewportSize/2, yAngle));
         }
 
         if(deltaX == 0 & deltaY == 0) {
@@ -162,8 +218,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
             int y = b.getY();
             int padding = 25;
             if(
-                    x > xAngle + padding && x < (xAngle + GuiTelescope.viewportSize-padding-b.getSize()) &&
-                    y > yAngle + padding && y < (yAngle + GuiTelescope.viewportSize-padding-b.getSize())
+                    x > xAngle + padding && x < (xAngle + viewportSize-padding-b.getSize()) &&
+                    y > yAngle + padding && y < (yAngle + viewportSize-padding-b.getSize())
                ) {
                 if(!isBodyResearched(b.getBody().getName())) {
                     if(!curObserveBody.equals(b.getBody().getName())) {
@@ -171,11 +227,16 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                         curObserveBody = b.getBody().getName();
                         looseCounter = 100;
                     }
+                    curBodyRelativeY = y-(yAngle+viewportSize/2-b.getSize()/2);
+                    curBodyRelativeX = x-(xAngle+viewportSize/2-b.getSize()/2);
+
                     observationTime++;
                     if(observationTime/20 >= ModConfig.researchSystem.required_observation_time) {
                         researchedBodies += ","+curObserveBody;
                         observationTime = 0;
                         curObserveBody = "";
+                        curBodyRelativeY = 0;
+                        curBodyRelativeX = 0;
                         markDirty();
                     }
                     return;
@@ -185,6 +246,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
         if(looseCounterEnd()) {
             observationTime = 0;
             curObserveBody = "";
+            curBodyRelativeY = 0;
+            curBodyRelativeX = 0;
         }
     }
 
@@ -205,6 +268,9 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
             }
             doMovement();
             observe();
+            IBlockState st = world.getBlockState(getPos());
+            BlockTelescope be = (BlockTelescope) st.getBlock();
+            be.updateCmp(world, pos, st);
         }
 
     }
