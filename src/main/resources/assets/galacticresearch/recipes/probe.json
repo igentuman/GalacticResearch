@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PDP",
+    "SWS",
+    "PBP"
+  ],
+  "key": {
+    "P": {
+      "item": "galacticraftcore:heavy_plating"
+    },
+    "B": {
+      "item": "galacticraftcore:battery"
+    },
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "waferAdvanced"
+    },
+    "S": {
+      "item": "galacticraftcore:basic_item",
+      "data": 1
+    },
+    "D": {
+      "item": "galacticraftcore:dishbase"
+    }
+  },
+  "result": {
+    "item": "galacticresearch:probe"
+  }
+}

@@ -34,7 +34,7 @@ public class CommonProxy implements ISidedProxy {
     {
         HashMap<Integer, ItemStack> input = new HashMap<>();
         input.put(1, new ItemStack(GCItems.partNoseCone));
-        input.put(2, new ItemStack(GCBlocks.radioTelescope, 1, 0));
+        input.put(2, new ItemStack(RegistryHandler.ITEM_PROBE, 1, 0));
         input.put(3, new ItemStack(GCItems.heavyPlatingTier1, 1, 0));
         input.put(4, new ItemStack(GCItems.heavyPlatingTier1, 1, 0));
         input.put(5, new ItemStack(GCItems.heavyPlatingTier1, 1, 0));

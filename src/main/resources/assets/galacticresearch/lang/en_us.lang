@@ -1,12 +1,15 @@
 tile.telescope.name=Telescope
 tile.mission_control_station.name=Mission Control Station
 gui.telescope=Telescope
+container.mission_control_station.name=Mission Control Station
+container.telescope.name=Telescope
 gui.mission_control_station=Mission Control Station
 gui.mission_control_station.mission=Current Mission:
 gui.mission_control_station.mission_status=Status: %s
 message.research.reset=Resetting player researches
 message.research.added=Added new research
 description.telescope=Research planets
+item.probe.name=Probe
 gui.mission.pending=Idle
 gui.mission.complete=Complete
 gui.mission.progress=In Progress - %s

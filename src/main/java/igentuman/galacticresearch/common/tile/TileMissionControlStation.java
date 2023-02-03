@@ -48,7 +48,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     @Override
     public String[] getMethods() {
-        return new String[] {"getComponentName", "getMissionsInfo","selectMission", "activateMission"};
+        return new String[] {"getComponentName", "getMissionsInfo","selectMission", "activateMission", "missionDuration"};
     }
 
     public String getComponentName()
@@ -67,6 +67,8 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
                 return selectMission(args);
             case 3:
                 return activateMission(args);
+            case 4:
+                return new Object[]{ModConfig.machines.satellite_mission_duration*20};
             default:
                 throw new NoSuchMethodException();
         }

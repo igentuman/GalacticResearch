@@ -57,23 +57,17 @@ public class SatelliteRocketRecipeCategory implements IRecipeCategory
     {
         IGuiItemStackGroup itemstacks = recipeLayout.getItemStacks();
 
-        itemstacks.init(0, true, 44, 13);
-        itemstacks.init(1, true, 44, 31);
-        itemstacks.init(2, true, 35, 49);
-        itemstacks.init(3, true, 35, 67);
-        itemstacks.init(4, true, 35, 85);
-        itemstacks.init(5, true, 53, 49);
-        itemstacks.init(6, true, 53, 67);
-        itemstacks.init(7, true, 53, 85);
-        itemstacks.init(8, true, 17, 85);
-        itemstacks.init(9, true, 71, 85);
-        itemstacks.init(10, true, 44, 103);
-        itemstacks.init(11, true, 17, 103);
-        itemstacks.init(12, true, 71, 103);
-        itemstacks.init(13, true, 89, 7);
-        itemstacks.init(14, true, 115, 7);
-        itemstacks.init(15, true, 141, 7);
-        itemstacks.init(16, false, 138, 91);
+        itemstacks.init(0, true, 44, 31);
+        itemstacks.init(1, true, 44, 49);
+        itemstacks.init(2, true, 35, 67);
+        itemstacks.init(3, true, 35, 85);
+        itemstacks.init(4, true, 53, 85);
+
+        itemstacks.init(5, true, 53, 67);
+        itemstacks.init(6, true, 62, 103);
+        itemstacks.init(7, true, 44, 103);
+        itemstacks.init(8, true, 26, 103);
+        itemstacks.init(9, false, 138, 91);
 
         itemstacks.set(ingredients);
     }

@@ -37,8 +37,8 @@ public class RegistryHandler {
     @ObjectHolder("galacticresearch:satellite_rocket")
     public static ItemSatelliteRocket SATELLITE_ROCKET = new ItemSatelliteRocket("satellite_rocket");
 
-    @ObjectHolder("galacticresearch:data_card")
-    public static ItemDataCard DATA_CARD = new ItemDataCard();
+    @ObjectHolder("galacticresearch:probe")
+    public static Item ITEM_PROBE = new Item().setRegistryName("probe").setTranslationKey("probe");
 
     public static void registerEntities() {
         ResourceLocation registryName = new ResourceLocation(GalacticResearch.MODID, "satellite_rocket");
@@ -66,7 +66,7 @@ public class RegistryHandler {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(SATELLITE_ROCKET);
-        event.getRegistry().register(DATA_CARD);
+        event.getRegistry().register(ITEM_PROBE);
         event.getRegistry().register(new ItemBlock(MISSION_CONTROL_STATION).setRegistryName(MISSION_CONTROL_STATION.getRegistryName()));
         event.getRegistry().register(new ItemBlock(TELESCOPE).setRegistryName(TELESCOPE.getRegistryName()));
     }
@@ -76,7 +76,7 @@ public class RegistryHandler {
     public void registerModels(ModelRegistryEvent event) {
         registerItemModel(Item.getItemFromBlock(MISSION_CONTROL_STATION), 0, "inventory");
         registerItemModel(Item.getItemFromBlock(TELESCOPE), 0, "inventory");
-        registerItemModel(DATA_CARD, 0, "inventory");
+        registerItemModel(ITEM_PROBE, 0, "inventory");
         registerItemModel(SATELLITE_ROCKET, 0, "inventory");
         //ClientRegistry.bindTileEntitySpecialRenderer(TileDrill.class, new DrillTESR());
     }
