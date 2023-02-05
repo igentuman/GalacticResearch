@@ -1,6 +1,7 @@
 package igentuman.galacticresearch;
 
 import igentuman.galacticresearch.command.CommandHandler;
+import igentuman.galacticresearch.common.data.SpaceMineProvider;
 import igentuman.galacticresearch.handler.GREventHandler;
 import igentuman.galacticresearch.handler.GRPlayerHandler;
 import igentuman.galacticresearch.network.GRChannelHandler;
@@ -37,6 +38,7 @@ public class GalacticResearch
     public static GalacticResearch instance;
     public static MinecraftServer server;
     public static SkyModel skyModel;
+    public static SpaceMineProvider spaceMineProvider;
     public static GRChannelHandler packetPipeline;
     public static GRHooks hooks = new GRHooks();
 
@@ -62,12 +64,14 @@ public class GalacticResearch
     public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
         server = ev.getServer();
         skyModel = SkyModel.get();
+        spaceMineProvider = SpaceMineProvider.get();
     }
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent ev) {
         server = ev.getServer();
         skyModel = SkyModel.get();
+        spaceMineProvider = SpaceMineProvider.get();
         skyModel.setSeed(server.getEntityWorld().getSeed());
     }
 

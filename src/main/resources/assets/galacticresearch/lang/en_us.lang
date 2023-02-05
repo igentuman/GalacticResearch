@@ -1,33 +1,41 @@
 tile.telescope.name=Telescope
 tile.mission_control_station.name=Mission Control Station
-gui.telescope=Telescope
+
 container.mission_control_station.name=Mission Control Station
 container.telescope.name=Telescope
+
+message.research.reset=Resetting player researches
+message.research.added=Added new research
+message.mining_asteroid.generated=Generated: %s
+message.analyzed.planet=You just unlocked: %s
+message.new_asteroid=New asteroid detected on sky
+message.mining_asteroid.cleared=All asteroids were removed
+
+description.telescope=Research planets
+description.mission_control_station=Controls Rocket Trajectory
+
+gui.mission_control_station.wrong_rocket=Wrong Rocket
 gui.mission_control_station=Mission Control Station
 gui.mission_control_station.mission=Current Mission:
 gui.mission_control_station.mission_status=Status: %s
-message.research.reset=Resetting player researches
-message.research.added=Added new research
-description.telescope=Research planets
-item.probe.name=Probe
 gui.mission.pending=Idle
 gui.mission.complete=Complete
 gui.mission.progress=In Progress - %s
 gui.mission_control_station.activate=Activate Mission
 gui.mission_control_station.no_rocket=No Rocket on Pad
 gui.mission_control_station.rocket_not_ready=Rocket Is Not Yet Ready
-message.analyzed.planet=You just unlocked: %s
+gui.telescope=Telescope
 gui.mission_control_station.rocket_ready=Rocket Is Ready
-gui.celestial_selection.advise=To unlock celestial bodies, you need to send Satellite Rockets first
+gui.celestial_selection.advise=Research Space in order to unlock planets
 gui.mission_control_station.analyze=Analyze Completed Missions
-description.mission_control_station=Controls Rocket Trajectory
 gui.help.desc.0=Use control buttons to search planets on sky
 gui.help.desc.1=Keep planet in focus area to collect data
 gui.help.mcs.desc.0=Select mission and send satellite rocket
 gui.help.mcs.desc.1=Wait until satellite returns data from the mission
 gui.telescope.status=Status: %s
-gui.telescope.status.idle=Not Explored
-gui.telescope.status.researching=Researching %s
+gui.telescope.status.idle=Idle
+gui.telescope.status.researching=Observing %s
+gui.message.mission_empty=Select mission in Mission Control Station
 gui.moon.name=Moon
 gui.none.name=None
 gui.mars.name=Mars
@@ -42,5 +50,10 @@ gui.mercury.name=Mercury
 gui.overworld.name=Earth
 gui.telescope.researched=Researched:
 gui.telescope.researched.none=None
+
 item.satellite_rocket.name=Satellite Rocket
 item.mining_rocket.name=Mining Rocket
+item.probe.name=Probe
+item.mining_rocket_schematic.name=Mining Rocket Schematic
+
+schematic.mining_rocket.dungeon_level=Can be found on Mars

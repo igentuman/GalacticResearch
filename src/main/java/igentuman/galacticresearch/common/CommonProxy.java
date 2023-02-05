@@ -2,11 +2,13 @@ package igentuman.galacticresearch.common;
 
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ISidedProxy;
+import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.RegistryHandler;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.schematic.SchematicMiningRocket;
 import igentuman.galacticresearch.common.schematic.SchematicSatelliteRocket;
 import igentuman.galacticresearch.network.TileProcessUpdatePacket;
+import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
@@ -89,6 +91,7 @@ public class CommonProxy implements ISidedProxy {
         SchematicRegistry.registerSchematicRecipe(new SchematicSatelliteRocket());
         SchematicRegistry.registerSchematicRecipe(new SchematicMiningRocket());
         RegistryHandler.registerEntities();
+        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(RegistryHandler.MINING_ROCKET_SCHEMATIC, 1, 0));
     }
 
     @Override

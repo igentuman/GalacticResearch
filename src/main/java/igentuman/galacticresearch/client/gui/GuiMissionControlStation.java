@@ -147,8 +147,17 @@ public class GuiMissionControlStation extends GuiContainerGC {
         String status = tile.getMissionStatusKey(tile.currentMission);
         int info =  tile.getMissionInfo(tile.currentMission);
         this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission"), 22, 25, 4210752);
-        this.fontRenderer.drawString(I18n.format("gui."+curMission+".name"), 22, 39, 4210752);
+        String planet = I18n.format("gui."+curMission+".name");
+        if(curMission.contains("ASTEROID-")) {
+            planet = curMission;
+        }
+        this.fontRenderer.drawString(I18n.format(planet), 22, 39, 4210752);
         String st = I18n.format(status, tile.getMissonPercent(tile.currentMission));
+
+        if(tile.currentMission.isEmpty()) {
+            st = "";
+            info = -1;
+        }
         if(info < ModConfig.machines.satellite_mission_duration*20 && info > -1) {
             st +="%";
         }
@@ -158,7 +167,9 @@ public class GuiMissionControlStation extends GuiContainerGC {
             this.fontRenderer.drawString(I18n.format("gui.mission_control_station.no_rocket"), 7, 130, 4210752);
         } else if(tile.rocketState == 0) {
             this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_not_ready"), 7, 130, 4210752);
-        } else {
+        } else if (tile.rocketState == -2) {
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.wrong_rocket"), 7, 130, 4210752);
+        } else{
             this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_ready"), 7, 130, 4210752);
         }
         tickButtons();

@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.sky;
 
 import igentuman.galacticresearch.ModConfig;
+import igentuman.galacticresearch.sky.body.Asteroid;
 import igentuman.galacticresearch.sky.body.ISkyBody;
 import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.sky.body.Star;
@@ -15,6 +16,7 @@ public class SkyModel {
     private static int starsDensity = 5000;
     public long seed;
     private Star[] stars;
+    private List<Asteroid> asteroids = new ArrayList<>();
     private SkyItem currentBody;
     private int curDim;
     List<SkyItem> bodies;
@@ -24,6 +26,23 @@ public class SkyModel {
 
     private SkyModel()
     {
+    }
+
+    public void addAsteroid(String name)
+    {
+        asteroids.add(new Asteroid(name));
+    }
+
+    public void removeAsteroid(String name)
+    {
+        int i = 0;
+        for(Asteroid a: asteroids) {
+            if(a.getBody().getName().equals(name)) {
+                asteroids.remove(i);
+                return;
+            }
+            i++;
+        }
     }
 
     public void setSeed(long seed)
@@ -82,6 +101,7 @@ public class SkyModel {
                 res.add(r);
             }
         }
+        res.addAll(asteroids);
         return res;
     }
 

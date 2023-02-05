@@ -1,5 +1,6 @@
 package igentuman.galacticresearch.common.tile;
 
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.block.BlockTelescope;
 import igentuman.galacticresearch.integration.computer.IComputerIntegration;
@@ -267,12 +268,37 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                 return;
             }
             doMovement();
-            observe();
+            if(!GalacticResearch.server.getEntityWorld().isRaining() &&
+                GalacticResearch.server.getEntityWorld().getBiome(getPos()).canRain()) {
+                observe();
+            }
             IBlockState st = world.getBlockState(getPos());
             BlockTelescope be = (BlockTelescope) st.getBlock();
             be.updateCmp(world, pos, st);
+            clearAsteroids();
         }
+    }
 
+    public void deleteResearch(String name)
+    {
+        StringBuilder tmp = new StringBuilder();
+        for (String r: getResearchedBodiesArray()) {
+            if(!r.equals(name)) {
+                tmp.append(r).append(",");
+            }
+        }
+        researchedBodies = tmp.toString();
+        markDirty();
+    }
+
+    public void clearAsteroids()
+    {
+        for (String m: getResearchedBodiesArray()) {
+            if(!m.contains("ASTEROID-")) continue;
+            if(!GalacticResearch.spaceMineProvider.getMissions().containsKey(m)) {
+                deleteResearch(m);
+            }
+        }
     }
 
     public String[] getResearchedBodiesArray()

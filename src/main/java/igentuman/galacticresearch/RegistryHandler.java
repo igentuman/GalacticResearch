@@ -44,10 +44,29 @@ public class RegistryHandler {
     @ObjectHolder("galacticresearch:probe")
     public static Item ITEM_PROBE = new Item().setRegistryName("probe").setTranslationKey("probe");
 
+    @ObjectHolder("galacticresearch:mining_rocket_schematic")
+    public static ItemMiningRocketSchematic MINING_ROCKET_SCHEMATIC = new ItemMiningRocketSchematic("mining_rocket_schematic");
+
     public static void registerEntities() {
-        ResourceLocation registryName = new ResourceLocation(GalacticResearch.MODID, "satellite_rocket");
-        EntityRegistry.registerModEntity(registryName, EntitySatelliteRocket.class, "satellite_rocket", 14, GalacticResearch.instance, 150, 1, false);
-        EntityRegistry.registerModEntity(registryName, EntityMiningRocket.class, "mining_rocket", 15, GalacticResearch.instance, 150, 1, false);
+        EntityRegistry.registerModEntity(
+                new ResourceLocation(GalacticResearch.MODID, "satellite_rocket"),
+                EntitySatelliteRocket.class,
+                "satellite_rocket",
+                14, GalacticResearch.instance,
+                150,
+                1,
+                false
+        );
+        EntityRegistry.registerModEntity(
+                new ResourceLocation(GalacticResearch.MODID, "mining_rocket"),
+                EntityMiningRocket.class,
+                "mining_rocket",
+                15,
+                GalacticResearch.instance,
+                150,
+                1,
+                false
+        );
     }
 
     @SubscribeEvent
@@ -73,6 +92,7 @@ public class RegistryHandler {
         event.getRegistry().register(SATELLITE_ROCKET);
         event.getRegistry().register(MINING_ROCKET);
         event.getRegistry().register(ITEM_PROBE);
+        event.getRegistry().register(MINING_ROCKET_SCHEMATIC);
         event.getRegistry().register(new ItemBlock(MISSION_CONTROL_STATION).setRegistryName(MISSION_CONTROL_STATION.getRegistryName()));
         event.getRegistry().register(new ItemBlock(TELESCOPE).setRegistryName(TELESCOPE.getRegistryName()));
     }
@@ -83,9 +103,9 @@ public class RegistryHandler {
         registerItemModel(Item.getItemFromBlock(MISSION_CONTROL_STATION), 0, "inventory");
         registerItemModel(Item.getItemFromBlock(TELESCOPE), 0, "inventory");
         registerItemModel(ITEM_PROBE, 0, "inventory");
+        registerItemModel(MINING_ROCKET_SCHEMATIC, 0, "inventory");
         registerItemModel(SATELLITE_ROCKET, 0, "inventory");
         registerItemModel(MINING_ROCKET, 0, "inventory");
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileDrill.class, new DrillTESR());
     }
 
     @SideOnly(Side.CLIENT)

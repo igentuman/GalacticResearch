@@ -29,7 +29,6 @@ public class TileEntityLandingPadReflector {
             }
             if(tile instanceof TileMissionControlStation) {
                 ((TileMissionControlStation) tile).setAttachedPad(instance);
-
             }
         }
     }

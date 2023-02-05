@@ -6,9 +6,12 @@ import igentuman.galacticresearch.common.block.BlockTelescope;
 import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.data.DimensionProvider;
+import igentuman.galacticresearch.common.entity.EntityMiningRocket;
+import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.entity.IGRAutoRocket;
 import igentuman.galacticresearch.integration.computer.IComputerIntegration;
 import igentuman.galacticresearch.network.GRPacketSimple;
+import igentuman.galacticresearch.util.Util;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
@@ -36,9 +39,11 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class TileMissionControlStation extends TileBaseElectricBlockWithInventory implements ISidedInventory, ILandingPadAttachable, IComputerIntegration {
 
@@ -62,7 +67,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             case 2:
                 return selectMission(args);
             case 3:
-                return activateMission(args);
+                return new Object[] {activateMission()};
             case 4:
                 return new Object[]{ModConfig.machines.satellite_mission_duration*20};
             default:
@@ -84,11 +89,6 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             result = true;
         }
         return new Object[] {result};
-    }
-
-    public Object[] activateMission(Object[] args)
-    {
-        return new Object[] {activateMission()};
     }
 
     @Annotations.NetworkedField(
@@ -131,27 +131,19 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         dimensionProvider = new DimensionProvider(this);
     }
 
-    public static String removeLastChar(String s) {
-        return (s == null || s.length() == 0)
-                ? ""
-                : (s.substring(0, s.length() - 1));
-    }
+
 
     public void playerAnalyzeData(EntityPlayer player)
     {
         try {
             EntityPlayerMP playerBaseClient = PlayerUtil.getPlayerBaseServerFromPlayerUsername(player.getName(), true);
-
             PlayerSpaceData cap = playerBaseClient.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
-
             if (cap == null) {
                 GalacticResearch.instance.logger.log(Level.WARN, "Analyze missions capability error");
                 return;
             }
-            String tmp = "";
             for (String mission : getMissions()) {
                 if (isMissionComplete(mission)) {
-                    tmp += mission + ",";
                     if (!cap.getUnlockedMissions().contains(mission)) {
                         cap.addMission(mission);
                         player.addExperience(10);
@@ -185,13 +177,13 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing side)
+    public boolean canExtractItem(int slotID, @NotNull ItemStack itemstack, EnumFacing side)
     {
         return slotID == 0;
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean isItemValidForSlot(int slotID, @NotNull ItemStack itemstack)
     {
         return slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem());
     }
@@ -212,37 +204,60 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             }
             fetchMissions();
             updateRocketState();
+            removeAsteroidMissions();
             updateMissionsStateCounter();
         } else {
             unserializeMissionData();
         }
     }
 
+    public void removeAsteroidMissions()
+    {
+        for(String m: getMissions()) {
+            if(!m.contains("ASTEROID-")) continue;
+            if(!GalacticResearch.spaceMineProvider.getMissions().containsKey(m)) {
+                missionsDataMap.remove(m);
+                if(currentMission.equals(m)) currentMission = "";
+            }
+        }
+    }
+
     public void updateMissionsStateCounter()
     {
+        int duration = ModConfig.machines.satellite_mission_duration * 20;
+        if(missionsDataMap.isEmpty()) return;
         for(String s: missionsDataMap.keySet()) {
+
             int v = missionsDataMap.get(s);
-            if(v > 0 && v < ModConfig.machines.satellite_mission_duration*20) {
+            if(s.contains("ASTEROID-")) {
+                double left = GalacticResearch.spaceMineProvider.getMissions().get(s);
+                double initial = GalacticResearch.spaceMineProvider.getOreCnt(s);
+                double p = left/initial;
+                if(left <= 0) {
+                    v = duration;
+                } else {
+                    v = (int) (duration-duration*p)-1;
+                }
+                missionsDataMap.replace(s, v);
+            } else if (v > 0 && v < duration) {
                 v++;
                 missionsDataMap.replace(s, v);
             }
         }
-        if(!world.isRemote) serializeMissionData();
+        serializeMissionData();
     }
 
     public boolean activateMission()
     {
         if(rocketState != 1) return false;
-        EntityAutoRocket r = getRocket();
+        IGRAutoRocket r = getRocket();
         if(r == null) {
             return false;
         }
         if(r instanceof IGRAutoRocket) {
             ((IGRAutoRocket) r).setMission(currentMission);
         }
-
-        r.autoLaunchSetting = EntityAutoRocket.EnumAutoLaunch.INSTANT;
-
+        r.setAutolaunchSetting(EntityAutoRocket.EnumAutoLaunch.INSTANT);
         r.setLaunchPhase(EntitySpaceshipBase.EnumLaunchPhase.IGNITED);
         setMissionInfo(currentMission, 0);
         return true;
@@ -256,8 +271,9 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public void updateRocketState()
     {
-        EntityAutoRocket r = getRocket();
-        if(r == null) {
+        EntityAutoRocket r = (EntityAutoRocket) getRocket();
+
+        if(r == null || !(r instanceof IGRAutoRocket)) {
             rocketState = -1;
             return;
         }
@@ -265,6 +281,13 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             rocketState = 1;
         } else {
             rocketState = 0;
+        }
+        if(currentMission.contains("ASTEROID-") && !(r instanceof EntityMiningRocket)) {
+            rocketState = -2;
+        }
+
+        if(!currentMission.contains("ASTEROID-") && !(r instanceof EntitySatelliteRocket)) {
+            rocketState = -2;
         }
     }
 
@@ -335,7 +358,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         return !this.getDisabled(0);
     }
 
-    public int[] getSlotsForFace(EnumFacing side) {
+    public int[] getSlotsForFace(@NotNull EnumFacing side) {
         return side != this.getElectricInputDirection() ? new int[]{0} : new int[0];
     }
 
@@ -345,11 +368,8 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public void serializeMissionData()
     {
-        String tmp = "";
-        for(String m: missionsDataMap.keySet()) {
-            tmp += m+":"+missionsDataMap.get(m)+";";
-        }
-        missionsData = tmp;
+        missionsData = Util.serializeMap(missionsDataMap);
+        markDirty();
     }
 
     public void setMissionInfo(String name, int v)
@@ -384,13 +404,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public void unserializeMissionData()
     {
-        missionsDataMap.clear();
-        String[] missions = missionsData.split(";");
-        for(String m: missions) {
-            String[] p = m.split(":");
-            if(p.length < 2) continue;
-            missionsDataMap.put(p[0], Integer.valueOf(p[1]));
-        }
+        missionsDataMap = Util.unserializeMap(missionsData);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -432,15 +446,15 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         this.attachedDock = pad;
     }
 
-    public EntityAutoRocket getRocket()
+    public IGRAutoRocket getRocket()
     {
         if (attachedDock instanceof TileEntityLandingPad)
         {
             TileEntityLandingPad pad = ((TileEntityLandingPad) attachedDock);
             IDockable rocket = pad.getDockedEntity();
-            if (rocket instanceof EntityAutoRocket)
+            if (rocket instanceof IGRAutoRocket)
             {
-                return (EntityAutoRocket) rocket;
+                return (IGRAutoRocket) rocket;
             }
         }
         return null;

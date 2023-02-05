@@ -71,7 +71,7 @@ public class ModConfig {
 
         public List<SkyItem> getListOfResearchable()
         {
-            List<SkyItem> list = new ArrayList<SkyItem>();
+            List<SkyItem> list = new ArrayList<>();
             for (String bodyLine: researchable_bodies) {
                 try {
                     list.add(parseBodyLine(bodyLine));
@@ -91,16 +91,16 @@ public class ModConfig {
         @Config.Comment({
                 "How long it takes to unlock planets (seconds)"
         })
-        public int satellite_mission_duration = 20;
+        public int satellite_mission_duration = 240;
 
         @Config.Name("mining_rocket_schematic_id")
         public int mining_rocket_schematic_id = 9262;
 
-        @Config.Name("mining_mission_duration")
+        @Config.Name("mining_speed")
         @Config.Comment({
-                "How long it takes to mine resources in space (seconds)"
+                "Ticks to mine one block on asteroid"
         })
-        public int mining_mission_duration = 20;
+        public int mining_speed = 10;
 
         @Config.Name("mining_mission_minimal_resources")
         @Config.Comment({
@@ -110,23 +110,29 @@ public class ModConfig {
 
         @Config.Name("mining_mission_maximal_resources")
         @Config.Comment({
-                "In stacks (limit 27)"
+                "In stacks (limit 54 as rocket has 54 slots)"
         })
         public int mining_mission_maximal_resources = 45;
 
+        @Config.Name("announce_asteroids")
+        @Config.Comment({
+                "Will post messages in global chat about new asteroids"
+        })
+        public boolean announce_asteroids = true;
 
         @Config.Name("mining_asteroids_popularity")
         @Config.Comment({
-                "How often such asteroids for mining missions will appear in sky",
-                "Range 0 - 100. 100 means 10 times per day. 1 means 1 asteroid per 10 days"
+                "Bigger value means more often appearance of asteroids on sky"
         })
-        public int mining_asteroids_popularity = 10;
+        public int mining_asteroids_popularity = 50;
 
-        @Config.Name("mining_missions_per_mcs")
+        @Config.Name("mining_missions_limit")
         @Config.Comment({
-                "How many incomplete mining missions can mcs store"
+                "Limit for pending missions at the same time",
+                "Means if new asteroid will appear and there already 5 asteroids waiting, it will delete the oldest one",
+                "Currently mined asteroids won't be deleted"
         })
-        public int mining_missions_per_mcs = 3;
+        public int mining_missions_limit = 5;
 
         @Config.Name("mineable_resources")
         @Config.Comment({

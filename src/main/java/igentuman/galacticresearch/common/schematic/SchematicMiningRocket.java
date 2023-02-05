@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.common.schematic;
 
 import igentuman.galacticresearch.ModConfig;
+import igentuman.galacticresearch.RegistryHandler;
 import igentuman.galacticresearch.common.schematic.mining_rocket.ContainerSchematicMiningRocket;
 import igentuman.galacticresearch.common.schematic.mining_rocket.GuiSchematicMiningRocket;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicPage;
@@ -31,7 +32,7 @@ public class SchematicMiningRocket extends SchematicPage
     @Override
     public ItemStack getRequiredItem()
     {
-        return null;
+        return new ItemStack(RegistryHandler.MINING_ROCKET_SCHEMATIC);
     }
 
     @SideOnly(Side.CLIENT)

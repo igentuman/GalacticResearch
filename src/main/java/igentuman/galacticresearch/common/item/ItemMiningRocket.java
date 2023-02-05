@@ -133,7 +133,7 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
             return false;
         }
 
-        final EntityMiningRocket spaceship = new EntityMiningRocket(worldIn, centerX, centerY, centerZ, EnumRocketType.values()[stack.getItemDamage()]);
+        final EntityMiningRocket spaceship = new EntityMiningRocket(worldIn, centerX, centerY, centerZ);
 
         spaceship.setPosition(spaceship.posX, spaceship.posY + spaceship.getOnPadYOffset(), spaceship.posZ);
         worldIn.spawnEntity(spaceship);
@@ -173,7 +173,7 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
 
         if (par1ItemStack.hasTagCompound() && par1ItemStack.getTagCompound().hasKey("RocketFuel"))
         {
-            EntityMiningRocket rocket = new EntityMiningRocket(FMLClientHandler.instance().getWorldClient(), 0, 0, 0, EnumRocketType.values()[par1ItemStack.getItemDamage()]);
+            EntityMiningRocket rocket = new EntityMiningRocket(FMLClientHandler.instance().getWorldClient(), 0, 0, 0);
             tooltip.add(GCCoreUtil.translate("gui.message.fuel.name") + ": " + par1ItemStack.getTagCompound().getInteger("RocketFuel") + " / " + rocket.fuelTank.getCapacity());
         }
     }

@@ -63,6 +63,11 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         }
     }
 
+    @Override
+    public void setAutolaunchSetting(EnumAutoLaunch setting) {
+        autoLaunchSetting = setting;
+    }
+
     public void onUpdate() {
         if(this.launchPhase != EnumLaunchPhase.LAUNCHED.ordinal() && this.launchPhase != EnumLaunchPhase.IGNITED.ordinal()) {
             updateMCSPos();

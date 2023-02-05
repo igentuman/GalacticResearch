@@ -24,9 +24,6 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
         if (transformedName.equals("micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad")) {
             return Reflectors.reflectClass(basicClass, transformedName, TileEntityLandingPadReflector.class.getName());
         }
-        /*if (transformedName.equals("micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry")) {
-            return Reflectors.reflectClass(basicClass, transformedName, GalaxyRegistryReflector.class.getName());
-        }*/
 
         return basicClass;
     }

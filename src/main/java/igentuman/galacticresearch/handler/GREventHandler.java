@@ -26,6 +26,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,7 +39,6 @@ public class GREventHandler
         if (entityLiving instanceof EntityPlayerMP)
         {
             GalacticResearch.pHandler.onPlayerUpdate((EntityPlayerMP) entityLiving);
-            return;
         }
     }
 
@@ -86,8 +86,10 @@ public class GREventHandler
     public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         PlayerSpaceData stats = event.player.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
         for(String m: ModConfig.researchSystem.default_researched_bodies) {
+            assert stats != null;
             stats.addMission(m);
         }
+        assert stats != null;
         GalacticResearch.packetPipeline.sendTo(
                 new GRPacketSimple(
                         GRPacketSimple.EnumSimplePacket.SYNC_PLAYER_SPACE_DATA,
@@ -106,8 +108,10 @@ public class GREventHandler
             if (tick % 30 == 0) {
                 PlayerSpaceData stats = player.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
                 for (String m : ModConfig.researchSystem.default_researched_bodies) {
+                    assert stats != null;
                     stats.addMission(m);
                 }
+                assert stats != null;
                 GalacticResearch.packetPipeline.sendTo(
                         new GRPacketSimple(
                                 GRPacketSimple.EnumSimplePacket.SYNC_PLAYER_SPACE_DATA,
@@ -119,33 +123,9 @@ public class GREventHandler
         }
     }
 
-    /*@SubscribeEvent
-    public void schematicUnlocked(Unlock event)
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event)
     {
-        GCPlayerStats stats = GCPlayerStats.get(event.player);
-
-        if (!stats.getUnlockedSchematics().contains(event.page))
-        {
-            stats.getUnlockedSchematics().add(event.page);
-            Collections.sort(stats.getUnlockedSchematics());
-
-            if (event.player != null && event.player.connection != null)
-            {
-                Integer[] iArray = new Integer[stats.getUnlockedSchematics().size()];
-
-                for (int i = 0; i < iArray.length; i++)
-                {
-                    ISchematicPage page = stats.getUnlockedSchematics().get(i);
-                    iArray[i] = page == null ? -2 : page.getPageID();
-                }
-
-                List<Object> objList = new ArrayList<Object>();
-                objList.add(iArray);
-
-                GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SCHEMATIC_LIST, GCCoreUtil.getDimensionID(event.player.world), objList), event.player);
-            }
-        }
-    }*/
-
-
+        GalacticResearch.spaceMineProvider.updateMissions();
+    }
 }

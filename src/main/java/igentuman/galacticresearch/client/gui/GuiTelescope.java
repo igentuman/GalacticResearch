@@ -14,6 +14,7 @@ import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion
 import micdoodle8.mods.galacticraft.core.energy.EnergyDisplayHelper;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.renderer.GlStateManager;
@@ -41,7 +42,8 @@ public class GuiTelescope extends GuiContainerGC {
     private GuiButton btnMultiplier;
     private GuiButtonImage btnHelp;
     private Map<String,GuiButtonImage> planets = new HashMap<>();
-
+    public float sh = 0;
+    public int[] curStar = new int[] {1, 1};
     private GuiElementInfoRegion electricInfoRegion;
     private GuiElementInfoRegion helpRegion;
     private GuiElementInfoRegion researchedRegion;
@@ -102,9 +104,6 @@ public class GuiTelescope extends GuiContainerGC {
     {
         return (guiTop + 24) + y - tile.yAngle;
     }
-
-    public float sh = 0;
-    public int[] curStar = new int[] {1,1};
 
     public void renderStars()
     {
@@ -187,8 +186,13 @@ public class GuiTelescope extends GuiContainerGC {
         List<String> lines = new ArrayList();
         lines.add(GCCoreUtil.translate("gui.telescope.researched"));
         String[] bodies = tile.getResearchedBodiesArray();
+
         for(String name: bodies) {
-            lines.add(GCCoreUtil.translate("gui."+name+".name"));
+            if(name.contains("ASTEROID-")) {
+                lines.add(name);
+            } else {
+                lines.add(I18n.format("gui."+name+".name"));
+            }
         }
         if(bodies.length == 0) {
             lines.add(GCCoreUtil.translate("gui.telescope.researched.none"));
@@ -267,7 +271,12 @@ public class GuiTelescope extends GuiContainerGC {
         this.btnMultiplier.displayString = String.valueOf(tile.movementAmplifier);
         String statusLine = I18n.format("gui.telescope.status.idle");
         if(!tile.curObserveBody.isEmpty()) {
-            String planet = I18n.format("gui."+tile.curObserveBody+".name");
+            String planet = "";
+            if(tile.curObserveBody.contains("ASTEROID-")) {
+                planet = "ASTEROID";
+            } else {
+                planet = I18n.format("gui."+tile.curObserveBody+".name");
+            }
             statusLine =  I18n.format("gui.telescope.status.researching", planet);
         }
         this.fontRenderer.drawString(I18n.format("gui.telescope.status", statusLine), 8, 141, 4210752);
@@ -290,7 +299,7 @@ public class GuiTelescope extends GuiContainerGC {
         }
 
         this.drawTexturedModalRect(guiLeft+42, guiTop + 167, 187, 0, Math.min(tile.getScaledElecticalLevel(54), 54), 7);
-
+        if(Minecraft.getMinecraft().world.isRaining() && Minecraft.getMinecraft().world.getBiome(tile.getPos()).canRain()) return;
         renderStars();
         renderPlanets();
         mc.getTextureManager().bindTexture(guiTexture);
