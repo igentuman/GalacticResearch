@@ -5,6 +5,9 @@ import igentuman.galacticresearch.ISidedProxy;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.RegistryHandler;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
+import igentuman.galacticresearch.common.item.ItemMiningRocket;
+import igentuman.galacticresearch.common.item.ItemMiningRocketSchematic;
+import igentuman.galacticresearch.common.item.ItemSatelliteRocket;
 import igentuman.galacticresearch.common.schematic.SchematicMiningRocket;
 import igentuman.galacticresearch.common.schematic.SchematicSatelliteRocket;
 import igentuman.galacticresearch.network.TileProcessUpdatePacket;
@@ -86,10 +89,13 @@ public class CommonProxy implements ISidedProxy {
 
     @Override
     public void init(FMLInitializationEvent event)
-    {   addSatelliteRocketRecipe();
+    {
+
+        addSatelliteRocketRecipe();
         addMiningRocketRecipe();
         SchematicRegistry.registerSchematicRecipe(new SchematicSatelliteRocket());
         SchematicRegistry.registerSchematicRecipe(new SchematicMiningRocket());
+        ItemMiningRocketSchematic.registerSchematicItems();
         RegistryHandler.registerEntities();
         GalacticraftRegistry.addDungeonLoot(2, new ItemStack(RegistryHandler.MINING_ROCKET_SCHEMATIC, 1, 0));
     }

@@ -49,12 +49,12 @@ public class GalacticResearch
     public static GRPlayerHandler pHandler;
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(new RegistryHandler());
         pHandler = new GRPlayerHandler();
         MinecraftForge.EVENT_BUS.register(new GREventHandler());
         MinecraftForge.EVENT_BUS.register(pHandler);
         proxy.preInit(event);
         logger = event.getModLog();
-        MinecraftForge.EVENT_BUS.register(new RegistryHandler());
         MinecraftForge.EVENT_BUS.register(this);
         ModPacketHandler.registerMessages(MODID);
         hooks.hookPreInit();

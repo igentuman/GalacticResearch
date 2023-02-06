@@ -2,7 +2,6 @@ package igentuman.galacticresearch.common.item;
 
 import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType.EnumRocketType;
-import micdoodle8.mods.galacticraft.api.item.GCRarity;
 import micdoodle8.mods.galacticraft.api.item.IHoldableItem;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCFluids;
@@ -19,6 +18,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemMiningRocket extends Item implements IHoldableItem, ISortableItem, GCRarity
+public class ItemMiningRocket extends Item implements IHoldableItem, ISortableItem
 {
 
     public ItemMiningRocket(String assetName)
@@ -48,6 +48,13 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
         this.setTranslationKey(assetName);
         this.setRegistryName(assetName);
     }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return ClientProxyCore.galacticraftItem;
+    }
+
 
     @Override
     public CreativeTabs getCreativeTab()

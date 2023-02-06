@@ -2,7 +2,6 @@ package igentuman.galacticresearch.common.item;
 
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.RegistryHandler;
-import micdoodle8.mods.galacticraft.api.item.GCRarity;
 import micdoodle8.mods.galacticraft.api.recipe.ISchematicItem;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.Constants;
@@ -11,12 +10,14 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.entities.EntityHangingSchematic;
 import micdoodle8.mods.galacticraft.core.items.ISortableItem;
 import micdoodle8.mods.galacticraft.core.items.ItemSchematic;
+import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategoryItem;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemHangingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
@@ -30,8 +31,15 @@ import java.util.List;
 
 import static igentuman.galacticresearch.GalacticResearch.MODID;
 
-public class ItemMiningRocketSchematic extends ItemHangingEntity implements ISchematicItem, ISortableItem, GCRarity
+public class ItemMiningRocketSchematic extends ItemHangingEntity implements ISchematicItem, ISortableItem
 {
+    public static int indexOffset = 0;
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return ClientProxyCore.galacticraftItem;
+    }
 
     public ItemMiningRocketSchematic(String assetName)
     {
@@ -104,12 +112,12 @@ public class ItemMiningRocketSchematic extends ItemHangingEntity implements ISch
 
     protected int getIndex(int damage)
     {
-        return ModConfig.machines.mining_rocket_schematic_id;
+        return damage+indexOffset;
     }
 
     public static void registerSchematicItems()
     {
-        SchematicRegistry.registerSchematicItem(new ItemStack(RegistryHandler.MINING_ROCKET_SCHEMATIC, 1, 0));
+        indexOffset = SchematicRegistry.registerSchematicItem(new ItemStack(RegistryHandler.MINING_ROCKET_SCHEMATIC));
     }
 
     /**

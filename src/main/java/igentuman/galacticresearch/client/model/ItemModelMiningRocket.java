@@ -11,6 +11,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
+import java.util.Arrays;
 
 public class ItemModelMiningRocket extends ModelTransformWrapper
 {
@@ -48,7 +49,12 @@ public class ItemModelMiningRocket extends ModelTransformWrapper
             mul.setTranslation(trans);
             ret.mul(mul);
             mul.setIdentity();
-            if(!ConfigManagerCore.disableRocketIconRotation) {
+            if(Arrays.stream(ConfigManagerCore.class.getFields())
+                    .anyMatch(f -> f.getName().equals("disableRocketIconRotation"))) {
+                if (!ConfigManagerCore.disableRocketIconRotation) {
+                    mul.rotY(ClientUtil.getClientTimeTotal() / 1000.0F);
+                }
+            } else {
                 mul.rotY(ClientUtil.getClientTimeTotal() / 1000.0F);
             }
             ret.mul(mul);
