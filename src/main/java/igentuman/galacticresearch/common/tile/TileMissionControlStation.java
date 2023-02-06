@@ -41,9 +41,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class TileMissionControlStation extends TileBaseElectricBlockWithInventory implements ISidedInventory, ILandingPadAttachable, IComputerIntegration {
 
@@ -204,41 +202,56 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             }
             fetchMissions();
             updateRocketState();
-            removeAsteroidMissions();
+            removeAsteroidMissions(true);
             updateMissionsStateCounter();
         } else {
             unserializeMissionData();
         }
     }
 
-    public void removeAsteroidMissions()
+    public void removeAsteroidMissions(boolean check)
     {
         for(String m: getMissions()) {
             if(!m.contains("ASTEROID-")) continue;
-            if(!GalacticResearch.spaceMineProvider.getMissions().containsKey(m)) {
+            if(check) {
+                if (!GalacticResearch.spaceMineProvider.getMissions().containsKey(m)) {
+                    missionsDataMap.remove(m);
+                    if (currentMission.equals(m)) currentMission = "";
+                }
+            } else {
                 missionsDataMap.remove(m);
-                if(currentMission.equals(m)) currentMission = "";
+                if (currentMission.equals(m)) currentMission = "";
             }
         }
     }
+
 
     public void updateMissionsStateCounter()
     {
         int duration = ModConfig.machines.satellite_mission_duration * 20;
         if(missionsDataMap.isEmpty()) return;
-        for(String s: missionsDataMap.keySet()) {
+        Set<String> tmp = missionsDataMap.keySet();
+        for(String s: tmp) {
 
             int v = missionsDataMap.get(s);
             if(s.contains("ASTEROID-")) {
-                double left = GalacticResearch.spaceMineProvider.getMissions().get(s);
-                double initial = GalacticResearch.spaceMineProvider.getOreCnt(s);
-                double p = left/initial;
-                if(left <= 0) {
-                    v = duration;
-                } else {
-                    v = (int) (duration-duration*p)-1;
+                if(GalacticResearch.spaceMineProvider.getMissions().size() == 0) {
+                     removeAsteroidMissions(false);
+                     return;
                 }
-                missionsDataMap.replace(s, v);
+                try {
+                    double left = GalacticResearch.spaceMineProvider.getMissions().get(s);
+                    double initial = GalacticResearch.spaceMineProvider.getOreCnt(s);
+                    double p = left / initial;
+                    if (left <= 0) {
+                        v = duration;
+                    } else {
+                        v = (int) (duration - duration * p) - 1;
+                    }
+                    missionsDataMap.replace(s, v);
+                } catch (NullPointerException ignored) {
+
+                }
             } else if (v > 0 && v < duration) {
                 v++;
                 missionsDataMap.replace(s, v);

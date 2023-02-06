@@ -94,7 +94,7 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 	@Override
 	public void drawButtons(int mousePosX, int mousePosY) {
 		super.drawButtons(mousePosX, mousePosY);
-		final int LHS = GuiCelestialSelection.BORDER_SIZE + GuiCelestialSelection.BORDER_EDGE_SIZE;
+		int LHS = GuiCelestialSelection.BORDER_SIZE + GuiCelestialSelection.BORDER_EDGE_SIZE;
 		drawRect(LHS + 1, (height - LHS) - 5, LHS + 500, (height - LHS) - 20, ColorUtil.to32BitColor(255, 0, 0, 0));
 		this.fontRenderer.drawString(I18n.format("gui.celestial_selection.advise"), LHS + 5, (height - LHS) - 15, RED);
 	}

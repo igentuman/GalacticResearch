@@ -65,8 +65,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
 
     public Object[] rotateTelescope(Object[] args)
     {
-        deltaX = ((Double) args[0]).intValue();
-        deltaY = ((Double) args[1]).intValue();
+        deltaX = (new Double(args[0].toString())).intValue();
+        deltaY = (new Double(args[1].toString())).intValue();
         return new Object[] {true};
     }
 
@@ -268,8 +268,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                 return;
             }
             doMovement();
-            if(!GalacticResearch.server.getEntityWorld().isRaining() &&
-                GalacticResearch.server.getEntityWorld().getBiome(getPos()).canRain()) {
+            if(!GalacticResearch.server.getEntityWorld().isRaining() ||
+                !GalacticResearch.server.getEntityWorld().getBiome(getPos()).canRain()) {
                 observe();
             }
             IBlockState st = world.getBlockState(getPos());

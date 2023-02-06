@@ -36,7 +36,7 @@ public class CommandResearch extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
 		EntityPlayerMP p = (EntityPlayerMP) sender;
 		if(args.length < 1) {
-
+			p.sendMessage(new TextComponentString(getUsage(sender)));
 			return;
 		}
 		String r = args[0];
@@ -48,11 +48,11 @@ public class CommandResearch extends CommandBase {
 		}
 		if(r.equals("reset")) {
 			cap.unlocked_missions = "";
-			p.sendMessage(new TextComponentString(I18n.format("message.research.reset")));
+			notifyCommandListener(sender, this, "message.research.reset");
 		} else {
 			if(!cap.getUnlockedMissions().contains(r)) {
 				cap.addMission(r);
-				p.sendMessage(new TextComponentString(I18n.format("message.research.added")));
+				notifyCommandListener(sender, this, "message.research.added");
 			}
 		}
 		GalacticResearch.packetPipeline.sendTo(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.SYNC_PLAYER_SPACE_DATA, GCCoreUtil.getDimensionID(p.world), new Object[] { cap.unlocked_missions }), (EntityPlayerMP) p);

@@ -92,7 +92,7 @@ public class SpaceMineProvider {
         if(generateCounter <= 0) {
             deleteMissions();
             generateMission();
-            generateCounter = 864000/ModConfig.machines.mining_asteroids_popularity;
+            generateCounter = 1000000/ModConfig.machines.mining_asteroids_popularity;
             saveData();
         }
     }
@@ -100,7 +100,7 @@ public class SpaceMineProvider {
     public static SpaceMineProvider get() {
         if(instance == null) {
             instance = new SpaceMineProvider();
-            instance.generateCounter = 864000/ModConfig.machines.mining_asteroids_popularity;
+            instance.generateCounter = 1000000/ModConfig.machines.mining_asteroids_popularity;
             ArrayList<Integer> list = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : ModConfig.machines.mineable_resources.entrySet()) {
                 list.add(entry.getValue());
@@ -191,7 +191,7 @@ public class SpaceMineProvider {
         this.missions.put(name, cnt);
         GalacticResearch.skyModel.addAsteroid(name);
         if(ModConfig.machines.announce_asteroids) {
-            GalacticResearch.server.getPlayerList().sendMessage(new TextComponentString(GCCoreUtil.translate("message.new_asteroid")));
+            GalacticResearch.server.getPlayerList().sendMessage(new TextComponentString("Asteroid detected on sky"));
         }
         return name + " ("+cnt+")";
     }

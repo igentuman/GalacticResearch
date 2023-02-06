@@ -49,6 +49,12 @@ public class ModConfig {
         })
         public int required_observation_time = 45;
 
+        @Config.Name("extraplanets_intergration")
+        @Config.Comment({
+                "Disable in case of conflicts"
+        })
+        public boolean extraplanets_intergration = true;
+
         protected SkyItem parseBodyLine(String line)
         {
             String[] parts = line.split(",");

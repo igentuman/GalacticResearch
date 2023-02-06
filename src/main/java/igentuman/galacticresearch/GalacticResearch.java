@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
         modid = igentuman.galacticresearch.GalacticResearch.MODID,
         name = igentuman.galacticresearch.GalacticResearch.NAME,
         version = igentuman.galacticresearch.GalacticResearch.VERSION,
-        dependencies = "required-after:galacticraftcore;"
+        dependencies = "required-after:galacticraftplanets;"
 )
 @Mod.EventBusSubscriber
 public class GalacticResearch

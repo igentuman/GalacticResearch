@@ -73,14 +73,22 @@ public class GREventHandler
         }
     }
 
+
     @SubscribeEvent
     public void attachSpaceDataCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityPlayerMP) {
             event.addCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA_NAME, new SpaceDataProvider((EntityPlayerMP) event.getObject()));
-        } else if(event.getObject() instanceof EntityPlayerSP) {
+        }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void attachSpaceDataCapabilityClient(AttachCapabilitiesEvent<Entity> event) {
+         if(event.getObject() instanceof EntityPlayerSP) {
             event.addCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_DATA_CLIENT_NAME, new SpaceClientDataProvider((EntityPlayerSP) event.getObject()));
         }
     }
+
 
     @SubscribeEvent
     public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {

@@ -12,11 +12,13 @@ public final class GRHooks {
     public boolean CCLoaded = false;
     public boolean CraftTweakerLoaded = false;
     public boolean OCLoaded = false;
+    public boolean ExtraPlanetsLoaded = false;
 
     public void hookPreInit() {
         CCLoaded = Loader.isModLoaded("computercraft");
         CraftTweakerLoaded = Loader.isModLoaded("crafttweaker");
         OCLoaded = Loader.isModLoaded("opencomputers");
+        ExtraPlanetsLoaded = Loader.isModLoaded("extraplanets");
 
     }
 

@@ -1,0 +1,59 @@
+tile.telescope.name=Телескоп
+tile.mission_control_station.name=Станция Контроля Миссий
+
+container.mission_control_station.name=Станция Контроля Миссий
+container.telescope.name=Телескоп
+
+message.research.reset=Очистка открытий игрока
+message.research.added=Добавлено открытие
+message.mining_asteroid.generated=Сгенерирован: %s
+message.analyzed.planet=Ты открыл: %s
+message.new_asteroid=Обнаружен новый астероид
+message.mining_asteroid.cleared=Все астероиды удалены
+
+description.telescope=Наблюдение за небесными телами
+description.mission_control_station=Управляет полётом ракет
+
+gui.mission_control_station.wrong_rocket=Не тот тип ракеты
+gui.mission_control_station=Станция Контроля Миссий
+gui.mission_control_station.mission=Текущая миссия:
+gui.mission_control_station.mission_status=Статус: %s
+gui.mission.pending=Ожидание
+gui.mission.complete=Завершено
+gui.mission.progress=В процессе - %s
+gui.mission_control_station.activate=Активировать миссию
+gui.mission_control_station.no_rocket=Ракета не обнаружена
+gui.mission_control_station.rocket_not_ready=Ракета не подготовлена
+gui.telescope=Телескоп
+gui.mission_control_station.rocket_ready=Ракета готова
+gui.celestial_selection.advise=Исследуй космос для открытия новых планет
+gui.mission_control_station.analyze=Анализ завершенных миссий
+gui.help.desc.0=Управляй телескопом для поиска небесных тел
+gui.help.desc.1=Удерживай планету в фокусной области до завершения
+gui.help.mcs.desc.0=Выбери миссию и установи ракету
+gui.help.mcs.desc.1=Ожидай окончания миссии
+gui.telescope.status=Статус: %s
+gui.telescope.status.idle=Ожидание
+gui.telescope.status.researching=Наблюдение %s
+gui.message.mission_empty=Выбери миссию в Станции Контроля Миссий
+gui.moon.name=Луна
+gui.none.name=None
+gui.mars.name=Марс
+gui.venus.name=Венера
+gui.asteroids.name=Астероиды
+gui.sun.name=Солнце
+gui.neptune.name=Нептун
+gui.jupiter.name=Юпитер
+gui.saturn.name=Сатурн
+gui.uranus.name=Уран
+gui.mercury.name=Меркурий
+gui.overworld.name=Земля
+gui.telescope.researched=Исследовано:
+gui.telescope.researched.none=None
+
+item.satellite_rocket.name=Спутниковая Ракета
+item.mining_rocket.name=Добывающая Ракета
+item.probe.name=Спутник
+item.mining_rocket_schematic.name=Схема Добывающей Ракеты
+
+schematic.mining_rocket.dungeon_level=Можно найти на Марсе

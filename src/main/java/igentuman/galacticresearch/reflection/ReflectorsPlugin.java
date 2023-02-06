@@ -25,6 +25,10 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
             return Reflectors.reflectClass(basicClass, transformedName, TileEntityLandingPadReflector.class.getName());
         }
 
+        if (transformedName.equals("com.mjr.extraplanets.client.handlers.MainHandlerClient")) {
+            return Reflectors.reflectClass(basicClass, transformedName, MainHandlerClientReflector.class.getName());
+        }
+
         return basicClass;
     }
 }

@@ -1,16 +1,17 @@
 package igentuman.galacticresearch.command;
 
 import igentuman.galacticresearch.GalacticResearch;
+import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.server.command.CommandTreeBase;
 import org.jetbrains.annotations.NotNull;
 
-public class CommandAsteroids extends CommandBase {
-	
+public class CommandAsteroids extends CommandTreeBase {
+
 	@Override
 	public @NotNull String getName() {
 		return "asteroids";
@@ -36,12 +37,12 @@ public class CommandAsteroids extends CommandBase {
 		String r = args[0];
 		if(r.equals("generate")) {
 			String m = GalacticResearch.spaceMineProvider.generateMission(true);
-			p.sendMessage(new TextComponentString(I18n.format("message.mining_asteroid.generated", m)));
+			notifyCommandListener(sender, this, "message.mining_asteroid.generated", m);
 		}
 
 		if(r.equals("clear")) {
 			GalacticResearch.spaceMineProvider.removeMissions();
-			p.sendMessage(new TextComponentString(I18n.format("message.mining_asteroid.cleared")));
+			notifyCommandListener(sender, this, "message.mining_asteroid.cleared");
 		}
 	}
 }
