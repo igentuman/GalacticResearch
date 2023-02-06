@@ -33,7 +33,7 @@ repositories {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.0b2"
+version = "1.0.0b3"
 group = "igentuman.galacticresearch"
 archivesBaseName = "GalacticResearch"
 

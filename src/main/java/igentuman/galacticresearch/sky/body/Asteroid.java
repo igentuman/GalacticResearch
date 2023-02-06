@@ -97,6 +97,7 @@ public class Asteroid extends Researchable {
     public int yTexOffset()
     {
         Random r = new Random(body.getName().hashCode());
-        return r.nextInt(5)*16;
+        int i = r.nextInt(6);
+        return i*16+i;
     }
 }

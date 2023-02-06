@@ -19,6 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -152,13 +153,15 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     {
         return this.getStackInSlot(0);
     }
-
+    public List<Integer> multipliers = Arrays.asList(1,2,5,10);
     public void changeMultiplier()
     {
-        movementAmplifier++;
-        if(movementAmplifier>5) {
-            movementAmplifier = 1;
+        int i = multipliers.indexOf(movementAmplifier);
+        i++;
+        if(i>multipliers.size()-1) {
+            i=0;
         }
+        movementAmplifier = multipliers.get(i);
     }
 
     public void doMovement()

@@ -22,6 +22,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.util.vector.Quaternion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +35,8 @@ import static igentuman.galacticresearch.common.tile.TileTelescope.viewportSize;
 
 public class GuiTelescope extends GuiContainerGC {
     private static final ResourceLocation guiTexture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/container/telescope_hd.png");
+    private static final ResourceLocation overlay = new ResourceLocation(GalacticResearch.MODID, "textures/gui/container/telescope_top_overlay.png");
+
     private final TileTelescope tile;
 
     private GuiButtonImage btnUp;
@@ -142,8 +146,8 @@ public class GuiTelescope extends GuiContainerGC {
             int x = viewportX(res.getX());
             int y = viewportY(res.getY());
 
-            int viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX());
-            int viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY());
+            int viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX())+6;
+            int viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY())+6;
 
             mc.getTextureManager().bindTexture(res.getTexture());
             GlStateManager.disableDepth();
@@ -151,10 +155,33 @@ public class GuiTelescope extends GuiContainerGC {
             if(res.getBody().getName().equals("moon")) {
                 yOffset = WorldUtil.getMoonPhase() * 32;
             }
+            double rot = 0;
+            //apply rotation
+            boolean rotated = false;
+            if(res.getBody().getName().contains("ASTEROID-")) {
+                GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+
+                GL11.glPushMatrix();
+                GL11.glTranslatef((float) x+res.getSize()/2, (float) y+res.getSize()/2, 0f);
+                GL11.glRotatef(Minecraft.getMinecraft().world.getTotalWorldTime(), 1, 0, 45);
+                GL11.glTranslatef(-((float) x+res.getSize()/2), -((float) y+res.getSize()/2), 0f);
+
+                //GL11.glRotatef(Minecraft.getMinecraft().world.getTotalWorldTime()*4, 0, 1, 0);
+                rotated = true;
+            }
+
             this.drawTexturedModalRect(x, y, 0, yOffset, Math.min(viewportBondX, res.getSize()), Math.min(viewportBondY, res.getSize()));
+            if(rotated) {
+
+                GL11.glPopMatrix();
+                //GlStateManager.rotate(Minecraft.getMinecraft().world.getTotalWorldTime(), x, y, 1);
+            }
+
             GlStateManager.enableDepth();
         }
+
     }
+
 
     public void renderFocusArea()
     {
@@ -302,6 +329,9 @@ public class GuiTelescope extends GuiContainerGC {
         if(Minecraft.getMinecraft().world.isRaining() && Minecraft.getMinecraft().world.getBiome(tile.getPos()).canRain()) return;
         renderStars();
         renderPlanets();
+        mc.getTextureManager().bindTexture(overlay);
+        this.drawTexturedModalRect(var5, var6 + 5, 0, 0, this.xSize, this.ySize);
+
         mc.getTextureManager().bindTexture(guiTexture);
         renderFocusArea();
         renderProgressBar();
