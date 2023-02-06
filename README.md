@@ -10,5 +10,10 @@ The flow:
 4. ???
 5. You can fly to the opened planet
 
+1. Observe asteroids in telescope
+2. Send mining rocket to mine them
+
+Automate all the flow with OpenComputers or ComputerCraft
+
 And very important note. All flow can be automated with OpenComputers.
 But if you're not familiar with computers, you'll have to waste some time during manual research.
