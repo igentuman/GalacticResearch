@@ -14,7 +14,7 @@ public class Star implements ISkyBody {
     private int color;
     private static Random rand;
     private double s = 0.05;
-
+    private int speed = 8;
     public static Star generate()
     {
         if(rand == null) {
@@ -29,6 +29,32 @@ public class Star implements ISkyBody {
         this.y = y;
         this.size = size;
         this.color = color;
+    }
+
+    public float guiX(long lastTime, float ticks)
+    {
+        float sx = (x + (float)time()/speed);
+        int cx = (int) (sx / SkyModel.width);
+        float xc = sx - cx * SkyModel.width;
+
+        sx = (x + (float)lastTime/speed);
+        cx = (int) (sx / SkyModel.width);
+        float xl = sx - cx * SkyModel.width;
+        return xl + (xc - xl) * ticks;
+    }
+
+    public float guiY(long lastTime, float ticks)
+    {
+        float sy = (y + (float)time()/speed);
+        int cy = (int) (sy / SkyModel.height);
+        float yc = sy - cy * SkyModel.height;
+
+
+        sy = (y + (float)lastTime/speed);
+        cy = (int) (sy / SkyModel.height);
+        float yl = sy - cy * SkyModel.height;
+
+        return yl + (yc - yl) * ticks;
     }
 
     public int getColor() {

@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.client.gui;
 
 import com.google.common.collect.Lists;
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class GRGuiCelestialSelection extends GuiCelestialSelection {
 
@@ -25,8 +27,9 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 
 	private boolean isUnlocked(String name, PlayerClientSpaceData stats)
 	{
-		return stats.getUnlockedMissions().contains(name) ||
-				Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name);
+		return stats.getUnlockedMissions().contains(name.toLowerCase()) ||
+				Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name.toLowerCase()) ||
+				!GalacticResearch.skyModel.getBodies().stream().anyMatch(body -> body.getName().equals(name.toLowerCase()) || body.getParent().equals(name.toLowerCase()));
 	}
 
 	@Override

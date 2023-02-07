@@ -21,6 +21,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.util.vector.Quaternion;
@@ -52,6 +54,10 @@ public class GuiTelescope extends GuiContainerGC {
     private GuiElementInfoRegion helpRegion;
     private GuiElementInfoRegion researchedRegion;
     private GuiButtonImage btnResearched;
+    public static long  lastTickWTime = 0;
+    public static float ticks = 0;
+    public static float lastXangle = 0;
+    public static float lastYangle = 0;
 
     public GuiTelescope(InventoryPlayer par1InventoryPlayer, TileTelescope tile) {
         super(new ContainerTelescope(par1InventoryPlayer, tile));
@@ -92,21 +98,42 @@ public class GuiTelescope extends GuiContainerGC {
 
     public boolean isVisible(ISkyBody body)
     {
-        return  body.getX() > tile.xAngle &&
-                body.getY() > tile.yAngle &&
-                body.getX() < (tile.xAngle + viewportSize) &&
-                body.getY() < (tile.yAngle + viewportSize) &&
+        return  body.getX() > xAngle() &&
+                body.getY() > yAngle() &&
+                body.getX() < (xAngle() + viewportSize) &&
+                body.getY() < (yAngle() + viewportSize) &&
                 body.isVisible();
     }
 
-    public int viewportX(int x)
+    float tmpX = 0;
+    float tmpY = 0;
+
+    public float xAngle()
     {
-        return (guiLeft + 6) + x - tile.xAngle;
+        if(lastXangle == 0) {
+            lastXangle = tmpX;
+        }
+        tmpX = tile.xAngle;
+        return lastXangle + (tile.xAngle - lastXangle) * ticks;
     }
 
-    public int viewportY(int y)
+    public float yAngle()
     {
-        return (guiTop + 24) + y - tile.yAngle;
+        if(lastYangle == 0) {
+            lastYangle = tmpY;
+        }
+        tmpY = tile.yAngle;
+        return lastYangle + (tile.yAngle - lastYangle) * ticks;
+    }
+
+    public float viewportX(float x)
+    {
+        return (guiLeft + 6) + x - xAngle();
+    }
+
+    public float viewportY(float y)
+    {
+        return (guiTop + 24) + y - yAngle();
     }
 
     public void renderStars()
@@ -122,8 +149,8 @@ public class GuiTelescope extends GuiContainerGC {
                 sh = 0.0F;
             }
             if(!isVisible(star)) continue;
-            int x = viewportX(star.getX());
-            int y = viewportY(star.getY());
+            float x = viewportX(star.getX());
+            float y = viewportY(star.getY());
             int offset = star.getColor()*3;
             this.drawTexturedModalRect(x*2+sh, y*2+sh, 0, 201 + offset, star.getSize(), star.getSize());
         }
@@ -137,17 +164,18 @@ public class GuiTelescope extends GuiContainerGC {
     {
         List<Researchable> bodies = SkyModel.get().getObjectsToResearch(tile.dimension);
         if(bodies == null) return;
+
         for(ISkyBody researchable: bodies) {
             if(researchable == null) continue;
             Researchable res = (Researchable) researchable;
             if(!isVisible(res)) {
                 continue;
             }
-            int x = viewportX(res.getX());
-            int y = viewportY(res.getY());
+            float x = viewportX(res.guiX(lastTickWTime, ticks));
+            float y = viewportY(res.guiY(lastTickWTime, ticks));
 
-            int viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX())+6;
-            int viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY())+6;
+            float viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX())+6;
+            float viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY())+6;
 
             mc.getTextureManager().bindTexture(res.getTexture());
             GlStateManager.disableDepth();
@@ -155,8 +183,6 @@ public class GuiTelescope extends GuiContainerGC {
             if(res.getBody().getName().equals("moon")) {
                 yOffset = WorldUtil.getMoonPhase() * 32;
             }
-            double rot = 0;
-            //apply rotation
             boolean rotated = false;
             if(res.getBody().getName().contains("ASTEROID-")) {
                 GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -165,16 +191,12 @@ public class GuiTelescope extends GuiContainerGC {
                 GL11.glTranslatef((float) x+res.getSize()/2, (float) y+res.getSize()/2, 0f);
                 GL11.glRotatef(Minecraft.getMinecraft().world.getTotalWorldTime(), 1, 0, 45);
                 GL11.glTranslatef(-((float) x+res.getSize()/2), -((float) y+res.getSize()/2), 0f);
-
-                //GL11.glRotatef(Minecraft.getMinecraft().world.getTotalWorldTime()*4, 0, 1, 0);
                 rotated = true;
             }
 
-            this.drawTexturedModalRect(x, y, 0, yOffset, Math.min(viewportBondX, res.getSize()), Math.min(viewportBondY, res.getSize()));
+            this.drawTexturedModalRect(x, y, 0, yOffset, (int) Math.min(viewportBondX, res.getSize()), (int) Math.min(viewportBondY, res.getSize()));
             if(rotated) {
-
                 GL11.glPopMatrix();
-                //GlStateManager.rotate(Minecraft.getMinecraft().world.getTotalWorldTime(), x, y, 1);
             }
 
             GlStateManager.enableDepth();
@@ -279,6 +301,8 @@ public class GuiTelescope extends GuiContainerGC {
         addResearchedRegion();
         initButtons();
     }
+
+
 
     private int scale(double value, double maxValue)
     {

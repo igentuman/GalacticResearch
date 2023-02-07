@@ -69,6 +69,8 @@ public class Asteroid extends Researchable {
         return Math.max(5, speed);
     }
 
+
+
     public int getX()
     {
         int sx = (int)(x + time()/speed());

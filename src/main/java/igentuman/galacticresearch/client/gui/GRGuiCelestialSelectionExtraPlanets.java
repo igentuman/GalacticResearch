@@ -3,6 +3,7 @@ package igentuman.galacticresearch.client.gui;
 import com.google.common.collect.Lists;
 import com.mjr.extraplanets.client.gui.screen.CustomCelestialSelection;
 import com.mjr.mjrlegendslib.util.MessageUtilities;
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
@@ -15,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import org.apache.logging.log4j.Level;
 
 import java.util.*;
 
@@ -41,8 +43,9 @@ public class GRGuiCelestialSelectionExtraPlanets extends CustomCelestialSelectio
 
 	private boolean isUnlocked(String name, PlayerClientSpaceData stats)
 	{
-		return stats.getUnlockedMissions().contains(name) ||
-				Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name);
+		return stats.getUnlockedMissions().contains(name.toLowerCase()) ||
+				Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name.toLowerCase()) ||
+				!GalacticResearch.skyModel.getBodies().stream().anyMatch(body -> body.getName().equals(name.toLowerCase()) || body.getParent().equals(name.toLowerCase()));
 	}
 
 	@Override
@@ -56,54 +59,51 @@ public class GRGuiCelestialSelectionExtraPlanets extends CustomCelestialSelectio
 			stats = playerBaseClient.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
 		}
 		this.bodiesToRender.clear();
-		Iterator var1 = GalaxyRegistry.getRegisteredSolarSystems().values().iterator();
 
-		while(var1.hasNext()) {
-			SolarSystem solarSystem = (SolarSystem)var1.next();
+		for(SolarSystem solarSystem: GalaxyRegistry.getRegisteredSolarSystems().values()) {
 			if (solarSystem.getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
 				this.bodiesToRender.add(solarSystem.getMainStar());
 			}
 		}
 
-		var1 = GalaxyRegistry.getRegisteredPlanets().values().iterator();
-
-		while(var1.hasNext()) {
-			Planet planet = (Planet)var1.next();
+		for(Planet planet: GalaxyRegistry.getRegisteredPlanets().values()) {
 			if (planet.getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
+				GalacticResearch.instance.logger.log(Level.INFO, planet.getName());
 				if (isUnlocked(planet.getName(), stats)) {
+					GalacticResearch.instance.logger.log(Level.INFO, planet.getName()+" unlocked");
 					this.bodiesToRender.add(planet);
+				}  else {
+					GalacticResearch.instance.logger.log(Level.INFO, planet.getName()+" not");
 				}
 			}
 		}
 
-		var1 = GalaxyRegistry.getRegisteredMoons().values().iterator();
-
-		while(true) {
-			while(var1.hasNext()) {
-				Moon moon = (Moon)var1.next();
-				if (moon.getParentPlanet() != null && moon.getParentPlanet().getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
-					if (isUnlocked(moon.getParentPlanet().getName(), stats) && isUnlocked(moon.getName(), stats)) {
-						this.bodiesToRender.add(moon);
-					}
-				} else if (moon.getParentPlanet() == null) {
-					MessageUtilities.fatalErrorMessageToLog("extraplanets", "The moon " + moon.getUnlocalizedName() + " seems to have a null parent planet. Please check the log for other errors!");
+		for(Moon moon: GalaxyRegistry.getRegisteredMoons().values()) {
+			if (moon.getParentPlanet() != null && moon.getParentPlanet().getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
+				GalacticResearch.instance.logger.log(Level.INFO, moon.getName());
+				GalacticResearch.instance.logger.log(Level.INFO, moon.getParentPlanet().getName());
+				if (isUnlocked(moon.getParentPlanet().getName(), stats) && isUnlocked(moon.getName(), stats)) {
+					GalacticResearch.instance.logger.log(Level.INFO, moon.getName()+" unlocked");
+					this.bodiesToRender.add(moon);
+				} else {
+					GalacticResearch.instance.logger.log(Level.INFO, moon.getName()+" not");
+					GalacticResearch.instance.logger.log(Level.INFO, moon.getParentPlanet().getName()+" not");
 				}
+			} else if (moon.getParentPlanet() == null) {
+				MessageUtilities.fatalErrorMessageToLog("extraplanets", "The moon " + moon.getUnlocalizedName() + " seems to have a null parent planet. Please check the log for other errors!");
 			}
-
-			var1 = GalaxyRegistry.getRegisteredSatellites().values().iterator();
-
-			while(var1.hasNext()) {
-				Satellite satellite = (Satellite)var1.next();
-				if (satellite.getParentPlanet().getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
-					this.bodiesToRender.add(satellite);
-				}
-			}
-
-			GuiCelestialSelection.BORDER_SIZE = this.width / 65;
-			GuiCelestialSelection.BORDER_EDGE_SIZE = GuiCelestialSelection.BORDER_SIZE / 4;
-			return;
 		}
+
+		for(Satellite sat: GalaxyRegistry.getRegisteredSatellites().values()) {
+			if (sat.getParentPlanet().getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
+				this.bodiesToRender.add(sat);
+			}
+		}
+
+		GuiCelestialSelection.BORDER_SIZE = this.width / 65;
+		GuiCelestialSelection.BORDER_EDGE_SIZE = GuiCelestialSelection.BORDER_SIZE / 4;
 	}
+
 	protected List<CelestialBody> getChildren(Object object) {
 		List<CelestialBody> bodyList = Lists.newArrayList();
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
@@ -115,64 +115,37 @@ public class GRGuiCelestialSelectionExtraPlanets extends CustomCelestialSelectio
 		if (player != null) {
 			stats = playerBaseClient.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
 		}
-		Iterator var3;
-		List planets;
-		Iterator var6;
+
 		if (object instanceof Planet) {
-			var3 = GalaxyRegistry.getRegisteredPlanets().values().iterator();
-
-			label81:
-			while(true) {
-				while(true) {
-					Planet planet;
-					do {
-						do {
-							if (!var3.hasNext()) {
-								break label81;
-							}
-
-							planet = (Planet)var3.next();
-						} while(!planet.equals(object));
-					} while(!planet.getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName));
-
-					planets = GalaxyRegistry.getMoonsForPlanet((Planet)object);
-					var6 = planets.iterator();
-
-					while(var6.hasNext()) {
-						Moon moon = (Moon)var6.next();
-						if (stats.getUnlockedMissions().contains(moon.getName())) {
-							bodyList.add(moon);
-						}
+			for (Planet planet : GalaxyRegistry.getRegisteredPlanets().values()) {
+				if (!planet.equals(object)) {
+					continue;
+				}
+				if (!planet.getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
+					continue;
+				}
+				for (Moon moon : GalaxyRegistry.getMoonsForPlanet((Planet) object)) {
+					if (isUnlocked(moon.getName(), stats)) {
+						bodyList.add(moon);
 					}
 				}
+				break;
 			}
+
 		} else if (object instanceof SolarSystem) {
-			var3 = GalaxyRegistry.getRegisteredSolarSystems().values().iterator();
-
-			label57:
-			while(true) {
-				while(true) {
-					SolarSystem solarSystems;
-					do {
-						do {
-							if (!var3.hasNext()) {
-								break label57;
-							}
-
-							solarSystems = (SolarSystem)var3.next();
-						} while(!solarSystems.equals(object));
-					} while(!solarSystems.getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName));
-
-					planets = GalaxyRegistry.getPlanetsForSolarSystem((SolarSystem)object);
-					var6 = planets.iterator();
-
-					while(var6.hasNext()) {
-						Planet planet = (Planet)var6.next();
-						if (stats.getUnlockedMissions().contains(planet.getName())) {
-							bodyList.add(planet);
-						}
+			for (SolarSystem solarSystem : GalaxyRegistry.getRegisteredSolarSystems().values()) {
+				if (!solarSystem.equals(object)) {
+					continue;
+				}
+				if (!solarSystem.getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
+					continue;
+				}
+				for (Planet planet : GalaxyRegistry.getPlanetsForSolarSystem((SolarSystem) object)) {
+					if (isUnlocked(planet.getName(), stats)) {
+						bodyList.add(planet);
 					}
 				}
+				break;
 			}
 		}
 

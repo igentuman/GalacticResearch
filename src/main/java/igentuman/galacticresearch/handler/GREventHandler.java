@@ -5,16 +5,19 @@ import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.client.capability.SpaceClientDataProvider;
 import igentuman.galacticresearch.client.gui.GRGuiCelestialSelection;
+import igentuman.galacticresearch.client.gui.GuiTelescope;
 import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.capability.SpaceDataProvider;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
+import igentuman.galacticresearch.common.tile.TileTelescope;
 import igentuman.galacticresearch.network.GRPacketSimple;
 import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
 import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection;
 import micdoodle8.mods.galacticraft.core.event.EventLandingPadRemoval;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
@@ -22,6 +25,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -59,6 +64,23 @@ public class GREventHandler
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onClientTick(TickEvent.ClientTickEvent event)
+    {
+        try {
+            if (event.phase != TickEvent.Phase.END) return;
+            GuiTelescope.lastTickWTime = Minecraft.getMinecraft().world.getTotalWorldTime();
+            GuiTelescope.lastXangle = 0;
+            GuiTelescope.lastYangle = 0;
+        } catch (NullPointerException ignored ) { }
+    }
+
+    @SubscribeEvent
+    public void renderOverlay(GuiScreenEvent.DrawScreenEvent event) {
+        GuiTelescope.ticks = event.getRenderPartialTicks();
     }
 
     @SubscribeEvent

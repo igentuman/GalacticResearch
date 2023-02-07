@@ -17,6 +17,7 @@ public class ModConfig {
         @Config.Name("researchable_bodies")
         @Config.Comment({
                 "Define all researchable solar bodies",
+                "All other bodies, not defined in the list will be researched by default",
                 "Format: nameKey, zIndex, rarity,size, dimension ids (separated by ;), parent planet nameKey",
                 "(texture for the body location: galacticresearch:textures/gui/planets/nameKey.png)",
                 "(translation key for bodies: galacticresearch.planet.nameKey)",
@@ -29,10 +30,13 @@ public class ModConfig {
                 "moon, 1, 10, 32, -28, overworld",
                 "mars, 4, 30, 20, -29, sun",
                 "asteroids, 5, 30, 16, -30, sun",
-                "jupiter, 6, 30, 32, -15;-1501, sun",
+                "jupiter, 6, 30, 32, -15, sun",
                 "saturn, 7, 40, 28, -16, sun",
                 "uranus, 8, 70, 16, -17, sun",
-                "neptune, 9, 80, 16, -18, sun"
+                "neptune, 9, 80, 16, -18, sun",
+                "ceres, 9, 80, 16, -20, sun",
+                "neptune, 9, 80, 16, -18, sun",
+                "neptune, 9, 80, 16, -18, sun",
         };
 
         @Config.Name("default_researched_bodies")

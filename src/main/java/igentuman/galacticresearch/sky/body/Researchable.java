@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.sky.body;
 
 import igentuman.galacticresearch.GalacticResearch;
+import igentuman.galacticresearch.client.gui.GuiTelescope;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.sky.SkyItem;
 import igentuman.galacticresearch.util.WorldUtil;
@@ -14,6 +15,42 @@ public class Researchable implements ISkyBody {
     protected int y;
     protected SkyItem body;
     protected int speed = 0;
+
+    public float guiX(long lastTime, float ticks)
+    {
+        float sx = (x + (float)time()/speed());
+        int cx = (int) (sx / SkyModel.width);
+        float xc = sx - cx * SkyModel.width;
+        if(isHorizontalReversed()) {
+            xc = SkyModel.width - (sx - cx * SkyModel.width);
+        }
+
+        sx = (x + (float)lastTime/speed());
+        cx = (int) (sx / SkyModel.width);
+        float xl = sx - cx * SkyModel.width;
+        if(isHorizontalReversed()) {
+            xl = SkyModel.width - (sx - cx * SkyModel.width);
+        }
+        return xl + (xc - xl) * ticks;
+    }
+
+    public float guiY(long lastTime, float ticks)
+    {
+        float sy = (y + (float)time()/speed());
+        int cy = (int) (sy / SkyModel.height);
+        float yc = sy - cy * SkyModel.height;
+        if(isVerticalReversed()) {
+            yc = SkyModel.height - (sy - cy * SkyModel.height);
+        }
+
+        sy = (y + (float)lastTime/speed());
+        cy = (int) (sy / SkyModel.height);
+        float yl = sy - cy * SkyModel.height;
+        if(isVerticalReversed()) {
+            yl = SkyModel.height - (sy - cy * SkyModel.height);
+        }
+        return yl + (yc - yl) * ticks;
+    }
 
     public boolean isVerticalReversed()
     {

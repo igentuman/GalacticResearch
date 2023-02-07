@@ -74,12 +74,12 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public int xAngle = viewportSize/2;
+    public float xAngle = viewportSize/2;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public int yAngle = viewportSize/2;
+    public float yAngle = viewportSize/2;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -104,12 +104,12 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public int curBodyRelativeY = 0;
+    public float curBodyRelativeY = 0;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public int curBodyRelativeX = 0;
+    public float curBodyRelativeX = 0;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -117,14 +117,15 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     public String researchedBodies = "";
 
     public int operationCooldown = 10;
-    private int deltaX;
-    private int deltaY;
+    private float deltaX;
+    private float deltaY;
 
     public TileTelescope() {
         super("container.telescope.name");
         this.storage.setMaxExtract(45.0F);
         this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
     }
+
 
     public void rotateX(int x)
     {
@@ -218,8 +219,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
             if(Arrays.stream(ModConfig.researchSystem.default_researched_bodies).anyMatch(s -> s.equals(b.getBody().getName()))) {
                 continue;
             }
-            int x = b.getX();
-            int y = b.getY();
+            float x = b.getX();
+            float y = b.getY();
             int padding = 25;
             if(
                     x > xAngle + padding && x < (xAngle + viewportSize-padding-b.getSize()) &&
@@ -329,8 +330,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.dimension = nbt.getInteger("dimension");
-        this.xAngle = nbt.getInteger("xAngle");
-        this.yAngle = nbt.getInteger("yAngle");
+        this.xAngle = nbt.getFloat("xAngle");
+        this.yAngle = nbt.getFloat("yAngle");
         this.movementAmplifier = nbt.getInteger("movementAmplifier");
         this.operationCooldown = nbt.getInteger("operationCooldown");
         this.observationTime = nbt.getInteger("observationTime");
@@ -340,8 +341,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setInteger("dimension", this.dimension);
-        nbt.setInteger("xAngle", this.xAngle);
-        nbt.setInteger("yAngle", this.yAngle);
+        nbt.setFloat("xAngle", this.xAngle);
+        nbt.setFloat("yAngle", this.yAngle);
         nbt.setInteger("movementAmplifier", this.movementAmplifier);
         nbt.setInteger("operationCooldown", this.operationCooldown);
         nbt.setInteger("observationTime", this.observationTime);

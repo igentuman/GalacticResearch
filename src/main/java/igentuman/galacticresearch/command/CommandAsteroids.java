@@ -36,8 +36,15 @@ public class CommandAsteroids extends CommandTreeBase {
 		}
 		String r = args[0];
 		if(r.equals("generate")) {
-			String m = GalacticResearch.spaceMineProvider.generateMission(true);
-			notifyCommandListener(sender, this, "message.mining_asteroid.generated", m);
+			if(args.length > 1) {
+				for(int i = 0; i < Integer.parseInt(args[1]); i++) {
+					String m = GalacticResearch.spaceMineProvider.generateMission(true);
+					notifyCommandListener(sender, this, "message.mining_asteroid.generated", m);
+				}
+			} else {
+				String m = GalacticResearch.spaceMineProvider.generateMission(true);
+				notifyCommandListener(sender, this, "message.mining_asteroid.generated", m);
+			}
 		}
 
 		if(r.equals("clear")) {

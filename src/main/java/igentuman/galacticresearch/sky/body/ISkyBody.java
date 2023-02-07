@@ -13,6 +13,14 @@ public interface ISkyBody {
 
     int getSize();
 
+    default long clientTime()
+    {
+        if(Minecraft.getMinecraft().world == null) {
+            return  0;
+        }
+        return Minecraft.getMinecraft().world.getTotalWorldTime();
+    }
+
     default long time()
     {
         if(Minecraft.getMinecraft().world == null) {
