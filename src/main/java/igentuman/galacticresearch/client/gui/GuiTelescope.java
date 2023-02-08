@@ -21,12 +21,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.apache.logging.log4j.Level;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-import org.lwjgl.util.vector.Quaternion;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +74,26 @@ public class GuiTelescope extends GuiContainerGC {
             if(selectedButton.id == 4) return;
             actionPerformed(selectedButton);
         }
+    }
+
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if(keyCode == Keyboard.KEY_UP) {
+            actionPerformed(btnUp);
+            return;
+        }
+        if(keyCode == Keyboard.KEY_DOWN) {
+            actionPerformed(btnDown);
+            return;
+        }
+        if(keyCode == Keyboard.KEY_LEFT) {
+            actionPerformed(btnLeft);
+            return;
+        }
+        if(keyCode == Keyboard.KEY_RIGHT) {
+            actionPerformed(btnRight);
+            return;
+        }
+        super.keyTyped(typedChar, keyCode);
     }
 
     protected void actionPerformed(GuiButton par1GuiButton) {
@@ -265,6 +285,7 @@ public class GuiTelescope extends GuiContainerGC {
         List<String> help = new ArrayList();
         help.add(GCCoreUtil.translate("gui.help.desc.0"));
         help.add(GCCoreUtil.translate("gui.help.desc.1"));
+        help.add(GCCoreUtil.translate("gui.help.desc.2"));
 
         this.helpRegion.tooltipStrings = help;
         this.helpRegion.xPosition = guiLeft + 154;

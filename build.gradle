@@ -90,7 +90,7 @@ dependencies {
     compileOnly "org.jetbrains:annotations:17.0.0"
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
-    deobfCompile "curse.maven:cc-tweaked-282001:2992872"
+    implementation "curse.maven:cc-tweaked-282001:2992872"
     implementation "curse.maven:extraplanets-241291:4366814"
     deobfCompile "li.cil.oc:OpenComputers:${oc_version}"
     deobfProvided "mezz.jei:jei_1.12.2:${jei_version}:api"

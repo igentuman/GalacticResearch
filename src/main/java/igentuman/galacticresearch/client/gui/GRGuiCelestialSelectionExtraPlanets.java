@@ -70,10 +70,7 @@ public class GRGuiCelestialSelectionExtraPlanets extends CustomCelestialSelectio
 			if (planet.getParentSolarSystem().getUnlocalizedParentGalaxyName().equalsIgnoreCase(this.currentGalaxyName)) {
 				GalacticResearch.instance.logger.log(Level.INFO, planet.getName());
 				if (isUnlocked(planet.getName(), stats)) {
-					GalacticResearch.instance.logger.log(Level.INFO, planet.getName()+" unlocked");
 					this.bodiesToRender.add(planet);
-				}  else {
-					GalacticResearch.instance.logger.log(Level.INFO, planet.getName()+" not");
 				}
 			}
 		}
@@ -83,11 +80,7 @@ public class GRGuiCelestialSelectionExtraPlanets extends CustomCelestialSelectio
 				GalacticResearch.instance.logger.log(Level.INFO, moon.getName());
 				GalacticResearch.instance.logger.log(Level.INFO, moon.getParentPlanet().getName());
 				if (isUnlocked(moon.getParentPlanet().getName(), stats) && isUnlocked(moon.getName(), stats)) {
-					GalacticResearch.instance.logger.log(Level.INFO, moon.getName()+" unlocked");
 					this.bodiesToRender.add(moon);
-				} else {
-					GalacticResearch.instance.logger.log(Level.INFO, moon.getName()+" not");
-					GalacticResearch.instance.logger.log(Level.INFO, moon.getParentPlanet().getName()+" not");
 				}
 			} else if (moon.getParentPlanet() == null) {
 				MessageUtilities.fatalErrorMessageToLog("extraplanets", "The moon " + moon.getUnlocalizedName() + " seems to have a null parent planet. Please check the log for other errors!");

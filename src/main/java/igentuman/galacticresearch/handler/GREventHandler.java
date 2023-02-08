@@ -2,6 +2,8 @@ package igentuman.galacticresearch.handler;
 
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
+import igentuman.galacticresearch.ai.task.EntityAIPlayerNoFly;
+import igentuman.galacticresearch.ai.task.EntityAISpawnMinions;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.client.capability.SpaceClientDataProvider;
 import igentuman.galacticresearch.client.gui.GRGuiCelestialSelection;
@@ -10,24 +12,26 @@ import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.capability.SpaceDataProvider;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
-import igentuman.galacticresearch.common.tile.TileTelescope;
 import igentuman.galacticresearch.network.GRPacketSimple;
 import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
 import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection;
+import micdoodle8.mods.galacticraft.core.entities.EntityBossBase;
 import micdoodle8.mods.galacticraft.core.event.EventLandingPadRemoval;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -67,6 +71,18 @@ public class GREventHandler
     }
 
     @SubscribeEvent
+    public void onEntityJoinWorld(EntityJoinWorldEvent event)
+    {
+        Entity entity = event.getEntity();
+        if(ModConfig.tweaks.hard_boss_fight) {
+            if (entity instanceof EntityBossBase) {
+                ((EntityBossBase) entity).tasks.addTask(1, new EntityAIPlayerNoFly((EntityLiving) entity, EntityPlayer.class, 8.0F));
+                ((EntityBossBase) entity).tasks.addTask(1, new EntityAISpawnMinions((EntityLiving) entity, EntityPlayer.class, 12.0F));
+            }
+        }
+    }
+
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
@@ -79,6 +95,7 @@ public class GREventHandler
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public void renderOverlay(GuiScreenEvent.DrawScreenEvent event) {
         GuiTelescope.ticks = event.getRenderPartialTicks();
     }

@@ -11,6 +11,7 @@ import java.util.List;
 public class ModConfig {
     public static ResearchSystemSettings researchSystem= new ResearchSystemSettings();
     public static Machines machines = new Machines();
+    public static Tweaks tweaks = new Tweaks();
 
     public static class ResearchSystemSettings {
 
@@ -91,6 +92,17 @@ public class ModConfig {
             }
             return list;
         }
+    }
+
+    public static class Tweaks {
+
+        @Config.Name("hard_boss_fight")
+        @Config.Comment({
+                "More challenge - more fun"
+        })
+        public boolean hard_boss_fight = true;
+
+
     }
 
     public static class Machines {

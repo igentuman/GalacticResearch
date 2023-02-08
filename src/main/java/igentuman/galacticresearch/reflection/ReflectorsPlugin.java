@@ -1,6 +1,8 @@
 package igentuman.galacticresearch.reflection;
 
 import com.github.mjaroslav.reflectors.v4.Reflectors;
+import igentuman.galacticresearch.ModConfig;
+import igentuman.galacticresearch.reflection.entity.EntityBossSkeletonReflector;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
@@ -28,6 +30,11 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
         if (transformedName.equals("com.mjr.extraplanets.client.handlers.MainHandlerClient")) {
             return Reflectors.reflectClass(basicClass, transformedName, MainHandlerClientReflector.class.getName());
         }
+
+            if (transformedName.equals("micdoodle8.mods.galacticraft.core.entities.EntitySkeletonBoss")) {
+                return Reflectors.reflectClass(basicClass, transformedName, EntityBossSkeletonReflector.class.getName());
+            }
+
 
         return basicClass;
     }

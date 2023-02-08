@@ -30,6 +30,7 @@ gui.celestial_selection.advise=Research Space in order to unlock planets
 gui.mission_control_station.analyze=Analyze Completed Missions
 gui.help.desc.0=Use control buttons to search planets on sky
 gui.help.desc.1=Keep planet in focus area to collect data
+gui.help.desc.2=Keyboard arrow keys supported
 gui.help.mcs.desc.0=Select mission and send satellite rocket
 gui.help.mcs.desc.1=Wait until satellite returns data from the mission
 gui.telescope.status=Status: %s

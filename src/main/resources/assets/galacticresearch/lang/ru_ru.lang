@@ -30,6 +30,7 @@ gui.celestial_selection.advise=Исследуй космос для открыт
 gui.mission_control_station.analyze=Анализ завершенных миссий
 gui.help.desc.0=Управляй телескопом для поиска небесных тел
 gui.help.desc.1=Удерживай планету в фокусной области до завершения
+gui.help.desc.2=Поддерживаются стрелки на клавиатуре
 gui.help.mcs.desc.0=Выбери миссию и установи ракету
 gui.help.mcs.desc.1=Ожидай окончания миссии
 gui.telescope.status=Статус: %s
