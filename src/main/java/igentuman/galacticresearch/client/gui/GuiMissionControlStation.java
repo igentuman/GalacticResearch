@@ -12,6 +12,7 @@ import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementCheckbox;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementDropdown;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion;
 import micdoodle8.mods.galacticraft.core.energy.EnergyDisplayHelper;
+import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
@@ -100,6 +101,7 @@ public class GuiMissionControlStation extends GuiContainerGC {
         List<String> help = new ArrayList();
         help.add(GCCoreUtil.translate("gui.help.mcs.desc.0"));
         help.add(GCCoreUtil.translate("gui.help.mcs.desc.1"));
+        help.add(GCCoreUtil.translate("gui.help.mcs.desc.2"));
 
         this.helpRegion.tooltipStrings = help;
         this.helpRegion.xPosition = guiLeft + 156;
@@ -163,10 +165,13 @@ public class GuiMissionControlStation extends GuiContainerGC {
         }
         this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission_status", st), 22, 53, 4210752);
 
+        if(tile.getTelescope() == null) {
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.no_telescope"), 7, 120, ColorUtil.to32BitColor(255,255, 0, 0));
+        }
         if(tile.rocketState == -1) {
             this.fontRenderer.drawString(I18n.format("gui.mission_control_station.no_rocket"), 7, 130, 4210752);
         } else if(tile.rocketState == 0) {
-            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_not_ready"), 7, 130, 4210752);
+            this.fontRenderer.drawString(I18n.format("gui.mission_control_station.rocket_not_ready"), 7, 130, ColorUtil.to32BitColor(255,255, 0, 0));
         } else if (tile.rocketState == -2) {
             this.fontRenderer.drawString(I18n.format("gui.mission_control_station.wrong_rocket"), 7, 130, 4210752);
         } else{

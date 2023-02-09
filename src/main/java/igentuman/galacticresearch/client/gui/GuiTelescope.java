@@ -12,6 +12,7 @@ import igentuman.galacticresearch.util.WorldUtil;
 import micdoodle8.mods.galacticraft.core.client.gui.container.GuiContainerGC;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion;
 import micdoodle8.mods.galacticraft.core.energy.EnergyDisplayHelper;
+import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
@@ -227,11 +228,10 @@ public class GuiTelescope extends GuiContainerGC {
 
     public void renderFocusArea()
     {
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2-25, guiTop+24+viewportSize/2-25, 176, 123, 21, 21);
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2-25, guiTop+24+viewportSize/2+5, 176, 144, 21, 21);
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2+5, guiTop+24+viewportSize/2-25, 176, 165, 21, 21);
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2+5, guiTop+24+viewportSize/2+5, 176, 186, 21, 21);
-
+        this.drawTexturedModalRect(guiLeft+6+viewportSize/2-28, guiTop+24+viewportSize/2-28, 176, 123, 21, 21);
+        this.drawTexturedModalRect(guiLeft+6+viewportSize/2-28, guiTop+24+viewportSize/2+8, 176, 144, 21, 21);
+        this.drawTexturedModalRect(guiLeft+6+viewportSize/2+8, guiTop+24+viewportSize/2-28, 176, 165, 21, 21);
+        this.drawTexturedModalRect(guiLeft+6+viewportSize/2+8, guiTop+24+viewportSize/2+8, 176, 186, 21, 21);
     }
 
     public void initButtons()
@@ -351,7 +351,11 @@ public class GuiTelescope extends GuiContainerGC {
             }
             statusLine =  I18n.format("gui.telescope.status.researching", planet);
         }
-        this.fontRenderer.drawString(I18n.format("gui.telescope.status", statusLine), 8, 141, 4210752);
+        if(tile.getWorld().canSeeSky(tile.getPos())) {
+            this.fontRenderer.drawString(I18n.format("gui.telescope.status", statusLine), 8, 141, 4210752);
+        } else {
+            this.fontRenderer.drawString(I18n.format("gui.telescope.sky_blocked"), 8, 141, ColorUtil.to32BitColor(255,255, 0, 0));
+        }
         updateResearchedData();
         tickButtons();
     }
@@ -372,8 +376,10 @@ public class GuiTelescope extends GuiContainerGC {
 
         this.drawTexturedModalRect(guiLeft+42, guiTop + 167, 187, 0, Math.min(tile.getScaledElecticalLevel(54), 54), 7);
         if(Minecraft.getMinecraft().world.isRaining() && Minecraft.getMinecraft().world.getBiome(tile.getPos()).canRain()) return;
-        renderStars();
-        renderPlanets();
+        if(tile.getWorld().canSeeSky(tile.getPos())) {
+            renderStars();
+            renderPlanets();
+        }
         mc.getTextureManager().bindTexture(overlay);
         this.drawTexturedModalRect(var5, var6 + 5, 0, 0, this.xSize, this.ySize);
 
