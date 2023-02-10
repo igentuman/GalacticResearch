@@ -12,7 +12,7 @@ message.new_asteroid=New asteroid detected on sky
 message.mining_asteroid.cleared=All asteroids were removed
 
 description.telescope=Research planets
-description.mission_control_station=Controls Rocket Trajectory
+description.mission_control_station=Controls Rocket Missions and Connects to Space Stations
 
 gui.mission_control_station.wrong_rocket=Wrong Rocket
 gui.mission_control_station=Mission Control Station
@@ -43,9 +43,9 @@ gui.help.desc.2=Keyboard arrow keys supported
 gui.help.mcs.desc.0=Select mission and send satellite rocket
 gui.help.mcs.desc.1=Wait until satellite returns data from the mission
 gui.help.mcs.desc.2=MCS gets missions from Telescope placed by side
-gui.help.mcs.locator.desc.0=Build Space Stations on planets orbits
-gui.help.mcs.locator.desc.1=Define coordinates offset
-gui.help.mcs.locator.desc.2=Locator will locate closest to coordinates objects
+gui.help.mcs.locator.desc.0=In order locator to work, build Space Stations
+gui.help.mcs.locator.desc.1=Select planet and object to locate
+gui.help.mcs.locator.desc.2=Define offset coordinates
 gui.telescope.status=Status: %s
 gui.telescope.status.idle=Idle
 gui.telescope.sky_blocked=Sky is not visible

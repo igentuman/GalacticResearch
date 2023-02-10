@@ -1,6 +1,7 @@
 package igentuman.galacticresearch;
 
 import igentuman.galacticresearch.sky.SkyItem;
+import igentuman.galacticresearch.util.GRHooks;
 import net.minecraftforge.common.config.Config;
 
 import java.util.ArrayList;
@@ -107,9 +108,9 @@ public class ModConfig {
     public static class Locator {
         @Config.Name("location_duration")
         @Config.Comment({
-                "How long it takes to locate objects (seconds)"
+                "How long it takes to locate objects (ticks)"
         })
-        public int location_duration = 120;
+        public int location_duration = 240;
 
         @Config.Name("radius")
         @Config.Comment({
@@ -119,16 +120,33 @@ public class ModConfig {
 
         @Config.Name("locatable_objects")
         @Config.Comment({
-                "list of objects possible to locate"
+                "list of objects possible to locate",
+                "You can define custom structure name here, And maybe it will work :)"
         })
         public String[] locatable_objects = new String[] {
                 "village",
-                "ae2_meteorite",
                 "boss_dungeon",
                 "mansion",
                 "monument",
+                "temple",
+                "ae2_meteorite",
                 "ie_deposit"
         };
+
+        public String[] getLocatableObjects()
+        {
+            List<String> tmp = new ArrayList<>();
+            for (String l: locatable_objects) {
+                if(l.equals("ae2_meteorite") && !GalacticResearch.hooks.AE2Loaded) {
+                    continue;
+                }
+                if(l.equals("ie_deposit") && !GalacticResearch.hooks.IELoaded) {
+                    continue;
+                }
+                tmp.add(l);
+            }
+            return tmp.stream().toArray(String[]::new);
+        }
     }
 
     public static class Machines {

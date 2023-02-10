@@ -1,5 +1,6 @@
 package igentuman.galacticresearch.common.tile;
 
+import appeng.core.worlddata.WorldData;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
@@ -93,12 +94,16 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             if(Arrays.stream(getStations()).anyMatch(v -> v.equals(String.valueOf(dim)))) {
                 continue;
             }
+            if(currentStation.isEmpty()) {
+                currentStation = String.valueOf(dim);
+            }
             if(stations.isEmpty()) {
                 stations = String.valueOf(dim);
             } else {
                 stations += ";"+String.valueOf(dim);
             }
         }
+
         return this;
     }
 
@@ -112,8 +117,8 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     public int getLocatableObjectId()
     {
         if(currentLocatable.isEmpty()) return 0;
-        for (int i = 0; i< ModConfig.locator.locatable_objects.length; i++) {
-            if(ModConfig.locator.locatable_objects[i].equals(currentLocatable)) {
+        for (int i = 0; i< getObjectsToLocate().length; i++) {
+            if(getObjectsToLocate()[i].equals(currentLocatable)) {
                 return i;
             }
         }
@@ -122,7 +127,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public void selectLocatable(int id)
     {
-        currentLocatable = ModConfig.locator.locatable_objects[id];
+        currentLocatable = getObjectsToLocate()[id];
     }
 
     public void selectStation(int id)
@@ -178,7 +183,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public String[] getObjectsToLocate()
     {
-        return ModConfig.locator.locatable_objects;
+        return ModConfig.locator.getLocatableObjects();
     }
 
 
@@ -206,19 +211,19 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public int locationCounter;
+    public int locationCounter = -2;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public String locatorCords = "";
+    public String locatorCords;
 
-    public int[] locationCords = new int[] {0,0};
+    public int[] locationCords;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public String currentLocatable = "";
+    public String currentLocatable = getObjectsToLocate()[0];
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -268,6 +273,8 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         this.storage.setMaxExtract(45.0F);
         this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
         dimensionProvider = new DimensionProvider(this);
+        locationCords = new int[] {getPos().getX(), getPos().getZ()};
+        locatorCords = getPos().getX() +","+ getPos().getZ();
     }
 
     public void serializeLocatorData(List<String> result)
@@ -293,11 +300,13 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
                 int z = r/2;
                 info = ExcavatorHandler.getMineralWorldInfo(worldIn, (getLocatorXCord() + x*16) / 16, (getLocatorZCord() + z*16) / 16);
                 if (info.mineral != null && info.depletion == 0) {
-                    result.add((getLocatorXCord() + x*16) + "," + (getLocatorZCord() + z*16));
+                    String line = (getLocatorXCord() + x*16) + "," + (getLocatorZCord() + z*16);
+                    if(!result.contains(line)) result.add(line);
                 }
                 info = ExcavatorHandler.getMineralWorldInfo(worldIn, (getLocatorXCord() + x*16) / 16, (getLocatorZCord() -z*16) / 16);
                 if (info.mineral != null && info.depletion == 0) {
-                    result.add((getLocatorXCord() + x*16) + "," + (getLocatorZCord() - z*16));
+                    String line = (getLocatorXCord() + x*16) + "," + (getLocatorZCord() - z*16);
+                    if(!result.contains(line)) result.add(line);
                 }
             }
 
@@ -305,16 +314,17 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
                 int x = r/2;
                 info = ExcavatorHandler.getMineralWorldInfo(worldIn, (getLocatorXCord() + x*16) / 16, (getLocatorZCord() + z*16) / 16);
                 if (info.mineral != null && info.depletion == 0) {
-                    result.add((getLocatorXCord() + x*16) + "," + (getLocatorZCord() + z*16));
+                    String line = (getLocatorXCord() + x*16) + "," + (getLocatorZCord() + z*16);
+                    if(!result.contains(line)) result.add(line);
                 }
                 info = ExcavatorHandler.getMineralWorldInfo(worldIn, (getLocatorXCord() - x*16) / 16, (getLocatorZCord() +z*16) / 16);
                 if (info.mineral != null && info.depletion == 0) {
-                    result.add((getLocatorXCord() - x*16) + "," + (getLocatorZCord() + z*16));
+                    String line = (getLocatorXCord() - x*16) + "," + (getLocatorZCord() + z*16);
+                    if(!result.contains(line)) result.add(line);
                 }
             }
-
-            if(result.size() > 8) {
-                serializeMissionData();
+            if(result.size() > 4) {
+                serializeLocatorData(result);
                 return;
             }
         }
@@ -323,12 +333,12 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public void locateVillages()
     {
-        Village vil = GalacticResearch.server.
+        BlockPos m = GalacticResearch.server.
                 getWorld(Integer.parseInt(currentStation)).
-                getVillageCollection().
-                getNearestVillage(new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), ModConfig.locator.radius);
-        if(vil != null) {
-            locatorData = vil.getCenter().getX()+","+vil.getCenter().getZ();
+                findNearestStructure("Village", new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), true);
+
+        if(m != null) {
+            locatorData = m.getX()+","+m.getZ();
         }
 
     }
@@ -337,7 +347,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     {
         BlockPos m = GalacticResearch.server.
                 getWorld(Integer.parseInt(currentStation)).
-                findNearestStructure("woodland_mansion", new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), false);
+                findNearestStructure("Mansion", new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), true);
         if(m != null) {
             locatorData = m.getX()+","+m.getZ();
         }
@@ -347,7 +357,27 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     {
         BlockPos m = GalacticResearch.server.
                 getWorld(Integer.parseInt(currentStation)).
-                findNearestStructure("ocean_monument", new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), false);
+                findNearestStructure("Monument", new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), true);
+        if(m != null) {
+            locatorData = m.getX()+","+m.getZ();
+        }
+    }
+
+    public void locateTemples()
+    {
+        BlockPos m = GalacticResearch.server.
+                getWorld(Integer.parseInt(currentStation)).
+                findNearestStructure("Temple", new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), true);
+        if(m != null) {
+            locatorData = m.getX()+","+m.getZ();
+        }
+    }
+
+    public void locateCustom(String name)
+    {
+        BlockPos m = GalacticResearch.server.
+                getWorld(Integer.parseInt(currentStation)).
+                findNearestStructure(name, new BlockPos(getLocatorXCord(), 0, getLocatorZCord()), true);
         if(m != null) {
             locatorData = m.getX()+","+m.getZ();
         }
@@ -355,9 +385,15 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public void locateAE2Meteorites()
     {
-        List<String> result = new ArrayList<>();
-        //todo implement
+        World worldIn = WorldUtil.getWorldForDimensionServer(Integer.parseInt(currentStation));
 
+        Collection<NBTTagCompound> meteorites = WorldData.instance().spawnData().
+                getNearByMeteorites(worldIn.provider.getDimension(), getLocatorXCord()/16, getLocatorZCord()/16);
+        List<String> result = new ArrayList<>();
+        for(NBTTagCompound m: meteorites) {
+            result.add(m.getInteger("x") +","+ m.getInteger("z"));
+        }
+        serializeLocatorData(result);
     }
 
     public void locateBossDungeons()
@@ -383,15 +419,13 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
                 double oX = (double) i - getLocatorXCord();
                 double oZ = (double) j - getLocatorXCord();
                 result.add(oX+","+oZ);
-                if(result.size() > 10) {
+                if(result.size() > 5) {
                     serializeLocatorData(result);
                     return;
                 }
             }
         }
-        if(result.size() > 0) {
-            serializeLocatorData(result);
-        }
+        serializeLocatorData(result);
     }
 
 
@@ -415,6 +449,9 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             case "mansion":
                 locateMansions();
                 break;
+            case "temple":
+                locateTemples();
+                break;
             case "monument":
                 locateMonuments();
                 break;
@@ -424,6 +461,8 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             case "boss_dungeon":
                 locateBossDungeons();
                 break;
+            default:
+                locateCustom(currentLocatable);
         }
     }
 

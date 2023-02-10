@@ -91,6 +91,7 @@ dependencies {
     deobfCompile "curse.maven:immersive-engineering-231951:2974106"
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
+    deobfCompile "curse.maven:ae2-extended-life-570458:3791235"
     deobfCompile "curse.maven:asmodeuscore-303101:3873588"
     deobfCompile "curse.maven:galaxy-space-addon-for-galacticraft-238770:3873609"
     implementation "curse.maven:cc-tweaked-282001:2992872"

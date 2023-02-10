@@ -1,11 +1,9 @@
 package igentuman.galacticresearch.client.gui.MCS;
 
 import igentuman.galacticresearch.GalacticResearch;
-import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.container.ContainerMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.network.GRPacketSimple;
-import li.cil.repack.org.luaj.vm2.ast.Str;
 import micdoodle8.mods.galacticraft.core.client.gui.container.GuiContainerGC;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementDropdown;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion;
@@ -24,9 +22,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GuiMissionControlStationLocator extends GuiContainerGC implements GuiElementDropdown.IDropboxCallback, GuiElementTextBox.ITextBoxCallback {
@@ -80,7 +76,6 @@ public class GuiMissionControlStationLocator extends GuiContainerGC implements G
                 GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.MCS_LOCATE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
            break;
             case 6:
-               // locatorDataDropdown.optionStrings = new String[]{" ", " "};
                 locatorDataDropdown.enabled = false;
                 GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.OPEN_GUI_MISSIONS, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
                 break;
@@ -102,12 +97,12 @@ public class GuiMissionControlStationLocator extends GuiContainerGC implements G
             stations[i] =  GCCoreUtil.translate(tile.getStationName(tile.getStations()[i]));
         }
 
-        this.buttonList.add(xCord = new GuiElementTextBox(0, this, guiLeft+ 8, guiTop + 80, 30, 15, "", false, 5, true));
-        this.buttonList.add(yCord = new GuiElementTextBox(1, this, guiLeft+ 40, guiTop + 80, 30, 15, "", false, 5, true));
+        this.buttonList.add(xCord = new GuiElementTextBox(0, this, guiLeft+ 8, guiTop + 80, 34, 15, "", false, 5, true));
+        this.buttonList.add(yCord = new GuiElementTextBox(1, this, guiLeft+ 43, guiTop + 80, 34, 15, "", false, 5, true));
         this.buttonList.add(btnHelp = new GuiButtonImage(2, xpos+149, guiTop + 164, 13, 14, 176, 109, 0, guiTexture));
         this.buttonList.add(locateBtn = new GuiButton(3, guiLeft + 79, guiTop + 77, 90, 20,  GCCoreUtil.translate("gui.mission_control_station.locate")));
-        this.buttonList.add(locatorDataDropdown =new GuiElementDropdown(4, this, guiLeft+8, guiTop+120, getLocatorDataItems()));
-        this.buttonList.add(locatableDropdown = new GuiElementDropdown(5, this, guiLeft+8, 71, dropboxStrings));
+        this.buttonList.add(locatorDataDropdown =new GuiElementDropdown(4, this, guiLeft+8, guiTop+125, getLocatorDataItems()));
+        this.buttonList.add(locatableDropdown = new GuiElementDropdown(5, this, guiLeft+8, guiTop+51, dropboxStrings));
         this.buttonList.add(btnMissions = new GuiButtonImage(6, guiLeft+4 , guiTop - 7, 70, 16, 176, 140, 0, guiTexture));
         this.buttonList.add(btnLocator = new GuiButtonImage(7, guiLeft+74 , guiTop - 7, 70, 16, 176, 124, 0, guiTexture));
         this.buttonList.add(stationsDropdown =new GuiElementDropdown(8, this, guiLeft+8, guiTop+25, stations));
@@ -199,7 +194,7 @@ public class GuiMissionControlStationLocator extends GuiContainerGC implements G
 
         this.fontRenderer.drawString(I18n.format("gui.mission_control_station.locatable"), 8, 43, 4210752);
         this.fontRenderer.drawString(I18n.format("gui.mission_control_station.coordinates"), 8, 70, 4210752);
-        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.locator_data"), 8, 150, 4210752);
+        this.fontRenderer.drawString(I18n.format("gui.mission_control_station.locator_data"), 8, 115, 4210752);
         updateLocatorData();
         tickButtons();
     }

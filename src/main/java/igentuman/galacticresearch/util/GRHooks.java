@@ -14,6 +14,7 @@ public final class GRHooks {
     public boolean OCLoaded = false;
     public boolean ExtraPlanetsLoaded = false;
     public boolean IELoaded = false;
+    public boolean AE2Loaded = false;
 
     public void hookPreInit() {
         CCLoaded = Loader.isModLoaded("computercraft");
@@ -21,6 +22,7 @@ public final class GRHooks {
         OCLoaded = Loader.isModLoaded("opencomputers");
         ExtraPlanetsLoaded = Loader.isModLoaded("extraplanets");
         IELoaded = Loader.isModLoaded("immersiveengineering");
+        AE2Loaded = Loader.isModLoaded("appliedenergistics2");
 
     }
 

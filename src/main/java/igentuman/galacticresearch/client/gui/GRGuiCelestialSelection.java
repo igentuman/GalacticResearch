@@ -56,6 +56,8 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 			}
 		}
 
+		this.bodiesToRender.addAll(GalaxyRegistry.getRegisteredSatellites().values());
+
 		GuiCelestialSelection.BORDER_SIZE = this.width / 65;
 		GuiCelestialSelection.BORDER_EDGE_SIZE = GuiCelestialSelection.BORDER_SIZE / 4;
 
@@ -80,12 +82,12 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 		if (object instanceof Planet) {
 			List<Moon> moons = GalaxyRegistry.getMoonsForPlanet((Planet) object);
 			for (Moon moon : moons)
-				if (stats.getUnlockedMissions().contains(moon.getName()))
+				if (isUnlocked(moon.getName(), stats))
 					bodyList.add(moon);
 		} else if (object instanceof SolarSystem) {
 			List<Planet> planets = GalaxyRegistry.getPlanetsForSolarSystem((SolarSystem) object);
 			for (Planet planet : planets)
-				if (stats.getUnlockedMissions().contains(planet.getName()))
+				if (isUnlocked(planet.getName(), stats))
 					bodyList.add(planet);
 		}
 
