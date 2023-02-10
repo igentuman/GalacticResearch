@@ -88,6 +88,7 @@ configurations {
 dependencies {
     shade "com.github.MJaroslav.Reflectors:library:v4"
     compileOnly "org.jetbrains:annotations:17.0.0"
+    deobfCompile "curse.maven:immersive-engineering-231951:2974106"
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
     deobfCompile "curse.maven:asmodeuscore-303101:3873588"

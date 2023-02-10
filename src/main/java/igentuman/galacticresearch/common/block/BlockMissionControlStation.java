@@ -134,8 +134,11 @@ public class BlockMissionControlStation extends BlockHorizontal {
                 NBTTagCompound compound = new NBTTagCompound();
                 if(!((TileMissionControlStation) tile).missionsData.isEmpty())
                 {
-
                     compound.setString("missionsData", ((TileMissionControlStation) tile).missionsData);
+                }
+                if(!((TileMissionControlStation) tile).stations.isEmpty())
+                {
+                    compound.setString("stations", ((TileMissionControlStation) tile).stations);
                 }
                 item.setTagCompound(compound);
                 this.spawnAsEntity(worldIn, pos, item);
@@ -162,6 +165,12 @@ public class BlockMissionControlStation extends BlockHorizontal {
                         String missionsData = stack.getTagCompound().getString("missionsData");
                         ((TileMissionControlStation) tile).missionsData = missionsData;
                         ((TileMissionControlStation) tile).unserializeMissionData();
+                    }
+
+                    if(stack.getTagCompound().hasKey("stations"))
+                    {
+                        String stations = stack.getTagCompound().getString("stations");
+                        ((TileMissionControlStation) tile).stations = stations;
                     }
                 }
             }

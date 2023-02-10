@@ -78,7 +78,6 @@ public class GRPlayerHandler
         ColorUtil.sendUpdatedColorsToPlayer(stats);
     }
 
-
     protected void updateSchematics(EntityPlayerMP player, GCPlayerStats stats)
     {
         SchematicRegistry.addUnlockedPage(player, SchematicRegistry.getMatchingRecipeForID(ModConfig.machines.satellite_rocket_schematic_id));
@@ -101,9 +100,6 @@ public class GRPlayerHandler
             GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SCHEMATIC_LIST, GCCoreUtil.getDimensionID(player.world), objList), player);
         }
     }
-
-
-
 
     public void onPlayerUpdate(EntityPlayerMP player)
     {

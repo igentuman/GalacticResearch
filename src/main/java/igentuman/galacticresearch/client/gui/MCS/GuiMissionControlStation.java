@@ -1,4 +1,4 @@
-package igentuman.galacticresearch.client.gui;
+package igentuman.galacticresearch.client.gui.MCS;
 
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
@@ -38,6 +38,8 @@ public class GuiMissionControlStation extends GuiContainerGC {
     private GuiButtonImage btnUp;
     private GuiButtonImage btnDown;
     private GuiButtonImage btnHelp;
+    private GuiButtonImage btnLocator;
+    private GuiButtonImage btnMissions;
     private GuiButton activateBtn;
     private GuiButton analyzeDataBtn;
 
@@ -79,6 +81,9 @@ public class GuiMissionControlStation extends GuiContainerGC {
             case 4:
                 GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.ANALYZE_DATA_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
                 break;
+            case 5:
+                GalacticResearch.packetPipeline.sendToServer(new GRPacketSimple(GRPacketSimple.EnumSimplePacket.OPEN_GUI_LOCATOR, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tile.getPos(), 0}));
+                break;
             default:
         }
     }
@@ -94,6 +99,8 @@ public class GuiMissionControlStation extends GuiContainerGC {
         this.buttonList.add(btnHelp = new GuiButtonImage(2, xpos+149, guiTop + 164, 13, 14, 176, 109, 0, guiTexture));
         this.buttonList.add(activateBtn = new GuiButton(3, (this.width - this.xSize) / 2 + 7, guiTop + 141, 90, 20,  GCCoreUtil.translate("gui.mission_control_station.activate")));
         this.buttonList.add(analyzeDataBtn = new GuiButton(4, (this.width - this.xSize) / 2 + 7, guiTop + 87, 161, 20,  GCCoreUtil.translate("gui.mission_control_station.analyze")));
+        this.buttonList.add(btnLocator = new GuiButtonImage(5, guiLeft+74 , guiTop - 7, 70, 16, 176, 124, 0, guiTexture));
+        this.buttonList.add(btnMissions = new GuiButtonImage(6, guiLeft+4 , guiTop - 7, 70, 16, 176, 140, 0, guiTexture));
     }
 
     private void addHelpRegion()
@@ -142,6 +149,8 @@ public class GuiMissionControlStation extends GuiContainerGC {
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 
         this.fontRenderer.drawString(GCCoreUtil.translate("gui.mission_control_station"), 10, 10, 4210752);
+        this.fontRenderer.drawString(GCCoreUtil.translate("gui.mission_control_station.tab.missions"), 10, -3, 4210752);
+        this.fontRenderer.drawString(GCCoreUtil.translate("gui.mission_control_station.tab.locator"), 80, -3, 4210752);
         String curMission =tile.currentMission;
         if(curMission.isEmpty()) {
             curMission = "none";

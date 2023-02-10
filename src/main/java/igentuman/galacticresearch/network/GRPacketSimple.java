@@ -1,5 +1,6 @@
 package igentuman.galacticresearch.network;
 
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.common.capability.PlayerSpaceData;
@@ -188,6 +189,41 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                         machine.playerAnalyzeData(playerBase);
                     }
                     break;
+                case MCS_LOCATE_BUTTON:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.locate();
+                    }
+                    break;
+                case MCS_SELECT_LOCATABLE:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.selectLocatable((Integer) this.data.get(1));
+                    }
+                    break;
+                case EDIT_LOCATOR_CORDS:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.setLocationCords((Integer) this.data.get(1), (Integer) this.data.get(2));
+                    }
+                    break;
+                case MCS_SELECT_STATION:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        TileMissionControlStation machine = (TileMissionControlStation)tileAt;
+                        machine.selectStation((Integer) this.data.get(1));
+                    }
+                    break;
+                case OPEN_GUI_LOCATOR:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        ((TileMissionControlStation) tileAt).fetchPlayerStations(player);
+                        player.openGui(GalacticResearch.instance, 3, player.world, tileAt.getPos().getX(), tileAt.getPos().getY(), tileAt.getPos().getZ());
+                    }
+                    break;
+                case OPEN_GUI_MISSIONS:
+                    if (tileAt instanceof TileMissionControlStation) {
+                        player.openGui(GalacticResearch.instance, 2, player.world, tileAt.getPos().getX(), tileAt.getPos().getY(), tileAt.getPos().getZ());
+                    }
+                    break;
             }
 
         }
@@ -212,13 +248,19 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
         SYNC_PLAYER_SPACE_DATA(Side.CLIENT, String.class),
         PREV_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         NEXT_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        EDIT_LOCATOR_CORDS(Side.SERVER, new Class[]{BlockPos.class, Integer.class, Integer.class}),
         ACTIVATE_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         ANALYZE_DATA_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_UP_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        MCS_LOCATE_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_DOWN_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_LEFT_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_RIGHT_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_MULTIPLIER_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        MCS_SELECT_LOCATABLE(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        MCS_SELECT_STATION(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        OPEN_GUI_LOCATOR(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        OPEN_GUI_MISSIONS(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         C_OPEN_CUSTOM_GUI(Side.CLIENT, new Class[]{Integer.class, Integer.class, Integer.class});
 
         private Side targetSide;

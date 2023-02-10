@@ -12,6 +12,7 @@ public class ModConfig {
     public static ResearchSystemSettings researchSystem= new ResearchSystemSettings();
     public static Machines machines = new Machines();
     public static Tweaks tweaks = new Tweaks();
+    public static Locator locator = new Locator();
 
     public static class ResearchSystemSettings {
 
@@ -101,8 +102,33 @@ public class ModConfig {
                 "More challenge - more fun"
         })
         public boolean hard_boss_fight = true;
+    }
 
+    public static class Locator {
+        @Config.Name("location_duration")
+        @Config.Comment({
+                "How long it takes to locate objects (seconds)"
+        })
+        public int location_duration = 120;
 
+        @Config.Name("radius")
+        @Config.Comment({
+                "Locator will search objects in defined radius around offset coordinates"
+        })
+        public int radius = 1000;
+
+        @Config.Name("locatable_objects")
+        @Config.Comment({
+                "list of objects possible to locate"
+        })
+        public String[] locatable_objects = new String[] {
+                "village",
+                "ae2_meteorite",
+                "boss_dungeon",
+                "mansion",
+                "monument",
+                "ie_deposit"
+        };
     }
 
     public static class Machines {

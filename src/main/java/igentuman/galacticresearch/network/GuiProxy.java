@@ -1,8 +1,9 @@
 package igentuman.galacticresearch.network;
 
 import igentuman.galacticresearch.GalacticResearch;
-import igentuman.galacticresearch.client.gui.GuiMissionControlStation;
+import igentuman.galacticresearch.client.gui.MCS.GuiMissionControlStation;
 import igentuman.galacticresearch.client.gui.GuiTelescope;
+import igentuman.galacticresearch.client.gui.MCS.GuiMissionControlStationLocator;
 import igentuman.galacticresearch.common.container.ContainerMissionControlStation;
 import igentuman.galacticresearch.common.container.ContainerTelescope;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
@@ -44,7 +45,12 @@ public class GuiProxy implements IGuiHandler {
         }
         if (te instanceof TileMissionControlStation) {
             ((TileMissionControlStation) te).dimension = player.dimension;
-            return new GuiMissionControlStation(player.inventory, (TileMissionControlStation) te);
+            if(id == 2) {
+                return new GuiMissionControlStation(player.inventory, (TileMissionControlStation) te);
+            }
+            if(id == 3) {
+                return new GuiMissionControlStationLocator(player.inventory, ((TileMissionControlStation) te).fetchPlayerStations(player));
+            }
         }
         return null;
     }
