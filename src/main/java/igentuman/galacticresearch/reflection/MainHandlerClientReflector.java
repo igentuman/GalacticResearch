@@ -15,7 +15,7 @@ public class MainHandlerClientReflector {
 
     public static void onGuiOpenEvent(MainHandlerClient instance, GuiOpenEvent event) {
         if(ModConfig.researchSystem.extraplanets_intergration) {
-            if (Config.USE_CUSTOM_CELESTIAL_SELECTION && event.getGui() instanceof GuiCelestialSelection) {
+            if (Config.USE_CUSTOM_CELESTIAL_SELECTION && event.getGui().getClass().getName().equals("com.mjr.extraplanets.client.gui.screen.CustomCelestialSelection")) {
                 if (GameSettings.isKeyDown(micdoodle8.mods.galacticraft.core.tick.KeyHandlerClient.galaxyMap)) {
                     event.setGui(new GRGuiCelestialSelectionExtraPlanets(true, ((GuiCelestialSelection)event.getGui()).possibleBodies, ((GuiCelestialSelection)event.getGui()).canCreateStations));
                 } else {

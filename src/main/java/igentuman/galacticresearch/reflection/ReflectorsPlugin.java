@@ -35,6 +35,10 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
             return Reflectors.reflectClass(basicClass, transformedName, EntityBossSkeletonReflector.class.getName());
         }
 
+        if (transformedName.equals("micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner")) {
+            return Reflectors.reflectClass(basicClass, transformedName, TileEntityDungeonSpawnerReflector.class.getName());
+        }
+
         return basicClass;
     }
 }

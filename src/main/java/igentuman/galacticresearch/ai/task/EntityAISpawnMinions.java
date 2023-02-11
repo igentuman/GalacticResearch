@@ -7,6 +7,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -21,7 +23,7 @@ public class EntityAISpawnMinions extends EntityAIBase {
     protected EntityLiving entity;
     protected Entity closestEntity;
     protected float maxDistance;
-    private int counter = 20;
+    private int counter = 10;
     protected Class<? extends Entity> watchedClass;
 
 
@@ -59,7 +61,7 @@ public class EntityAISpawnMinions extends EntityAIBase {
     }
 
     private void spawnMobs() {
-        for(int i = 0; i < 3 + entity.world.rand.nextInt(2); i++) {
+        for(int i = 0; i < 1 + entity.world.rand.nextInt(2); i++) {
 
             EntityLiving mob = new EntityEvolvedSkeleton(entity.world);
 
@@ -70,6 +72,15 @@ public class EntityAISpawnMinions extends EntityAIBase {
                 mob.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
                 mob.setAttackTarget((EntityLivingBase) closestEntity);
                 mob.forceSpawn = true;
+                EntityAIBase task = null;
+                for(EntityAITasks.EntityAITaskEntry t: mob.targetTasks.taskEntries) {
+                    if(t.action instanceof EntityAIHurtByTarget) {
+                        task = t.action;
+                        break;
+                    }
+                }
+                if(task != null)
+                mob.targetTasks.removeTask(task);
             }
             closestEntity.world.spawnEntity(mob);
         }
