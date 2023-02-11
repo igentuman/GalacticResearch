@@ -103,9 +103,7 @@ public class GREventHandler
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onGuiOpenEvent(GuiOpenEvent event) {
-        if(event.getGui() != null && event.getGui().getClass().getName().equals("asmodeuscore.core.astronomy.gui.screen.NewGuiCelestialSelection")) {
-            return;
-        }
+
         if (((event.getGui() instanceof GuiCelestialSelection))) {
             if (GameSettings.isKeyDown(micdoodle8.mods.galacticraft.core.tick.KeyHandlerClient.galaxyMap)) {
                 event.setGui(new GRGuiCelestialSelection(true, ((GuiCelestialSelection) event.getGui()).possibleBodies, ((GuiCelestialSelection) event.getGui()).canCreateStations));

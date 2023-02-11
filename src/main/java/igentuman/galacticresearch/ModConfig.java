@@ -62,6 +62,12 @@ public class ModConfig {
         })
         public boolean extraplanets_intergration = true;
 
+        @Config.Name("galaxy_space_integration")
+        @Config.Comment({
+                "Disable in case of conflicts"
+        })
+        public boolean galaxy_space_integration = true;
+
         protected SkyItem parseBodyLine(String line)
         {
             String[] parts = line.split(",");

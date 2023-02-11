@@ -70,6 +70,7 @@ gui.dropdown.village=Деревня
 gui.dropdown.monument=Монумент
 gui.dropdown.ae2_meteorite=AE2 Метеорит
 gui.dropdown.boss_dungeon=Данж с боссом
+gui.dropdown.temple=Пирамида
 gui.dropdown.none=(выбрать)
 
 item.satellite_rocket.name=Спутниковая Ракета

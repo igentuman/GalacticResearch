@@ -34,9 +34,9 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 
 	@Override
 	public void initGui() {
-		final Minecraft minecraft = FMLClientHandler.instance().getClient();
-		final EntityPlayerSP player = minecraft.player;
-		final EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
+		Minecraft minecraft = FMLClientHandler.instance().getClient();
+		EntityPlayerSP player = minecraft.player;
+		EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
 		PlayerClientSpaceData stats = null;
 
 		if (player != null) {
@@ -69,9 +69,9 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 	@Override
 	protected List<CelestialBody> getChildren(Object object) {
 		List<CelestialBody> bodyList = Lists.newArrayList();
-		final Minecraft minecraft = FMLClientHandler.instance().getClient();
-		final EntityPlayerSP player = minecraft.player;
-		final EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
+		Minecraft minecraft = FMLClientHandler.instance().getClient();
+		EntityPlayerSP player = minecraft.player;
+		EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
 
 		PlayerClientSpaceData stats = null;
 

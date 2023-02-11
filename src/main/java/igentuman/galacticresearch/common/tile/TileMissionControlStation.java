@@ -439,6 +439,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             return;
         }
         locationCounter = -2;
+        if(currentStation.isEmpty()) return;
         switch (currentLocatable) {
             case "ie_deposit":
                 locateIEDeposits();
