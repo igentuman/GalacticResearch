@@ -39,6 +39,10 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
             return Reflectors.reflectClass(basicClass, transformedName, TileEntityDungeonSpawnerReflector.class.getName());
         }
 
+        if (transformedName.equals("asmodeuscore.core.event.AsmodeusClientEvent")) {
+            return Reflectors.reflectClass(basicClass, transformedName, AsmodeusClientEventReflector.class.getName());
+        }
+
         return basicClass;
     }
 }

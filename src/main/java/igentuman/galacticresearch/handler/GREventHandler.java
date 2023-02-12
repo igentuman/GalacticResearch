@@ -106,7 +106,10 @@ public class GREventHandler
 
         if(     event.getGui() == null ||
                 event.getGui().getClass().getName().equals("com.mjr.extraplanets.client.gui.screen.CustomCelestialSelection") ||
-                event.getGui().getClass().getName().equals("asmodeuscore.core.astronomy.gui.screen.NewGuiCelestialSelection")) {
+                event.getGui().getClass().getName().equals("asmodeuscore.core.astronomy.gui.screen.NewGuiCelestialSelection") ||
+                event.getGui().getClass().getName().equals("igentuman.galacticresearch.client.gui.GRGuiCelestialSelectionExtraPlanets") ||
+                event.getGui().getClass().getName().equals("igentuman.galacticresearch.client.gui.GRGuiCelestialSelectionGalaxySpace")
+            ) {
             return;
         }
         if (((event.getGui() instanceof GuiCelestialSelection))) {

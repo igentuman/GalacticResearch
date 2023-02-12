@@ -54,6 +54,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -603,6 +604,14 @@ public class GRGuiCelestialSelectionGalaxySpace extends NewGuiCelestialSelection
 		GL11.glLoadIdentity();
 		GL11.glMatrixMode(5888);
 		GL11.glLoadIdentity();
+	}
+
+	public void drawButtons(int mousePosX, int mousePosY) {
+		super.drawButtons(mousePosX, mousePosY);
+		int LHS = GuiCelestialSelection.BORDER_SIZE + GuiCelestialSelection.BORDER_EDGE_SIZE;
+		String str = EnumColor.DARK_RED + I18n.format("gui.celestial_selection.advise");
+		this.fontRenderer.drawString(str, LHS + 5, this.height - GuiCelestialSelection.BORDER_SIZE - GuiCelestialSelection.BORDER_EDGE_SIZE - 20, ColorUtil.to32BitColor(255, 255, 255, 255));
+
 	}
 
 	protected void drawSelectionCursor(FloatBuffer fb, Matrix4f worldMatrix) {

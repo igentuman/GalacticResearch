@@ -2,7 +2,6 @@ package igentuman.galacticresearch.reflection;
 
 import com.mjr.extraplanets.Config;
 import com.mjr.extraplanets.client.handlers.MainHandlerClient;
-import com.mjr.mjrlegendslib.util.MessageUtilities;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.client.gui.GRGuiCelestialSelection;
 import igentuman.galacticresearch.client.gui.GRGuiCelestialSelectionExtraPlanets;
