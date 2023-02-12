@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "galacticresearch:satellite_rocket"
+    },
+    "title": {
+      "translate": "advancement.galacticresearch.satellite_rocket.name"
+    },
+    "description": {
+      "translate": "advancement.galacticresearch.satellite_rocket.desc"
+    }
+  },
+  "parent": "galacticraftcore:galacticraft/rocket_workbench",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticresearch:satellite_rocket"
+          }
+        ]
+      }
+    }
+  }
+}

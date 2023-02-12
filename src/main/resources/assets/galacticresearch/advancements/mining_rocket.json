@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "galacticresearch:mining_rocket"
+    },
+    "title": {
+      "translate": "advancement.galacticresearch.mining_rocket.name"
+    },
+    "description": {
+      "translate": "advancement.galacticresearch.mining_rocket.desc"
+    }
+  },
+  "parent": "galacticraftcore:galacticraft/rocket_workbench",
+  "criteria": {
+    "has_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticresearch:mining_rocket"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -14,6 +14,11 @@ message.mining_asteroid.cleared=Все астероиды удалены
 description.telescope=Наблюдение за небесными телами
 description.mission_control_station=Управляет полётом ракет
 
+advancement.galacticresearch.mining_rocket.name=Космический майнинг
+advancement.galacticresearch.mining_rocket.desc=Скрафти Добывающую ракету
+advancement.galacticresearch.satellite_rocket.name=Пора исследовать немного планет
+advancement.galacticresearch.satellite_rocket.desc=Скрафти спутниковую ракету
+
 gui.mission_control_station.wrong_rocket=Не тот тип ракеты
 gui.mission_control_station=Станция Контроля Миссий
 gui.mission_control_station.mission=Текущая миссия:

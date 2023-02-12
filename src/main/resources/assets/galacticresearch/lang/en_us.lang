@@ -14,6 +14,11 @@ message.mining_asteroid.cleared=All asteroids were removed
 description.telescope=Research planets
 description.mission_control_station=Controls Rocket Missions and Connects to Space Stations
 
+advancement.galacticresearch.mining_rocket.name=Space mining
+advancement.galacticresearch.mining_rocket.desc=Craft Mining Rocket
+advancement.galacticresearch.satellite_rocket.name=It's time to explore some planets
+advancement.galacticresearch.satellite_rocket.desc=Craft Satellite Rocket
+
 gui.mission_control_station.wrong_rocket=Wrong Rocket
 gui.mission_control_station=Mission Control Station
 gui.mission_control_station.mission=Current Mission:
