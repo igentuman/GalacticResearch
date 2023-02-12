@@ -31,13 +31,11 @@ public class RenderMiningRocket extends Render<EntityMiningRocket> {
     public RenderMiningRocket(RenderManager manager, ModelBase spaceshipModel, String textureDomain, String texture)
     {
         this(manager, new ResourceLocation(textureDomain, "textures/model/" + texture + ".png"));
-      //  this.rocketModel = spaceshipModel;
     }
 
     public RenderMiningRocket(RenderManager manager, ResourceLocation texture)
     {
         super(manager);
-      //  this.rocketModel = texture;
         this.shadowSize = 0.9F;
     }
 

@@ -36,23 +36,23 @@ public class RegistryHandler {
     public static Block MISSION_CONTROL_STATION = new BlockMissionControlStation();
 
     @ObjectHolder("galacticresearch:satellite_rocket")
-    public static ItemSatelliteRocket SATELLITE_ROCKET = new ItemSatelliteRocket("satellite_rocket");
+    public static Item SATELLITE_ROCKET = new ItemSatelliteRocket("satellite_rocket");
 
     @ObjectHolder("galacticresearch:mining_rocket")
-    public static ItemMiningRocket MINING_ROCKET = new ItemMiningRocket("mining_rocket");
+    public static Item MINING_ROCKET = new ItemMiningRocket("mining_rocket");
 
     @ObjectHolder("galacticresearch:probe")
     public static Item ITEM_PROBE = new Item().setRegistryName("probe").setTranslationKey("probe");
 
     @ObjectHolder("galacticresearch:mining_rocket_schematic")
-    public static ItemMiningRocketSchematic MINING_ROCKET_SCHEMATIC = new ItemMiningRocketSchematic("mining_rocket_schematic");
+    public static Item MINING_ROCKET_SCHEMATIC = new ItemMiningRocketSchematic("mining_rocket_schematic");
 
     public static void registerEntities() {
         EntityRegistry.registerModEntity(
                 new ResourceLocation(GalacticResearch.MODID, "satellite_rocket"),
                 EntitySatelliteRocket.class,
                 "satellite_rocket",
-                14, GalacticResearch.instance,
+                714, GalacticResearch.instance,
                 150,
                 1,
                 false
@@ -61,7 +61,7 @@ public class RegistryHandler {
                 new ResourceLocation(GalacticResearch.MODID, "mining_rocket"),
                 EntityMiningRocket.class,
                 "mining_rocket",
-                15,
+                715,
                 GalacticResearch.instance,
                 150,
                 1,
@@ -89,12 +89,12 @@ public class RegistryHandler {
 
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(SATELLITE_ROCKET);
-        event.getRegistry().register(MINING_ROCKET);
         event.getRegistry().register(ITEM_PROBE);
         event.getRegistry().register(MINING_ROCKET_SCHEMATIC);
         event.getRegistry().register(new ItemBlock(MISSION_CONTROL_STATION).setRegistryName(MISSION_CONTROL_STATION.getRegistryName()));
         event.getRegistry().register(new ItemBlock(TELESCOPE).setRegistryName(TELESCOPE.getRegistryName()));
+        event.getRegistry().register(SATELLITE_ROCKET);
+        event.getRegistry().register(MINING_ROCKET);
     }
 
     @SideOnly(Side.CLIENT)

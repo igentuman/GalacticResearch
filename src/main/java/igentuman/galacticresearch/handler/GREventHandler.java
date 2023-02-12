@@ -3,7 +3,9 @@ package igentuman.galacticresearch.handler;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.ai.task.EntityAIPlayerNoFly;
+import igentuman.galacticresearch.ai.task.EntityAIPyrokinetic;
 import igentuman.galacticresearch.ai.task.EntityAISpawnMinions;
+import igentuman.galacticresearch.ai.task.EntityAISpawnWeb;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.client.capability.SpaceClientDataProvider;
 import igentuman.galacticresearch.client.gui.GRGuiCelestialSelection;
@@ -19,6 +21,8 @@ import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection
 import micdoodle8.mods.galacticraft.core.entities.EntityBossBase;
 import micdoodle8.mods.galacticraft.core.event.EventLandingPadRemoval;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCreeperBoss;
+import micdoodle8.mods.galacticraft.planets.venus.entities.EntitySpiderQueen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
@@ -78,6 +82,12 @@ public class GREventHandler
             if (entity instanceof EntityBossBase) {
                 ((EntityBossBase) entity).tasks.addTask(1, new EntityAIPlayerNoFly((EntityLiving) entity, EntityPlayer.class, 8.0F));
                 ((EntityBossBase) entity).tasks.addTask(1, new EntityAISpawnMinions((EntityLiving) entity, EntityPlayer.class, 12.0F));
+            }
+            if (entity instanceof EntityCreeperBoss) {
+                ((EntityBossBase) entity).tasks.addTask(1, new EntityAIPyrokinetic((EntityLiving) entity, EntityPlayer.class, 12.0F));
+            }
+            if (entity instanceof EntitySpiderQueen) {
+                ((EntityBossBase) entity).tasks.addTask(1, new EntityAISpawnWeb((EntityLiving) entity, EntityPlayer.class, 12.0F));
             }
         }
     }

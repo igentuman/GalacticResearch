@@ -47,19 +47,8 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
         this.setMaxStackSize(1);
         this.setTranslationKey(assetName);
         this.setRegistryName(assetName);
-    }
+        this.setCreativeTab(GalacticraftCore.galacticraftItemsTab);
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack itemStack) {
-        return ClientProxyCore.galacticraftItem;
-    }
-
-
-    @Override
-    public CreativeTabs getCreativeTab()
-    {
-        return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override

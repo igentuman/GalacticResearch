@@ -1,31 +1,23 @@
 package igentuman.galacticresearch.common;
 
-import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ISidedProxy;
-import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.RegistryHandler;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
-import igentuman.galacticresearch.common.item.ItemMiningRocket;
 import igentuman.galacticresearch.common.item.ItemMiningRocketSchematic;
-import igentuman.galacticresearch.common.item.ItemSatelliteRocket;
 import igentuman.galacticresearch.common.schematic.SchematicMiningRocket;
 import igentuman.galacticresearch.common.schematic.SchematicSatelliteRocket;
-import igentuman.galacticresearch.network.TileProcessUpdatePacket;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
-import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.recipe.NasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
-import micdoodle8.mods.galacticraft.planets.venus.VenusItems;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,10 +95,5 @@ public class CommonProxy implements ISidedProxy {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         SpaceCapabilityHandler.register();
-    }
-
-    @Override
-    public void handleProcessUpdatePacket(TileProcessUpdatePacket message, MessageContext ctx) {
-        GalacticResearch.instance.logger.error("Got PacketUpdateItemStack on wrong side!");
     }
 }

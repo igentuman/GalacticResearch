@@ -6,7 +6,6 @@ import igentuman.galacticresearch.handler.GREventHandler;
 import igentuman.galacticresearch.handler.GRPlayerHandler;
 import igentuman.galacticresearch.network.GRChannelHandler;
 import igentuman.galacticresearch.network.GuiProxy;
-import igentuman.galacticresearch.network.ModPacketHandler;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.util.GRHooks;
 import net.minecraft.server.MinecraftServer;
@@ -56,7 +55,6 @@ public class GalacticResearch
         proxy.preInit(event);
         logger = event.getModLog();
         MinecraftForge.EVENT_BUS.register(this);
-        ModPacketHandler.registerMessages(MODID);
         hooks.hookPreInit();
     }
 
@@ -109,11 +107,4 @@ public class GalacticResearch
     public void serverStart(FMLServerStartingEvent serverStartEvent) {
         CommandHandler.registerCommands(serverStartEvent);
     }
-
-    @EventHandler
-    public void onIdMapping(FMLModIdMappingEvent idMappingEvent) {
-        //OreDictHelper.refreshOreDictCache();
-        //DveinsRecipes.refreshRecipeCaches();
-    }
-
 }

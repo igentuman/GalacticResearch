@@ -10,21 +10,18 @@ import micdoodle8.mods.galacticraft.planets.venus.entities.EntitySpiderQueen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
-
-public class EntityAISpawnMinions extends EntityAIBase {
+public class EntityAIPyrokinetic extends EntityAIBase {
     protected EntityLiving entity;
     protected Entity closestEntity;
     protected float maxDistance;
@@ -32,14 +29,14 @@ public class EntityAISpawnMinions extends EntityAIBase {
     protected Class<? extends Entity> watchedClass;
 
 
-    public EntityAISpawnMinions(EntityLiving entityIn, Class<? extends Entity> watchTargetClass, float maxDistance) {
+    public EntityAIPyrokinetic(EntityLiving entityIn, Class<? extends Entity> watchTargetClass, float maxDistance) {
         this.entity = entityIn;
         this.watchedClass = watchTargetClass;
         this.maxDistance = maxDistance;
         this.setMutexBits(2);
     }
 
-    public EntityAISpawnMinions(EntityLiving entityIn, Class<? extends Entity> watchTargetClass, float maxDistance, float chanceIn) {
+    public EntityAIPyrokinetic(EntityLiving entityIn, Class<? extends Entity> watchTargetClass, float maxDistance, float chanceIn) {
         this.entity = entityIn;
         this.watchedClass = watchTargetClass;
         this.maxDistance = maxDistance;
@@ -50,7 +47,7 @@ public class EntityAISpawnMinions extends EntityAIBase {
     public boolean shouldExecute() {
         counter--;
         if(counter <= 0) {
-            counter = Math.max(entity.world.rand.nextInt(100), 60);
+            counter = Math.max(entity.world.rand.nextInt(50), 30);
             if (this.entity.getAttackTarget() != null) {
                 this.closestEntity = this.entity.getAttackTarget();
             }
@@ -65,41 +62,11 @@ public class EntityAISpawnMinions extends EntityAIBase {
         return false;
     }
 
-    private void spawnMobs() {
-        for(int i = 0; i < 1 + entity.world.rand.nextInt(2); i++) {
-            EntityLiving mob = null;
-            if(entity instanceof EntitySkeletonBoss) {
-                mob = new EntityEvolvedSkeleton(entity.world);
-            } else if(entity instanceof EntityCreeperBoss) {
-                mob = new EntityEvolvedCreeper(entity.world);
-            } else if(entity instanceof EntitySpiderQueen) {
-                mob = new EntityEvolvedSpider(entity.world);
-            }
-
-            float range = 3F;
-            mob.setPosition(entity.posX + 0.5 + Math.random() * range - range / 2, entity.posY + 1, entity.posZ + 0.5 + Math.random() * range - range / 2);
-            mob.onInitialSpawn(entity.world.getDifficultyForLocation(new BlockPos(mob)), null);
-            mob.setAttackTarget((EntityLivingBase) closestEntity);
-            mob.forceSpawn = true;
-            EntityAIBase task = null;
-            for(EntityAITasks.EntityAITaskEntry t: mob.targetTasks.taskEntries) {
-                if(t.action instanceof EntityAIHurtByTarget) {
-                    task = t.action;
-                    break;
-                }
-            }
-            if(task != null)
-                mob.targetTasks.removeTask(task);//do not attack each other
-
-            if(mob instanceof EntityEvolvedSkeleton) {
-                mob.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
-
-            }
-            closestEntity.world.spawnEntity(mob);
-        }
+    private void fire() {
+        closestEntity.world.setBlockState(closestEntity.getPosition(), Blocks.FIRE.getDefaultState(), 11);
     }
 
     public void updateTask() {
-        spawnMobs();
+        fire();
     }
 }

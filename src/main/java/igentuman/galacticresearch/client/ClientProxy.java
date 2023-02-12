@@ -6,19 +6,13 @@ import igentuman.galacticresearch.client.model.ItemModelMiningRocket;
 import igentuman.galacticresearch.client.model.ItemModelSatelliteRocket;
 import igentuman.galacticresearch.client.render.entity.RenderMiningRocket;
 import igentuman.galacticresearch.client.render.entity.RenderSatelliteRocket;
-import igentuman.galacticresearch.client.sound.SoundHandler;
 import igentuman.galacticresearch.common.CommonProxy;
 import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
-import igentuman.galacticresearch.common.tile.TileTelescope;
-import igentuman.galacticresearch.network.TileProcessUpdatePacket;
 import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,7 +24,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -56,7 +49,6 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent e)
     {
         super.init(e);
-        MinecraftForge.EVENT_BUS.register(SoundHandler.class);
     }
 
     @Override
@@ -88,20 +80,4 @@ public class ClientProxy extends CommonProxy {
         registerTexture(event, "satellite_rocket");
     }
 
-    @Override
-    public void handleProcessUpdatePacket(TileProcessUpdatePacket message, MessageContext ctx) {
-        TileEntity te = Minecraft.getMinecraft().world.getTileEntity(message.pos);
-
-        if(te instanceof TileTelescope) {
-         //   ((TileTelescope) te).onTileUpdatePacket(message);
-        }
-    }
-
-    @SubscribeEvent
-    public void registerModels(ModelRegistryEvent event) {
-     //   ModelResourceLocation modelResourceLocation = new ModelResourceLocation(MODID + ":satellite_rocket", "inventory");
-    //    ModelLoader.setCustomModelResourceLocation(RegistryHandler.SATELLITE_ROCKET, 0, modelResourceLocation);
-    //    ClientUtilities.registerModel(Constants.TEXTURE_PREFIX, PlanetProgression_Items.SATELLITE_ROCKET, 1, "satellite_rocket");
-
-    }
 }

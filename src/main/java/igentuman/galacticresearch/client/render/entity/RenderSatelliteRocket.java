@@ -31,13 +31,11 @@ public class RenderSatelliteRocket extends Render<EntitySatelliteRocket> {
     public RenderSatelliteRocket(RenderManager manager, ModelBase spaceshipModel, String textureDomain, String texture)
     {
         this(manager, new ResourceLocation(textureDomain, "textures/model/" + texture + ".png"));
-      //  this.rocketModel = spaceshipModel;
     }
 
     public RenderSatelliteRocket(RenderManager manager, ResourceLocation texture)
     {
         super(manager);
-      //  this.rocketModel = texture;
         this.shadowSize = 0.9F;
     }
 
