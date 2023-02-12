@@ -60,7 +60,11 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     @Override
     public String[] getMethods() {
-        return new String[] {"getComponentName", "getMissionsInfo","selectMission", "activateMission", "missionDuration"};
+        return new String[] {
+                "getComponentName", "getMissionsInfo","selectMission", "activateMission",
+                "missionDuration", "getSpaceStations", "getLocatableObjects", "selectSpaceStation",
+                "selectObjectToLocate", "locateObject", "getLocationData", "setCoordinates"
+        };
     }
 
     public String getComponentName()
@@ -81,6 +85,20 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
                 return new Object[] {activateMission()};
             case 4:
                 return new Object[]{ModConfig.machines.satellite_mission_duration*20};
+            case 5:
+                return new Object[]{getStations()};
+            case 6:
+                return new Object[]{getObjectsToLocate()};
+            case 7:
+                return new Object[] {selectStation((String) args[0])};
+            case 8:
+                return new Object[] {selectLocatable((String) args[0])};
+            case 9:
+                return new Object[] {locate()};
+            case 10:
+                return new Object[] {getLocatorDataItems()};
+            case 11:
+                return new Object[] {setLocationCords((Integer) args[0], (Integer) args[1])};
             default:
                 throw new NoSuchMethodException();
         }
@@ -107,11 +125,15 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         return this;
     }
 
-    public void locate()
+    public boolean locate()
     {
+        if(currentLocatable.isEmpty() || currentStation.isEmpty()) {
+            return false;
+        }
         locatorData = "";
         locationCounter = ModConfig.locator.location_duration;
         markDirty();
+        return true;
     }
 
     public int getLocatableObjectId()
@@ -130,6 +152,16 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         currentLocatable = getObjectsToLocate()[id];
     }
 
+    public boolean selectLocatable(String name)
+    {
+        List<String> st = Arrays.asList(getObjectsToLocate());
+        if(st.contains(name)) {
+            currentLocatable = name;
+            return true;
+        }
+        return false;
+    }
+
     public void selectStation(int id)
     {
         try {
@@ -137,6 +169,16 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         } catch (IndexOutOfBoundsException ignored) {
 
         }
+    }
+
+    public boolean selectStation(String name)
+    {
+        List<String> st = Arrays.asList(getStations());
+        if(st.contains(name)) {
+            currentStation = name;
+            return true;
+        }
+        return false;
     }
 
     public int getCurStationId()
@@ -163,11 +205,12 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         }
     }
 
-    public void setLocationCords(Integer x, Integer y)
+    public boolean setLocationCords(Integer x, Integer y)
     {
         locationCords = new int[]{x, y};
         locatorCords = x +","+ y;
         markDirty();
+        return true;
     }
 
     public String getStationName(String dim)
@@ -465,6 +508,18 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             default:
                 locateCustom(currentLocatable);
         }
+    }
+
+    public String[] getLocatorDataItems()
+    {
+        List<String> items = new ArrayList<>();
+        for(String line: locatorData.split(";")) {
+            String[] pairs = line.split(",");
+            if(pairs[0].isEmpty()) continue;
+            items.add("X: "+ Float.valueOf(pairs[0]).intValue()+", Z: "+Float.valueOf(pairs[1]).intValue());
+        }
+        if(items.size() == 0) items.add(" ");
+        return items.stream().toArray(String[]::new);
     }
 
 
