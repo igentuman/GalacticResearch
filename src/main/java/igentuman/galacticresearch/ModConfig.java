@@ -3,6 +3,7 @@ package igentuman.galacticresearch;
 import igentuman.galacticresearch.sky.SkyItem;
 import igentuman.galacticresearch.util.GRHooks;
 import net.minecraftforge.common.config.Config;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,23 +24,36 @@ public class ModConfig {
                 "All other bodies, not defined in the list will be researched by default",
                 "Format: nameKey, zIndex, rarity,size, dimension ids (separated by ;), parent planet nameKey",
                 "(texture for the body location: galacticresearch:textures/gui/planets/nameKey.png)",
-                "(translation key for bodies: galacticresearch.planet.nameKey)",
+                "(translation key for bodies: planet.nameKey)",
                 "parent planet field used to set child planets only observable in dimmension of parent planet (except sun, all planets with parent sun can be observed anywhere)"
         })
         public String[] researchable_bodies = new String[]{
-                "mercury, 1, 100, 16, -13, sun",
-                "venus, 2, 70, 20, -31, sun",
-                "overworld, 3, 50, 16, 0, sun",
-                "moon, 1, 10, 32, -28, overworld",
-                "mars, 4, 30, 20, -29, sun",
-                "asteroids, 5, 30, 16, -30, sun",
-                "jupiter, 6, 30, 32, -15, sun",
-                "saturn, 7, 40, 28, -16, sun",
-                "uranus, 8, 70, 16, -17, sun",
-                "neptune, 9, 80, 16, -18, sun",
-                "ceres, 9, 80, 16, -20, sun",
-                "neptune, 9, 80, 16, -18, sun",
-                "neptune, 9, 80, 16, -18, sun",
+            "mercury, 1, 100, 16, -13, sun",
+            "venus, 2, 70, 20, -31, sun",
+            "overworld, 3, 50, 16, 0, sun",
+            "moon, 1, 10, 32, -28, overworld",
+            "mars, 4, 30, 20, -29, sun",
+            "phobos, 1, 15, 5, -1012, mars",
+            "deimos, 2, 15, 8, -1013, mars",
+            "asteroids, 5, 30, 16, -30, sun",
+            "ceres, 6, 35, 10, -1007, sun",
+            "jupiter, 7, 30, 32, -15;-1501, sun",
+            "io, 1, 30, 15, -1014, jupiter",
+            "europa, 2, 30, 14, -1015, jupiter",
+            "ganymede, 3, 30, 12, -1016, jupiter",
+            "callisto, 4, 30, 10, -1022, jupiter",
+            "saturn, 8, 40, 28, -16, sun",
+            "enceladus, 2, 40, 18, -1017, saturn",
+            "titan, 6, 40, 15, -1018, saturn",
+            "uranus, 9, 70, 16, -17, sun",
+            "miranda, 1, 65, 12, -1024, uranus",
+            "oberon, 5, 40, 10, -1019, uranus",
+            "neptune, 10, 60, 16, -18, sun",
+            "proteus, 1, 55, 12, -1020, neptune",
+            "triton, 2, 55, 13, -1018, neptune",
+            "pluto, 11, 120, 9, -1008, sun",
+            "kuiperbelt, 12, 50, 8, -1009, sun",
+            "haumea, 13, 160, 4, -1023, sun"
         };
 
         @Config.Name("default_researched_bodies")
@@ -70,6 +84,7 @@ public class ModConfig {
 
         protected SkyItem parseBodyLine(String line)
         {
+            if(line.isEmpty()) return null;
             String[] parts = line.split(",");
             String name = parts[0].trim();
             int zIndex = Integer.parseInt(parts[1].trim());
@@ -78,11 +93,11 @@ public class ModConfig {
             String[] dimensionIds = parts[4].trim().split(";");
             int[] dims = new int[dimensionIds.length];
             int i = 0;
-            for (String dim: dimensionIds) {
+            for (String dim : dimensionIds) {
                 dims[i] = Integer.parseInt(dim.trim());
             }
             String parent = "";
-            if(parts.length > 5) {
+            if (parts.length > 5) {
                 parent = parts[5].trim();
             }
             return new SkyItem(name, zIndex, rarity, size, dims, parent);
@@ -93,9 +108,10 @@ public class ModConfig {
             List<SkyItem> list = new ArrayList<>();
             for (String bodyLine: researchable_bodies) {
                 try {
-                    list.add(parseBodyLine(bodyLine));
-                } catch (NullPointerException ignore) {
-
+                    SkyItem item = parseBodyLine(bodyLine.trim());
+                    if(item != null) list.add(item);
+                } catch (ArrayIndexOutOfBoundsException|NullPointerException er) {
+                    GalacticResearch.instance.logger.log(Level.ERROR, er.getLocalizedMessage());
                 }
             }
             return list;

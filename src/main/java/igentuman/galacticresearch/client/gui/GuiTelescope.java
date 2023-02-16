@@ -260,7 +260,11 @@ public class GuiTelescope extends GuiContainerGC {
             if(name.contains("ASTEROID-")) {
                 lines.add(name);
             } else {
-                lines.add(I18n.format("gui."+name+".name"));
+                String planet = I18n.format("planet."+name);
+                if(planet.equals("planet."+name)) {
+                    planet = I18n.format("moon."+name);
+                }
+                lines.add(planet);
             }
         }
         if(bodies.length == 0) {
@@ -338,7 +342,6 @@ public class GuiTelescope extends GuiContainerGC {
     }
 
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-
         this.fontRenderer.drawString(GCCoreUtil.translate("gui.telescope"), 60, 10, 4210752);
         this.btnMultiplier.displayString = String.valueOf(tile.movementAmplifier);
         String statusLine = I18n.format("gui.telescope.status.idle");
@@ -347,7 +350,10 @@ public class GuiTelescope extends GuiContainerGC {
             if(tile.curObserveBody.contains("ASTEROID-")) {
                 planet = "ASTEROID";
             } else {
-                planet = I18n.format("gui."+tile.curObserveBody+".name");
+                planet = I18n.format("planet."+tile.curObserveBody);
+                if(planet.equals("planet."+tile.curObserveBody)) {
+                    planet = I18n.format("moon."+tile.curObserveBody);
+                }
             }
             statusLine =  I18n.format("gui.telescope.status.researching", planet);
         }

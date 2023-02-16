@@ -158,7 +158,10 @@ public class GuiMissionControlStation extends GuiContainerGC {
         String status = tile.getMissionStatusKey(tile.currentMission);
         int info =  tile.getMissionInfo(tile.currentMission);
         this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission"), 22, 25, 4210752);
-        String planet = I18n.format("gui."+curMission+".name");
+        String planet = I18n.format("planet."+curMission);
+        if(planet.equals("planet."+curMission)) {
+            planet = I18n.format("moon."+curMission);
+        }
         if(curMission.contains("ASTEROID-")) {
             planet = curMission;
         }
