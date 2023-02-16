@@ -89,12 +89,12 @@ public class RegistryHandler {
 
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(ITEM_PROBE);
         event.getRegistry().register(MINING_ROCKET_SCHEMATIC);
         event.getRegistry().register(new ItemBlock(MISSION_CONTROL_STATION).setRegistryName(MISSION_CONTROL_STATION.getRegistryName()));
         event.getRegistry().register(new ItemBlock(TELESCOPE).setRegistryName(TELESCOPE.getRegistryName()));
         event.getRegistry().register(SATELLITE_ROCKET);
         event.getRegistry().register(MINING_ROCKET);
+        event.getRegistry().register(ITEM_PROBE);
     }
 
     @SideOnly(Side.CLIENT)

@@ -148,7 +148,9 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
     {
-        list.add(new ItemStack(this, 1, 0));
+        if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH) {
+            list.add(new ItemStack(this, 1, 0));
+        }
     }
 
     @Override

@@ -47,18 +47,13 @@ public class ItemSatelliteRocket extends Item implements IHoldableItem, ISortabl
         this.setMaxStackSize(1);
         this.setTranslationKey(assetName);
         this.setRegistryName(assetName);
+        this.setCreativeTab(GalacticraftCore.galacticraftItemsTab);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public EnumRarity getRarity(ItemStack itemStack) {
         return ClientProxyCore.galacticraftItem;
-    }
-
-    @Override
-    public CreativeTabs getCreativeTab()
-    {
-        return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
@@ -158,7 +153,9 @@ public class ItemSatelliteRocket extends Item implements IHoldableItem, ISortabl
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
     {
-        list.add(new ItemStack(this, 1, 0));
+        if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH) {
+            list.add(new ItemStack(this, 1, 0));
+        }
     }
 
     @Override
