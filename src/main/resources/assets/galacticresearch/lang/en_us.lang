@@ -56,8 +56,8 @@ gui.telescope.status.idle=Idle
 gui.telescope.sky_blocked=Sky is not visible
 gui.telescope.status.researching=Observing %s
 gui.message.mission_empty=Select mission in Mission Control Station
+gui.mission.fail=Failed
 gui.sun.name=Sun
-overworld.name=Earth
 gui.telescope.researched=Researched:
 gui.telescope.researched.none=None
 gui.dropdown.mansion=Mansion
@@ -68,6 +68,12 @@ gui.dropdown.ae2_meteorite=AE2 Meteorite
 gui.dropdown.boss_dungeon=Boss Dungeon
 gui.dropdown.none=None
 gui.dropdown.temple=Temple
+
+overworld.name=Earth
+planet.overworld=Earth
+planet.pluto=Pluto
+planet.ceres=Ceres
+moon.none=None
 
 item.satellite_rocket.name=Satellite Rocket
 item.mining_rocket.name=Mining Rocket

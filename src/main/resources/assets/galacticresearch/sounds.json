@@ -1,0 +1,12 @@
+{
+	"block.mcs.mission_fail": {
+		"category": "block",
+		"subtitle": "block.mcs.mission_fail",
+		"sounds": [ { "name": "galacticresearch:block/mission_fail", "stream": false } ]
+	},
+	"block.mcs.mission_finish": {
+		"category": "block",
+		"subtitle": "block.mcs.mission_finish",
+		"sounds": [ { "name": "galacticresearch:block/mission_finish", "stream": false } ]
+	}
+}

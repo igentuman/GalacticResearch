@@ -54,6 +54,7 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
     private int mineDelay = 10;
     private boolean miningDone = false;
     public EnumRocketType rocketType = EnumRocketType.INVENTORY54;
+    public boolean willFail = false;
 
     public EntityMiningRocket(World par1World) {
         super(par1World);
@@ -91,6 +92,13 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
     {
         mineDelay--;
         if(mineDelay <= 0 && !miningDone) {
+            if(willFail && rand.nextInt(200) < 10) {
+                TileMissionControlStation te = getMCS();
+                te.setMissionInfo(mission, -3);
+                isMining = false;
+                setDead();
+                return;
+            }
             ItemStack st = GalacticResearch.spaceMineProvider.mineBlock(mission);
             if(st.equals(ItemStack.EMPTY)) {
                 if(GalacticResearch.spaceMineProvider.getMissions().get(mission) <= 0) {
@@ -487,10 +495,15 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
         }
         TileMissionControlStation te = getMCS();
         if(te != null) {
+           if(world.rand.nextInt(100) > ModConfig.machines.mining_mission_success_rate) {
+               willFail = true;
+           }
             te.setMissionInfo(mission, 1);
         }
         isMining = true;
     }
+
+
 
 
     public void setMission(String name)

@@ -6,6 +6,7 @@ import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.item.ItemMiningRocketSchematic;
 import igentuman.galacticresearch.common.schematic.SchematicMiningRocket;
 import igentuman.galacticresearch.common.schematic.SchematicSatelliteRocket;
+import igentuman.galacticresearch.util.GRSounds;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
@@ -77,6 +78,7 @@ public class CommonProxy implements ISidedProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        GRSounds.init();
     }
 
     @Override

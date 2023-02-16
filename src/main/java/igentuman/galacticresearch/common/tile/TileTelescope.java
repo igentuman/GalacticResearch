@@ -272,8 +272,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                 return;
             }
             doMovement();
-            if(!GalacticResearch.server.getEntityWorld().isRaining() ||
-                !GalacticResearch.server.getEntityWorld().getBiome(getPos()).canRain()) {
+            if(!getWorld().isRaining() ||
+                !getWorld().getBiome(getPos()).canRain()) {
                 if(world.canSeeSky(getPos())) {
                     observe();
                 }

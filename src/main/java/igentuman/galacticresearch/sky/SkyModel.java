@@ -91,13 +91,23 @@ public class SkyModel {
     public List<Researchable> getObjectsToResearch(int dim)
     {
         List<Researchable> res = new ArrayList<>();
+        String whiteListed = "";
+        SkyItem b = getBodyByDIM(dim);
+        if(b == null) {
+            return res;
+        }
+        if(b.parentInstance != null) {
+            whiteListed = b.getParent();
+            b = b.parentInstance;
+        } else {
+            return res;
+        }
         for(Researchable r: getResearchables()) {
-            SkyItem b = getBodyByDIM(dim);
-            if(b == null) return res;
+
             if(b.getParent().equals(r.getBody().parent) ||
                     b.getName().equals(r.getBody().parent)
             ) {
-                if(b.getName().equals(r.getBody().getName())) continue;
+                if(b.getName().equals(r.getBody().getName()) && !r.getBody().getName().equals(whiteListed)) continue;
                 res.add(r);
             }
         }

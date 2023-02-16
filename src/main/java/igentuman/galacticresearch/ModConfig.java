@@ -2,6 +2,7 @@ package igentuman.galacticresearch;
 
 import igentuman.galacticresearch.sky.SkyItem;
 import igentuman.galacticresearch.util.GRHooks;
+import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import net.minecraftforge.common.config.Config;
 import org.apache.logging.log4j.Level;
 
@@ -28,33 +29,36 @@ public class ModConfig {
                 "parent planet field used to set child planets only observable in dimmension of parent planet (except sun, all planets with parent sun can be observed anywhere)"
         })
         public String[] researchable_bodies = new String[]{
-            "mercury, 1, 100, 16, -13, sun",
-            "venus, 2, 70, 20, -31, sun",
-            "overworld, 3, 50, 16, 0, sun",
-            "moon, 1, 10, 32, -28, overworld",
-            "mars, 4, 30, 20, -29, sun",
-            "phobos, 1, 15, 5, -1012, mars",
-            "deimos, 2, 15, 8, -1013, mars",
-            "asteroids, 5, 30, 16, -30, sun",
-            "ceres, 6, 35, 10, -1007, sun",
-            "jupiter, 7, 30, 32, -15;-1501, sun",
-            "io, 1, 30, 15, -1014, jupiter",
-            "europa, 2, 30, 14, -1015, jupiter",
-            "ganymede, 3, 30, 12, -1016, jupiter",
-            "callisto, 4, 30, 10, -1022, jupiter",
-            "saturn, 8, 40, 28, -16, sun",
-            "enceladus, 2, 40, 18, -1017, saturn",
-            "titan, 6, 40, 15, -1018, saturn",
-            "uranus, 9, 70, 16, -17, sun",
-            "miranda, 1, 65, 12, -1024, uranus",
-            "oberon, 5, 40, 10, -1019, uranus",
-            "neptune, 10, 60, 16, -18, sun",
-            "proteus, 1, 55, 12, -1020, neptune",
-            "triton, 2, 55, 13, -1018, neptune",
-            "pluto, 11, 120, 9, -1008, sun",
-            "kuiperbelt, 12, 50, 8, -1009, sun",
-            "haumea, 13, 160, 4, -1023, sun"
+     //     name        zindex  rarity  size    dim        parent
+            "mercury,   1,      100,    16,     -13,        sun",
+            "venus,     2,      70,     20,     -31;5,      sun",
+            "overworld, 3,      50,     16,      0;3,       sun",
+            "moon,      1,      10,     32,     -28,        overworld",
+            "mars,      4,      30,     20,     -29;4,      sun",
+            "phobos,    1,      15,     16,     -1012,      mars",
+            "deimos,    2,      15,     16,     -1013,      mars",
+            "asteroids, 5,      30,     16,     -30,        sun",
+            "ceres,     6,      35,     16,     -1007,      sun",
+            "jupiter,   7,      30,     32,     -15;-1501,  sun",
+            "io,        1,      30,     16,     -1014,      jupiter",
+            "europa,    2,      30,     16,     -1015,      jupiter",
+            "ganymede,  3,      30,     16,     -1016,      jupiter",
+            "callisto,  4,      30,     16,     -1022,      jupiter",
+            "saturn,    8,      40,     28,     -16,        sun",
+            "enceladus, 2,      40,     18,     -1017,      saturn",
+            "titan,     6,      40,     15,     -1018,      saturn",
+            "uranus,    9,      70,     16,     -17,        sun",
+            "miranda,   1,      65,     16,     -1024,      uranus",
+            "oberon,    5,      40,     16,     -1019,      uranus",
+            "neptune,   10,     60,     16,     -18,        sun",
+            "proteus,   1,      55,     16,     -1020,      neptune",
+            "triton,    2,      55,     16,     -1018,      neptune",
+            "pluto,     11,     120,    16,     -1008,      sun",
+            "kuiperbelt, 12,    50,     16,     -1009,      sun",
+            "haumea,    13,     160,    16,     -1023,      sun"
         };
+
+
 
         @Config.Name("default_researched_bodies")
         @Config.Comment({
@@ -103,13 +107,24 @@ public class ModConfig {
             return new SkyItem(name, zIndex, rarity, size, dims, parent);
         }
 
+        public boolean isRegistered(String name)
+        {
+            return GalaxyRegistry.getRegisteredPlanets().keySet().contains(name) ||
+                    GalaxyRegistry.getRegisteredMoons().keySet().contains(name);
+
+        }
+
         public List<SkyItem> getListOfResearchable()
         {
             List<SkyItem> list = new ArrayList<>();
             for (String bodyLine: researchable_bodies) {
                 try {
                     SkyItem item = parseBodyLine(bodyLine.trim());
-                    if(item != null) list.add(item);
+                    if(item != null) {
+                        if(isRegistered(item.getName())) { //add only registered bodies
+                            list.add(item);
+                        }
+                    }
                 } catch (ArrayIndexOutOfBoundsException|NullPointerException er) {
                     GalacticResearch.instance.logger.log(Level.ERROR, er.getLocalizedMessage());
                 }
@@ -179,7 +194,7 @@ public class ModConfig {
         @Config.Comment({
                 "How long it takes to unlock planets (seconds)"
         })
-        public int satellite_mission_duration = 240;
+        public int satellite_mission_duration = 300;
 
         @Config.Name("mining_rocket_schematic_id")
         public int mining_rocket_schematic_id = 9262;
@@ -188,19 +203,19 @@ public class ModConfig {
         @Config.Comment({
                 "Ticks to mine one block on asteroid"
         })
-        public int mining_speed = 10;
+        public int mining_speed = 15;
 
         @Config.Name("mining_mission_minimal_resources")
         @Config.Comment({
                 "In stacks"
         })
-        public int mining_mission_minimal_resources = 20;
+        public int mining_mission_minimal_resources = 10;
 
         @Config.Name("mining_mission_maximal_resources")
         @Config.Comment({
-                "In stacks (limit 54 as rocket has 54 slots)"
+                "In stacks (max 50)"
         })
-        public int mining_mission_maximal_resources = 45;
+        public int mining_mission_maximal_resources = 35;
 
         @Config.Name("announce_asteroids")
         @Config.Comment({
@@ -212,7 +227,7 @@ public class ModConfig {
         @Config.Comment({
                 "Bigger value means more often appearance of asteroids on sky"
         })
-        public int mining_asteroids_popularity = 50;
+        public int mining_asteroids_popularity = 20;
 
         @Config.Name("mining_missions_limit")
         @Config.Comment({
@@ -221,6 +236,12 @@ public class ModConfig {
                 "Currently mined asteroids won't be deleted"
         })
         public int mining_missions_limit = 5;
+
+        @Config.Name("mining_mission_success_rate")
+        @Config.Comment({
+                "Value range 0-100 (%)"
+        })
+        public int mining_mission_success_rate = 90;
 
         @Config.Name("mineable_resources")
         @Config.Comment({
@@ -242,6 +263,9 @@ public class ModConfig {
                 put("galacticraftcore:basic_block_moon", 10);
                 put("galacticraftcore:basic_block_moon:6", 20);
                 put("galacticraftplanets:venus:10", 10);
+                put("galacticraftplanets:asteroids_block:2", 1);
+                put("galacticraftplanets:dense_ice", 1);
+
             }
         };
     }

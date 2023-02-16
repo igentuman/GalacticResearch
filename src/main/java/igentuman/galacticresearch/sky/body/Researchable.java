@@ -5,6 +5,7 @@ import igentuman.galacticresearch.client.gui.GuiTelescope;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.sky.SkyItem;
 import igentuman.galacticresearch.util.WorldUtil;
+import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
@@ -15,6 +16,7 @@ public class Researchable implements ISkyBody {
     protected int y;
     protected SkyItem body;
     protected int speed = 0;
+    protected ResourceLocation texture;
 
     public float guiX(long lastTime, float ticks)
     {
@@ -132,7 +134,20 @@ public class Researchable implements ISkyBody {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/"+body.getName()+".png");
+        if(texture == null) {
+            if(body.getName().equals("moon")) {
+                texture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/"+body.getName()+".png");
+                return texture;
+            }
+            if(GalaxyRegistry.getRegisteredPlanets().keySet().contains(body.getName())) {
+                texture = GalaxyRegistry.getRegisteredPlanets().get(body.getName()).getBodyIcon();
+            } else if(GalaxyRegistry.getRegisteredMoons().keySet().contains(body.getName())) {
+                texture = GalaxyRegistry.getRegisteredMoons().get(body.getName()).getBodyIcon();
+            } else {
+                texture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/"+body.getName()+".png");
+            }
+        }
+        return texture;
     }
 
     public int yTexOffset()

@@ -57,7 +57,6 @@ gui.message.mission_empty=Выбери миссию в Станции Контр
 gui.sun.name=Солнце
 gui.telescope.researched=Исследовано:
 gui.telescope.researched.none=None
-
 gui.dropdown.mansion=Усадьба
 gui.dropdown.ie_deposit=IE Жила Минералов
 gui.dropdown.village=Деревня
@@ -66,6 +65,12 @@ gui.dropdown.ae2_meteorite=AE2 Метеорит
 gui.dropdown.boss_dungeon=Данж с боссом
 gui.dropdown.temple=Пирамида
 gui.dropdown.none=(выбрать)
+gui.mission.fail=Провалено
+
+moon.none=(не выбрано)
+planet.overworld=Земля
+planet.pluto=Плутон
+planet.ceres=Церера
 
 item.satellite_rocket.name=Спутниковая Ракета
 item.mining_rocket.name=Добывающая Ракета

@@ -13,6 +13,7 @@ import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.entity.IGRAutoRocket;
 import igentuman.galacticresearch.integration.computer.IComputerIntegration;
 import igentuman.galacticresearch.network.GRPacketSimple;
+import igentuman.galacticresearch.util.GRSounds;
 import igentuman.galacticresearch.util.Util;
 import io.netty.buffer.ByteBuf;
 import li.cil.repack.org.luaj.vm2.ast.Str;
@@ -43,6 +44,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
@@ -51,6 +53,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.WoodlandMansion;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -537,7 +540,10 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
                     if (!cap.getUnlockedMissions().contains(mission)) {
                         cap.addMission(mission);
                         player.addExperience(10);
-                        String planetLocalized = I18n.format("gui."+mission+".name");
+                        String planetLocalized = I18n.format("planet."+mission);
+                        if(planetLocalized.equals("planet."+mission)) {
+                            planetLocalized = I18n.format("moon."+mission);
+                        }
                         player.sendMessage(new TextComponentString(I18n.format("message.analyzed.planet", planetLocalized)));
                     }
                 }
@@ -618,7 +624,57 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             updateMissionsStateCounter();
         } else {
             unserializeMissionData();
+            getLocatorProgress();
+            handleMissionsOnClient();
         }
+    }
+
+    public void handleMissionsOnClient()
+    {
+        if(playSoundDelay <= 0) {
+            List<String> tmpCompleted = completedMissions();
+            if (!completedMissions.equals(tmpCompleted) && tmpCompleted.size() >= completedMissions.size()) {
+                completedMissions = tmpCompleted;
+                playMissionComplete(1f);
+                return;
+            } else if(tmpCompleted.size() < completedMissions.size()) {
+                completedMissions = tmpCompleted;
+            }
+
+            List<String> tmpFailed = completedMissions();
+            if (!failedMissions.equals(tmpFailed) && tmpFailed.size() >= failedMissions.size()) {
+                failedMissions = tmpFailed;
+                playMissionFailed(1f);
+            } else if(tmpFailed.size() < failedMissions.size()) {
+                failedMissions = tmpFailed;
+            }
+        }
+    }
+
+    public List<String> completedMissions = new ArrayList<>();
+
+    public List<String> completedMissions()
+    {
+        List<String> tmp = new ArrayList<>();
+        for(String mission: missionsDataMap.keySet()) {
+            if(isMissionComplete(mission)) {
+                tmp.add(mission);
+            }
+        }
+        return tmp;
+    }
+
+    public List<String> failedMissions = new ArrayList<>();
+
+    public List<String> failedMissions()
+    {
+        List<String> tmp = new ArrayList<>();
+        for(String mission: missionsDataMap.keySet()) {
+            if(getMissionInfo(mission) == -3) {
+                tmp.add(mission);
+            }
+        }
+        return tmp;
     }
 
     public void removeAsteroidMissions(boolean check)
@@ -647,6 +703,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
             int v = missionsDataMap.get(s);
             if(s.contains("ASTEROID-")) {
+                if(v == -3) continue;
                 if(GalacticResearch.spaceMineProvider.getMissions().size() == 0) {
                      removeAsteroidMissions(false);
                      return;
@@ -824,13 +881,37 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         if(state == -1) {
             return "gui.mission.pending";
         }
+        if(state == -3) {
+            return "gui.mission.fail";
+        }
         return "gui.mission.progress";
+    }
+    int playSoundDelay = 0;
+    @SideOnly(Side.CLIENT)
+    public void playMissionComplete(float volume)
+    {
+        world.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), GRSounds.mcs_mission_complete, SoundCategory.BLOCKS, volume, 1, false);
+        playSoundDelay = 40;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void playMissionFailed(float volume)
+    {
+        world.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), GRSounds.mcs_mission_fail, SoundCategory.BLOCKS, volume, 1, false);
+        playSoundDelay = 40;
     }
 
     public int getLocatorProgress()
     {
+        if(playSoundDelay > 0) {
+            playSoundDelay--;
+        }
         if(locationCounter == -2) return 0;
-        return (int) (((float)(ModConfig.locator.location_duration-locationCounter)/ModConfig.locator.location_duration)*100);
+        int progress =  (int) (((float)(ModConfig.locator.location_duration-locationCounter)/ModConfig.locator.location_duration)*100);
+        if(world.isRemote && progress >= 99 && playSoundDelay <= 0) {
+            playMissionComplete(0.5f);
+        }
+        return progress;
     }
 
     public void unserializeMissionData()

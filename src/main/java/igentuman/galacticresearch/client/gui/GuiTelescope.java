@@ -195,30 +195,39 @@ public class GuiTelescope extends GuiContainerGC {
             float x = viewportX(res.guiX(lastTickWTime, ticks));
             float y = viewportY(res.guiY(lastTickWTime, ticks));
 
-            float viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX())+6;
-            float viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY())+6;
+
 
             mc.getTextureManager().bindTexture(res.getTexture());
             GlStateManager.disableDepth();
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+
+            GL11.glPushMatrix();
             int yOffset = res.yTexOffset();
             if(res.getBody().getName().equals("moon")) {
                 yOffset = WorldUtil.getMoonPhase() * 32;
             }
             boolean rotated = false;
+            GlStateManager.pushMatrix();
+            float scale = 1f;
             if(res.getBody().getName().contains("ASTEROID-")) {
-                GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 
-                GL11.glPushMatrix();
-                GL11.glTranslatef((float) x+res.getSize()/2, (float) y+res.getSize()/2, 0f);
+                GL11.glTranslatef((float) x+(float)res.getSize()/2, (float) y+(float)res.getSize()/2, 0f);
                 GL11.glRotatef(Minecraft.getMinecraft().world.getTotalWorldTime(), 1, 0, 45);
-                GL11.glTranslatef(-((float) x+res.getSize()/2), -((float) y+res.getSize()/2), 0f);
+                GL11.glTranslatef(-((float) x+(float)res.getSize()/2), -((float) y+(float)res.getSize()/2), 0f);
                 rotated = true;
-            }
+            } else {
+                scale = (float)res.getSize()/(256-res.getSize());
+                GlStateManager.translate(x+(float)res.getSize()/2, (float) y+(float)res.getSize()/2, 0f);
+                GlStateManager.scale(scale,scale,scale);
+                GlStateManager.translate(-((float) x+(float)res.getSize()/2), -((float) y+(float)res.getSize()/2), 0f);
 
-            this.drawTexturedModalRect(x, y, 0, yOffset, (int) Math.min(viewportBondX, res.getSize()), (int) Math.min(viewportBondY, res.getSize()));
-            if(rotated) {
-                GL11.glPopMatrix();
             }
+            float viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX()*scale)+6;
+            float viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY()*scale)+6;
+
+            this.drawTexturedModalRect(x, y, 0, yOffset, (int) Math.min((float)viewportBondX, (float)res.getSize()/scale), (int) Math.min((float)viewportBondY, (float)res.getSize()/scale));
+            GlStateManager.popMatrix();
+            GL11.glPopMatrix();
 
             GlStateManager.enableDepth();
         }
