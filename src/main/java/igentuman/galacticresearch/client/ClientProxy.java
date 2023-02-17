@@ -7,6 +7,7 @@ import igentuman.galacticresearch.client.model.ItemModelSatelliteRocket;
 import igentuman.galacticresearch.client.render.entity.RenderMiningRocket;
 import igentuman.galacticresearch.client.render.entity.RenderSatelliteRocket;
 import igentuman.galacticresearch.client.screen.GameScreenMission;
+import igentuman.galacticresearch.client.screen.GameScreenTelescope;
 import igentuman.galacticresearch.common.CommonProxy;
 import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
@@ -52,6 +53,7 @@ public class ClientProxy extends CommonProxy {
     {
         super.init(e);
         GalacticraftRegistry.registerScreen(new GameScreenMission());
+        GalacticraftRegistry.registerScreen(new GameScreenTelescope());
     }
 
     @Override

@@ -1,8 +1,10 @@
 package igentuman.galacticresearch.sky.body;
 
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.util.WorldUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
 
@@ -91,5 +93,9 @@ public class Star implements ISkyBody {
     public int getSize()
     {
         return size;
+    }
+
+    public ResourceLocation getTexture() {
+        return new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/star.png");
     }
 }

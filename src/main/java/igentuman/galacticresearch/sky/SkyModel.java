@@ -101,8 +101,6 @@ public class SkyModel {
             whiteListed = b.getParent();
             blackListed = b.getName();
             b = b.parentInstance;
-        } else {
-            return res;
         }
         for(Researchable r: getResearchables()) {
 

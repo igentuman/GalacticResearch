@@ -2,16 +2,17 @@
 
 Minecraft Mod, addon for Galacticraft, which brings planet research functionality.
 In order to travel in space you need to research planets.
+You can build mining rocket and aoutomate asteroids mining process.
+New feature - locator, to locate objects on planets like dungeons, villages, IE deposits,...
 
-The flow:
-1. Find and collect initial planet data in telescope.
-2. Send satellite in space with collected data in #1
-3. Collect and process new data from satellites
-4. ???
-5. You can fly to the opened planet
 
-1. Observe asteroids in telescope
-2. Send mining rocket to mine them
+New stuff:
+Satellite rocket and Probe - will research planets for you
+Mining Rocket - will mine asteroids
+Telescope - use it to collect initial data about celestial bodies
+Mission Control Center - controls rocket missions, can connect to Space Stations to locate objects on planets
+
+Expanded GC Screen Block functionality - just place telemetry block next to telescope or MCS
 
 Automate all the flow with OpenComputers or ComputerCraft
 

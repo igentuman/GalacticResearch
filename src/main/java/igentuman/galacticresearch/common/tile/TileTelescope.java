@@ -74,12 +74,12 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public float xAngle = viewportSize/2;
+    public float xAngle = viewportSize;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
-    public float yAngle = viewportSize/2;
+    public float yAngle = viewportSize;
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -211,6 +211,12 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
         return looseCounter < 1;
     }
 
+    public boolean isBodyVisible(Researchable res, float viewPortX, float viewPortY)
+    {
+        return  res.getX()+res.getSize()>xAngle && res.getY()+res.getSize()>yAngle &&
+                res.getY()<yAngle+viewPortY && res.getX()<xAngle+viewPortX;
+    }
+
     public void observe()
     {
         List<Researchable> bodies = SkyModel.get().getObjectsToResearch(dimension);
@@ -223,8 +229,8 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
             float y = b.getY();
             int padding = 25;
             if(
-                    x > xAngle + padding && x < (xAngle + viewportSize-padding-b.getSize()) &&
-                    y > yAngle + padding && y < (yAngle + viewportSize-padding-b.getSize())
+                    x+b.getSize()/2 > xAngle + padding && x < (xAngle + viewportSize-padding-b.getSize()) &&
+                    y+b.getSize()/2 > yAngle + padding && y < (yAngle + viewportSize-padding-b.getSize())
                ) {
                 if(!isBodyResearched(b.getBody().getName())) {
                     if(!curObserveBody.equals(b.getBody().getName())) {

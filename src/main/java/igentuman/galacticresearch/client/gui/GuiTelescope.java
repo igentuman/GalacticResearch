@@ -41,7 +41,8 @@ public class GuiTelescope extends GuiContainerGC {
     private static final ResourceLocation overlay = new ResourceLocation(GalacticResearch.MODID, "textures/gui/container/telescope_top_overlay.png");
 
     private final TileTelescope tile;
-
+    float tmpX = 0;
+    float tmpY = 0;
     private GuiButtonImage btnUp;
     private GuiButtonImage btnDown;
     private GuiButtonImage btnLeft;
@@ -119,15 +120,14 @@ public class GuiTelescope extends GuiContainerGC {
 
     public boolean isVisible(ISkyBody body)
     {
-        return  body.getX() > xAngle() &&
-                body.getY() > yAngle() &&
+        return  body.getX()+body.getSize()/4 > xAngle() &&
+                body.getY()+body.getSize()/4 > yAngle() &&
                 body.getX() < (xAngle() + viewportSize) &&
                 body.getY() < (yAngle() + viewportSize) &&
                 body.isVisible();
     }
 
-    float tmpX = 0;
-    float tmpY = 0;
+
 
     public float xAngle()
     {
@@ -192,55 +192,77 @@ public class GuiTelescope extends GuiContainerGC {
             if(!isVisible(res)) {
                 continue;
             }
-            float x = viewportX(res.guiX(lastTickWTime, ticks));
-            float y = viewportY(res.guiY(lastTickWTime, ticks));
-
-
-
             mc.getTextureManager().bindTexture(res.getTexture());
             GlStateManager.disableDepth();
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 
-            GL11.glPushMatrix();
-            int yOffset = res.yTexOffset();
-            if(res.getBody().getName().equals("moon")) {
-                yOffset = WorldUtil.getMoonPhase() * 32;
-            }
-            boolean rotated = false;
-            GlStateManager.pushMatrix();
-            float scale = 1f;
-            if(res.getBody().getName().contains("ASTEROID-")) {
-
-                GL11.glTranslatef((float) x+(float)res.getSize()/2, (float) y+(float)res.getSize()/2, 0f);
-                GL11.glRotatef(Minecraft.getMinecraft().world.getTotalWorldTime(), 1, 0, 45);
-                GL11.glTranslatef(-((float) x+(float)res.getSize()/2), -((float) y+(float)res.getSize()/2), 0f);
-                rotated = true;
-            } else {
-                scale = (float)res.getSize()/(256-res.getSize());
-                GlStateManager.translate(x+(float)res.getSize()/2, (float) y+(float)res.getSize()/2, 0f);
-                GlStateManager.scale(scale,scale,scale);
-                GlStateManager.translate(-((float) x+(float)res.getSize()/2), -((float) y+(float)res.getSize()/2), 0f);
-
-            }
-            float viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX()*scale)+6;
-            float viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY()*scale)+6;
-
-            this.drawTexturedModalRect(x, y, 0, yOffset, (int) Math.min((float)viewportBondX, (float)res.getSize()/scale), (int) Math.min((float)viewportBondY, (float)res.getSize()/scale));
-            GlStateManager.popMatrix();
-            GL11.glPopMatrix();
+            renderBody(res);
 
             GlStateManager.enableDepth();
         }
 
     }
 
+    public void renderScaledBody(Researchable res)
+    {
+        float x = viewportX(res.guiX(lastTickWTime, ticks));
+        float y = viewportY(res.guiY(lastTickWTime, ticks));
+        float scale = (float)res.getSize()/256;
+        int yOffset = res.yTexOffset();
+        if(res.getBody().getName().equals("moon")) {
+            yOffset = WorldUtil.getMoonPhase() * 32;
+        }
+        float centerX = x+(float)res.getSize()/2;
+        float centerY = y+(float)res.getSize()/2;
+
+        GlStateManager.translate(centerX, centerY, 0f);
+        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.translate(-centerX, -centerY, 0f);
+
+        float viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX())+6;
+        float viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY())+6;
+
+        this.drawTexturedModalRect(x, y, 0, yOffset, (int) Math.min(viewportBondX/scale, (float)res.getSize()/scale), (int) Math.min(viewportBondY/scale, (float)res.getSize()/scale));
+    }
+
+    public void renderAsteroid(Researchable res)
+    {
+
+        float x = viewportX(res.guiX(lastTickWTime, ticks));
+        float y = viewportY(res.guiY(lastTickWTime, ticks));
+        float centerX = x+(float)res.getSize()/2;
+        float centerY = y+(float)res.getSize()/2;
+        GlStateManager.translate(centerX, centerY, 0f);
+        GlStateManager.rotate(Minecraft.getMinecraft().world.getTotalWorldTime(), 1, 0, 45);
+        GlStateManager.translate(-centerX, -centerY, 0f);
+
+        float viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX())+6;
+        float viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY())+6;
+
+        drawTexturedModalRect(x, y, 0, 0, (int) Math.min(viewportBondX, (float)res.getSize()), (int) Math.min(viewportBondY, (float)res.getSize()));
+
+    }
+
+
+    public void renderBody(Researchable res)
+    {
+        GlStateManager.pushMatrix();
+        if(res.getBody().getName().contains("ASTEROID-")) {
+            renderAsteroid(res);
+        } else {
+            renderScaledBody(res);
+        }
+        GlStateManager.popMatrix();
+    }
+
 
     public void renderFocusArea()
     {
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2-28, guiTop+24+viewportSize/2-28, 176, 123, 21, 21);
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2-28, guiTop+24+viewportSize/2+8, 176, 144, 21, 21);
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2+8, guiTop+24+viewportSize/2-28, 176, 165, 21, 21);
-        this.drawTexturedModalRect(guiLeft+6+viewportSize/2+8, guiTop+24+viewportSize/2+8, 176, 186, 21, 21);
+        int padding = 25;
+        this.drawTexturedModalRect(guiLeft+6+padding, guiTop+24+padding, 176, 123, 21, 21);
+        this.drawTexturedModalRect(guiLeft+6+padding, guiTop+3+viewportSize-padding, 176, 144, 21, 21);
+        this.drawTexturedModalRect(guiLeft+6+viewportSize-padding-21, guiTop+24+padding, 176, 165, 21, 21);
+        this.drawTexturedModalRect(guiLeft+6+viewportSize-padding-21, guiTop+24+viewportSize-padding-21, 176, 186, 21, 21);
     }
 
     public void initButtons()
@@ -391,6 +413,7 @@ public class GuiTelescope extends GuiContainerGC {
 
         this.drawTexturedModalRect(guiLeft+42, guiTop + 167, 187, 0, Math.min(tile.getScaledElecticalLevel(54), 54), 7);
         if(Minecraft.getMinecraft().world.isRaining() && Minecraft.getMinecraft().world.getBiome(tile.getPos()).canRain()) return;
+
         if(tile.getWorld().canSeeSky(tile.getPos())) {
             renderStars();
             renderPlanets();
