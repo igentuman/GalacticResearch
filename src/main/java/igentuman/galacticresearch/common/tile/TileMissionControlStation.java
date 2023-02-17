@@ -705,30 +705,33 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         if(missionsDataMap.isEmpty()) return;
         Set<String> tmp = missionsDataMap.keySet();
         for(String s: tmp) {
-
-            int v = missionsDataMap.get(s);
-            if(s.contains("ASTEROID-")) {
-                if(v == -3) continue;
-                if(GalacticResearch.spaceMineProvider.getMissions().size() == 0) {
-                     removeAsteroidMissions(false);
-                     return;
-                }
-                try {
-                    double left = GalacticResearch.spaceMineProvider.getMissions().get(s);
-                    double initial = GalacticResearch.spaceMineProvider.getOreCnt(s);
-                    double p = left / initial;
-                    if (left <= 0) {
-                        v = duration;
-                    } else {
-                        v = (int) (duration - duration * p) - 1;
+            try {
+                int v = missionsDataMap.get(s);
+                if (s.contains("ASTEROID-")) {
+                    if (v == -3) continue;
+                    if (GalacticResearch.spaceMineProvider.getMissions().size() == 0) {
+                        removeAsteroidMissions(false);
+                        return;
                     }
-                    missionsDataMap.replace(s, v);
-                } catch (NullPointerException ignored) {
+                    try {
+                        double left = GalacticResearch.spaceMineProvider.getMissions().get(s);
+                        double initial = GalacticResearch.spaceMineProvider.getOreCnt(s);
+                        double p = left / initial;
+                        if (left <= 0) {
+                            v = duration;
+                        } else {
+                            v = (int) (duration - duration * p) - 1;
+                        }
+                        missionsDataMap.replace(s, v);
+                    } catch (NullPointerException ignored) {
 
+                    }
+                } else if (v > 0 && v < duration) {
+                    v++;
+                    missionsDataMap.replace(s, v);
                 }
-            } else if (v > 0 && v < duration) {
-                v++;
-                missionsDataMap.replace(s, v);
+            } catch (NullPointerException ignore) {
+
             }
         }
         serializeMissionData();
