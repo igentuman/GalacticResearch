@@ -76,16 +76,26 @@ public class GameScreenCelestialReflector {
         if (star != null && star.getBodyIcon() != null) {
             drawCelestialBodyQ(star, 0.0F, 0.0F, ticks, 6.0F);
         }
-
-        String mainSolarSystem = solarSystem.getTranslationKey();
+        String mainSolarSystem;
+        try {
+            mainSolarSystem = solarSystem.getTranslationKey();
+        } catch (NoSuchMethodError ignore) {
+            mainSolarSystem = solarSystem.getUnlocalizedName();
+        }
         Iterator var6 = GalaxyRegistry.getRegisteredPlanets().values().iterator();
-
+        String pkey;
         while(var6.hasNext()) {
             Planet planet = (Planet)var6.next();
             if(!isUnlocked(planet.getName())) {
                 continue;
             }
-            if (planet.getParentSolarSystem() != null && planet.getBodyIcon() != null && planet.getParentSolarSystem().getTranslationKey().equalsIgnoreCase(mainSolarSystem)) {
+            try {
+                pkey = planet.getParentSolarSystem().getTranslationKey();
+            } catch (NoSuchMethodError ignore) {
+                pkey = planet.getParentSolarSystem().getUnlocalizedName();
+            }
+
+            if (planet.getParentSolarSystem() != null && planet.getBodyIcon() != null && pkey.equalsIgnoreCase(mainSolarSystem)) {
                 Vector3f pos = getCelestialBodyPositionQ(planet, ticks);
                 drawCircleQ(planet);
                 drawCelestialBodyQ(planet, pos.x, pos.y, ticks, planet.getRelativeDistanceFromCenter().unScaledDistance < 1.5F ? 2.0F : 2.8F);

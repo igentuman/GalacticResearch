@@ -2,7 +2,7 @@
 {
   "modid": "galacticresearch",
   "name": "Galactic Research",
-  "description": "Planet research.",
+  "description": "Space research and progression.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "authorList": ["igentuman"],

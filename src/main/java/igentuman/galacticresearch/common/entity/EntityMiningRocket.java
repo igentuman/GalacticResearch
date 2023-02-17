@@ -520,12 +520,14 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
         }
         TileMissionControlStation te = getMCS();
         if(te != null) {
-           if(world.rand.nextInt(100) > ModConfig.machines.mining_mission_success_rate) {
-               willFail = true;
-           }
-            te.setMissionInfo(mission, 1);
+            if (!inTransit && !isMining) {
+                if (world.rand.nextInt(100) > ModConfig.machines.mining_mission_success_rate) {
+                    willFail = true;
+                }
+                te.setMissionInfo(mission, 1);
+                inTransit = true;
+            }
         }
-        inTransit = true;
     }
 
 

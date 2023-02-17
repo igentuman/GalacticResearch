@@ -33,7 +33,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
     public float rumble;
     public BlockPos mcsPos = new BlockPos(0,0,0);
     public String mission;
-    public int researchCounter = ModConfig.machines.satellite_mission_duration*20+100;
+    public int researchCounter = ModConfig.machines.satellite_mission_duration*20+10;
     public boolean isResearching = false;
 
     public EntitySatelliteRocket(World par1World) {
@@ -107,7 +107,10 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
                 setDead();
                 return;
             }
-
+            if(fuelTank.getFluidAmount()<100) {
+                setDead();
+                return;
+            }
         }
         super.onUpdate();
         if (this.rumble > 0.0F) {
@@ -196,7 +199,10 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         }
         TileMissionControlStation te = getMCS();
         if(te != null) {
-            te.setMissionInfo(mission, 1);
+            if(!isResearching) {
+                te.setMissionInfo(mission, 1);
+                isResearching = true;
+            }
         }
     }
 
@@ -219,7 +225,6 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
             if (te instanceof TileMissionControlStation) {
                 return  (TileMissionControlStation) te;
             }
-            isResearching = true;
         }
         return null;
     }

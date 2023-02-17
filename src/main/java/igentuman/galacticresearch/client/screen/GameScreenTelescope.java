@@ -2,6 +2,7 @@ package igentuman.galacticresearch.client.screen;
 
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.common.tile.TileTelescope;
+import igentuman.galacticresearch.sky.body.Asteroid;
 import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.sky.body.Star;
 import micdoodle8.mods.galacticraft.api.client.IGameScreen;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldProvider;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.BufferUtils;
@@ -25,6 +27,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.nio.DoubleBuffer;
 import java.util.List;
+
+import static igentuman.galacticresearch.GalacticResearch.MODID;
 
 public class GameScreenTelescope implements IGameScreen
 {
@@ -96,16 +100,18 @@ public class GameScreenTelescope implements IGameScreen
         if (telemeter != null) {
             telescope = getTelescope(telemeter);
             if(telescope != null) {
-                WorldProvider wp = scr.getWorldProvider();
-                CelestialBody body = null;
-                if (wp instanceof IGalacticraftWorldProvider) {
-                    body = ((IGalacticraftWorldProvider) wp).getCelestialBody();
+                if(telescope.getEnergyStoredGC() > 100) {
+                    WorldProvider wp = scr.getWorldProvider();
+                    CelestialBody body = null;
+                    if (wp instanceof IGalacticraftWorldProvider) {
+                        body = ((IGalacticraftWorldProvider) wp).getCelestialBody();
+                    }
+                    if (body == null) {
+                        body = GalacticraftCore.planetOverworld;
+                    }
+                    drawStars();
+                    drawCelestialBodies(body);
                 }
-                if (body == null) {
-                    body = GalacticraftCore.planetOverworld;
-                }
-                drawStars();
-                drawCelestialBodies(body);
             }
         }
         GL11.glDisable(GL11.GL_CLIP_PLANE3);
@@ -193,7 +199,12 @@ public class GameScreenTelescope implements IGameScreen
         float alpha = 1.0F;
 
         GL11.glColor4f(1, 1, 1, alpha);
-        this.renderEngine.bindTexture(planet.getTexture());
+        if(planet instanceof Asteroid) {
+            this.renderEngine.bindTexture(new ResourceLocation(MODID,"textures/gui/planets/asteroid.png"));
+
+        } else {
+            this.renderEngine.bindTexture(planet.getTexture());
+        }
         this.drawTexturedRectCBody(0, 0, size, size);
 
         GL11.glPopMatrix();
