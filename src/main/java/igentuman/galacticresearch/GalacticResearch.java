@@ -8,6 +8,7 @@ import igentuman.galacticresearch.network.GRChannelHandler;
 import igentuman.galacticresearch.network.GuiProxy;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.util.GRHooks;
+import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.Logger;
+
 @Mod(
         modid = igentuman.galacticresearch.GalacticResearch.MODID,
         name = igentuman.galacticresearch.GalacticResearch.NAME,
@@ -87,8 +89,8 @@ public class GalacticResearch
         ConfigManager.sync(MODID, Config.Type.INSTANCE);
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
         packetPipeline = GRChannelHandler.init();
-
     }
+
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {

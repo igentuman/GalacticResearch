@@ -215,7 +215,7 @@ public class ModConfig {
         @Config.Comment({
                 "In stacks (max 50)"
         })
-        public int mining_mission_maximal_resources = 35;
+        public int mining_mission_maximal_resources = 30;
 
         @Config.Name("announce_asteroids")
         @Config.Comment({
@@ -252,7 +252,7 @@ public class ModConfig {
             {
                 put("minecraft:diamond_ore", 30);
                 put("minecraft:gold_ore", 10);
-                put("galacticraftcore:fallen_meteor", 30);
+                put("galacticraftcore:meteoric_iron_raw", 20);
                 put("minecraft:emerald_ore", 5);
                 put("galacticraftplanets:asteroids_block:4", 30);
                 put("galacticraftplanets:asteroids_block:3", 10);

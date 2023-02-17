@@ -6,9 +6,11 @@ import igentuman.galacticresearch.client.model.ItemModelMiningRocket;
 import igentuman.galacticresearch.client.model.ItemModelSatelliteRocket;
 import igentuman.galacticresearch.client.render.entity.RenderMiningRocket;
 import igentuman.galacticresearch.client.render.entity.RenderSatelliteRocket;
+import igentuman.galacticresearch.client.screen.GameScreenMission;
 import igentuman.galacticresearch.common.CommonProxy;
 import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -49,6 +51,7 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent e)
     {
         super.init(e);
+        GalacticraftRegistry.registerScreen(new GameScreenMission());
     }
 
     @Override

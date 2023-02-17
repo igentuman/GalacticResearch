@@ -1,5 +1,6 @@
 package igentuman.galacticresearch.common.entity;
 
+import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
     public float rumble;
     public BlockPos mcsPos = new BlockPos(0,0,0);
     public String mission;
+    public int researchCounter = ModConfig.machines.satellite_mission_duration*20+100;
+    public boolean isResearching = false;
 
     public EntitySatelliteRocket(World par1World) {
         super(par1World);
@@ -97,7 +100,15 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         } else if (!this.hasValidFuel() && this.getLaunched() && Math.abs(Math.sin((double)(this.timeSinceLaunch / 1000.0F))) / 10.0D != 0.0D) {
             this.motionY -= Math.abs(Math.sin((double)(this.timeSinceLaunch / 1000.0F))) / 20.0D;
         }
+        if(isResearching) {
+            if(researchCounter > 0) {
+                researchCounter--;
+            } else {
+                setDead();
+                return;
+            }
 
+        }
         super.onUpdate();
         if (this.rumble > 0.0F) {
             --this.rumble;
@@ -187,7 +198,6 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         if(te != null) {
             te.setMissionInfo(mission, 1);
         }
-        setDead();
     }
 
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
@@ -209,6 +219,7 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
             if (te instanceof TileMissionControlStation) {
                 return  (TileMissionControlStation) te;
             }
+            isResearching = true;
         }
         return null;
     }

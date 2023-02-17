@@ -55,6 +55,8 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
     private boolean miningDone = false;
     public EnumRocketType rocketType = EnumRocketType.INVENTORY54;
     public boolean willFail = false;
+    public boolean inTransit = false;
+    public int transitCounter = 500;
 
     public EntityMiningRocket(World par1World) {
         super(par1World);
@@ -92,7 +94,7 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
     {
         mineDelay--;
         if(mineDelay <= 0 && !miningDone) {
-            if(willFail && rand.nextInt(200) < 10) {
+            if(willFail && rand.nextInt(400) < 10) {
                 TileMissionControlStation te = getMCS();
                 te.setMissionInfo(mission, -3);
                 isMining = false;
@@ -102,6 +104,8 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
             ItemStack st = GalacticResearch.spaceMineProvider.mineBlock(mission);
             if(st.equals(ItemStack.EMPTY)) {
                 if(GalacticResearch.spaceMineProvider.getMissions().get(mission) <= 0) {
+                    transitCounter = 500;
+                    inTransit = true;
                     miningDone = true;
                     return;
                 }
@@ -109,6 +113,23 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
             addCargo(st, true);
             mineDelay = ModConfig.machines.mining_speed;
             addFuel(new FluidStack(Objects.requireNonNull(fuelTank.getFluid()), mineDelay-1), true);
+        }
+    }
+
+    public void updateTransit()
+    {
+        if(inTransit) {
+            if (transitCounter > 0) {
+                transitCounter--;
+                if(!isMining) {
+                    motionY+=5;
+                } else {
+                    motionY-=10;
+                }
+            } else {
+                inTransit = false;
+                if(!isMining) isMining = true;
+            }
         }
     }
 
@@ -427,20 +448,24 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
         } else if (!this.hasValidFuel() && this.getLaunched() && Math.abs(Math.sin(this.timeSinceLaunch / 1000.0F)) / 10.0D != 0.0D) {
             this.motionY -= Math.abs(Math.sin(this.timeSinceLaunch / 1000.0F)) / 20.0D;
         }
-
+        if(!world.isRemote) {
+            updateTransit();
+        }
         if(isMining) {
             if(miningDone) {
                 if (padPos.equals(new BlockPos(0, 0, 0))) {
                     setDead();
                     return;
                 }
-                if (launchPhase != EnumLaunchPhase.LANDING.ordinal() && launchPhase != EnumLaunchPhase.UNIGNITED.ordinal()) {
-                    this.launchPhase = EnumLaunchPhase.LANDING.ordinal();
-                    this.setPosition((float) padPos.getX() + 0.5F, padPos.getY() + 800, (float) padPos.getZ() + 0.5F);
-                    this.motionY = -5;
+                if(!inTransit) {
+                    if (launchPhase != EnumLaunchPhase.LANDING.ordinal() && launchPhase != EnumLaunchPhase.UNIGNITED.ordinal()) {
+                        this.launchPhase = EnumLaunchPhase.LANDING.ordinal();
+                        this.setPosition((float) padPos.getX() + 0.5F, padPos.getY() + 800, (float) padPos.getZ() + 0.5F);
+                        this.motionY = -5;
+                    }
                 }
             } else {
-                if(!world.isRemote) {
+                if(!world.isRemote && !inTransit) {
                     try {
                         mineResources();
                     } catch (NullPointerException ignored) {
@@ -500,7 +525,7 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
            }
             te.setMissionInfo(mission, 1);
         }
-        isMining = true;
+        inTransit = true;
     }
 
 
@@ -531,6 +556,7 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
             nbt.setInteger("Type", this.rocketType.getIndex());
             nbt.setString("mission", mission);
             nbt.setBoolean("isMining", isMining);
+            nbt.setBoolean("inTransit", inTransit);
             nbt.setIntArray("padPos", new int[] {padPos.getX(), mcsPos.getY(), mcsPos.getZ()});
             nbt.setIntArray("mcsPos", new int[] {mcsPos.getX(), mcsPos.getY(), mcsPos.getZ()});
             super.writeEntityToNBT(nbt);
@@ -542,6 +568,7 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
         this.rocketType = EnumRocketType.values()[nbt.getInteger("Type")];
         this.mission = nbt.getString("mission");
         this.isMining = nbt.getBoolean("isMining");
+        this.inTransit = nbt.getBoolean("inTransit");
         int[] raw = nbt.getIntArray("mcsPos");
         try {
             this.mcsPos = new BlockPos(raw[0], raw[1], raw[2]);

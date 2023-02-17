@@ -166,14 +166,14 @@ public class GuiMissionControlStation extends GuiContainerGC {
             planet = curMission;
         }
         this.fontRenderer.drawString(I18n.format(planet), 22, 39, 4210752);
-        String st = I18n.format(status, tile.getMissonPercent(tile.currentMission));
+        String st = I18n.format(status);
 
         if(tile.currentMission.isEmpty()) {
             st = "";
             info = -1;
         }
         if(info < ModConfig.machines.satellite_mission_duration*20 && info > -1) {
-            st +="%";
+            st +=" "+tile.getMissonPercent(tile.currentMission)+"%";
         }
         this.fontRenderer.drawString(I18n.format("gui.mission_control_station.mission_status", st), 22, 53, 4210752);
 

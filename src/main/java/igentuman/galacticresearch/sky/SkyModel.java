@@ -92,12 +92,14 @@ public class SkyModel {
     {
         List<Researchable> res = new ArrayList<>();
         String whiteListed = "";
+        String blackListed = "";
         SkyItem b = getBodyByDIM(dim);
         if(b == null) {
             return res;
         }
         if(b.parentInstance != null) {
             whiteListed = b.getParent();
+            blackListed = b.getName();
             b = b.parentInstance;
         } else {
             return res;
@@ -107,6 +109,7 @@ public class SkyModel {
             if(b.getParent().equals(r.getBody().parent) ||
                     b.getName().equals(r.getBody().parent)
             ) {
+                if(r.getBody().getName().equals(blackListed)) continue;
                 if(b.getName().equals(r.getBody().getName()) && !r.getBody().getName().equals(whiteListed)) continue;
                 res.add(r);
             }

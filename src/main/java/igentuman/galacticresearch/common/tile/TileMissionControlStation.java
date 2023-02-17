@@ -269,6 +269,11 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
     )
+    public String padCords = "";
+
+    @Annotations.NetworkedField(
+            targetSide = Side.CLIENT
+    )
     public String currentLocatable = getObjectsToLocate()[0];
 
     @Annotations.NetworkedField(
@@ -927,6 +932,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         this.dimension = nbt.getInteger("dimension");
         this.locationCounter = nbt.getInteger("locationCounter");
         this.locationCords = nbt.getIntArray("locationCords");
+        this.padCords = nbt.getString("padCords");
         this.currentMission = nbt.getString("currentMission");
         this.missions = nbt.getString("missions");
         this.stations = nbt.getString("stations");
@@ -944,6 +950,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         nbt.setInteger("dimension", this.dimension);
         nbt.setInteger("locationCounter", this.locationCounter);
         nbt.setIntArray("locationCords", this.locationCords);
+        nbt.setString("padCords", this.padCords);
         nbt.setString("currentMission", this.currentMission);
         nbt.setString("missions", this.missions);
         nbt.setString("missionsData", this.missionsData);
@@ -966,8 +973,19 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         return tile instanceof TileEntityLandingPad;
     }
 
+    public BlockPos getPadCords()
+    {
+        if(padCords.isEmpty()) {
+            return new BlockPos(0,0,0);
+        }
+        String[] cords = padCords.split(",");
+        return new BlockPos(Integer.parseInt(cords[0]), Integer.parseInt(cords[1]), Integer.parseInt(cords[2]));
+    }
+
     public void setAttachedPad(IFuelDock pad) {
         this.attachedDock = pad;
+        BlockPos bp = ((TileEntityLandingPad) attachedDock).getPos();
+        padCords = bp.getX()+","+bp.getY()+","+bp.getZ();
     }
 
     public IGRAutoRocket getRocket()
@@ -979,6 +997,12 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             if (rocket instanceof IGRAutoRocket)
             {
                 return (IGRAutoRocket) rocket;
+            }
+        } else if(!padCords.isEmpty()) {
+            TileEntity dock = world.getTileEntity(getPadCords());
+            if(dock instanceof TileEntityLandingPad) {
+                setAttachedPad((IFuelDock) dock);
+                return getRocket();
             }
         }
         return null;

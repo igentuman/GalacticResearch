@@ -129,6 +129,7 @@ public class SpaceMineProvider {
         int i = 0;
         for(ItemStack st: ores.keySet()) {
             if(i == pos) {
+                st.setCount(1);
                 return st;
             }
             i++;

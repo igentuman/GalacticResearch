@@ -3,6 +3,7 @@ package igentuman.galacticresearch.reflection;
 import com.github.mjaroslav.reflectors.v4.Reflectors;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.reflection.entity.EntityBossSkeletonReflector;
+import igentuman.galacticresearch.reflection.screen.GameScreenCelestialReflector;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
@@ -43,6 +44,11 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
         if (transformedName.equals("asmodeuscore.core.event.AsmodeusClientEvent")) {
             return Reflectors.reflectClass(basicClass, transformedName, AsmodeusClientEventReflector.class.getName());
         }
+
+        if (transformedName.equals("micdoodle8.mods.galacticraft.core.client.screen.GameScreenCelestial")) {
+            return Reflectors.reflectClass(basicClass, transformedName, GameScreenCelestialReflector.class.getName());
+        }
+
 
         return basicClass;
     }

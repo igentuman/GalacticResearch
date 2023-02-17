@@ -25,7 +25,7 @@ gui.mission_control_station.mission=Current Mission:
 gui.mission_control_station.mission_status=Status: %s
 gui.mission.pending=Idle
 gui.mission.complete=Complete
-gui.mission.progress=In Progress - %s
+gui.mission.progress=In Progress
 gui.mission_control_station.activate=Activate Mission
 gui.mission_control_station.no_rocket=No Rocket on Pad
 gui.mission_control_station.rocket_not_ready=Rocket Is Not Yet Ready
@@ -74,6 +74,13 @@ planet.overworld=Earth
 planet.pluto=Pluto
 planet.ceres=Ceres
 moon.none=None
+screen.progress_done=% done
+screen.mined_blocks=%s mined
+screen.title.mining=Mining Mission
+screen.title.research=Research Mission
+
+entity.mining_rocket.name=Mining Rocket
+entity.satellite_rocket.name=Satellite Rocket
 
 item.satellite_rocket.name=Satellite Rocket
 item.mining_rocket.name=Mining Rocket
