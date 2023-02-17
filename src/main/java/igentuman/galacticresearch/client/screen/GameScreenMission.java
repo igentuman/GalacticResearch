@@ -170,7 +170,9 @@ public class GameScreenMission implements IGameScreen
                     if(state > 0) {
                         percent = mcs.getMissonPercent(mcs.currentMission);
                         if(strName.contains("ASTEROID-")) {
-                            str[2] = I18n.format("screen.mined_blocks", GalacticResearch.spaceMineProvider.getOreCnt(strName)/100*percent);
+                            int mined = GalacticResearch.spaceMineProvider.getOreCnt(strName)/100*percent;
+                            if(mined > 0)
+                            str[2] = I18n.format("screen.mined_blocks", mined);
                         }
                     }
                     if(percent > 0 && percent < 100) {
