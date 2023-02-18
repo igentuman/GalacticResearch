@@ -14,6 +14,9 @@ message.mining_asteroid.cleared=所有小行星已被移除
 description.telescope=研究星球
 description.mission_control_station=控制火箭任务并与空间站连接
 
+entity.mining_rocket.name=采矿火箭
+entity.satellite_rocket.name=卫星火箭
+
 advancement.galacticresearch.mining_rocket.name=太空挖掘!
 advancement.galacticresearch.mining_rocket.desc=制作采矿火箭
 advancement.galacticresearch.satellite_rocket.name=是时候当"星探"了!
@@ -71,10 +74,10 @@ gui.overworld.name=地球
 gui.telescope.researched=已研究:
 gui.telescope.researched.none=无
 gui.dropdown.mansion=府邸
-gui.dropdown.ie_deposit=沉浸工程矿床
+gui.dropdown.ie_deposit=沉浸工程-矿床
 gui.dropdown.village=村庄
 gui.dropdown.monument=海底神殿
-gui.dropdown.ae2_meteorite=应用能源2陨石
+gui.dropdown.ae2_meteorite=应用能源2-陨石
 gui.dropdown.boss_dungeon=Boss地牢
 gui.dropdown.none=无
 gui.dropdown.temple=神庙
@@ -86,7 +89,13 @@ moon.none=无
 gui.mission.fail=任务失败
 item.satellite_rocket.name=卫星火箭
 item.mining_rocket.name=采矿火箭
-item.probe.name=探测器
+item.probe.name=探测卫星
 item.mining_rocket_schematic.name=采矿火箭蓝图
+
+screen.progress_done=% 已完成
+screen.mined_blocks=%s 已挖掘
+screen.title.mining=挖掘任务
+screen.title.research=研究任务
+
 
 schematic.mining_rocket.dungeon_level=可以在火星地牢中找到
