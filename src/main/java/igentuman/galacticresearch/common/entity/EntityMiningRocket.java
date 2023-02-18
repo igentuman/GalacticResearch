@@ -23,6 +23,7 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityTelemetry;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCargoRocket;
+import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -606,6 +607,14 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
     @Override
     public List<ItemStack> getItemsDropped(List<ItemStack> droppedItemList) {
         super.getItemsDropped(droppedItemList);
+        List<ItemStack> tmp = new ArrayList<>();
+        for(ItemStack item: droppedItemList) {
+            if(item.getItem().equals(MarsItems.rocketMars)) {
+                continue;
+            }
+            tmp.add(item);
+        }
+        droppedItemList=tmp;
         ItemStack rocket = new ItemStack(MINING_ROCKET, 1, 0);
         rocket.setTagCompound(new NBTTagCompound());
         assert rocket.getTagCompound() != null;
