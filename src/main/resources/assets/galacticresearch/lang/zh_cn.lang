@@ -87,9 +87,6 @@ screen.mined_blocks=%s 已挖掘
 screen.title.mining=挖掘任务
 screen.title.research=研究任务
 
-entity.mining_rocket.name=采矿火箭
-entity.satellite_rocket.name=卫星火箭
-
 item.satellite_rocket.name=卫星火箭
 item.mining_rocket.name=采矿火箭
 item.probe.name=太空探测卫星
