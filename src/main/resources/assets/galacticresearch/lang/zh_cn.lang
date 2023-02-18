@@ -17,7 +17,7 @@ description.mission_control_station=控制火箭任务并与空间站连接
 entity.mining_rocket.name=采矿火箭
 entity.satellite_rocket.name=卫星火箭
 
-advancement.galacticresearch.mining_rocket.name=太空挖掘!
+advancement.galacticresearch.mining_rocket.name=太空矿业无限公司!
 advancement.galacticresearch.mining_rocket.desc=制作采矿火箭
 advancement.galacticresearch.satellite_rocket.name=是时候当"星探"了!
 advancement.galacticresearch.satellite_rocket.desc=制作卫星火箭
