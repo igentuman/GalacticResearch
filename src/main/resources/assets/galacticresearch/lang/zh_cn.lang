@@ -22,6 +22,7 @@ advancement.galacticresearch.mining_rocket.desc=制作采矿火箭
 advancement.galacticresearch.satellite_rocket.name=是时候当"星探"了！
 advancement.galacticresearch.satellite_rocket.desc=制作卫星火箭
 
+gui.tier1_pad.desc=放置在第 1 层发射台上
 gui.mission_control_station.wrong_rocket=错误的火箭
 gui.mission_control_station=任务控制器
 gui.mission_control_station.mission=当前任务:

@@ -1,5 +1,7 @@
 package igentuman.galacticresearch.common.entity;
 
+import com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad;
+import galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
@@ -82,11 +84,34 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
     }
 
     public void updateMCSPos() {
-        TileEntityLandingPad pad = (TileEntityLandingPad) getLandingPad();
-        if(pad == null) return;
-        for (ILandingPadAttachable te : pad.getConnectedTiles()) {
-            if (te instanceof TileMissionControlStation) {
-                mcsPos = ((TileMissionControlStation) te).getPos();
+        IFuelDock dock = getLandingPad();
+        if(dock instanceof TileEntityLandingPad) {
+            TileEntityLandingPad pad = (TileEntityLandingPad) dock;
+            for (ILandingPadAttachable te : pad.getConnectedTiles()) {
+                if (te instanceof TileMissionControlStation) {
+                    mcsPos = ((TileMissionControlStation) te).getPos();
+                    return;
+                }
+            }
+        }
+
+        if(isGSPadTile((TileEntity) dock)) {
+            TileEntityAdvLandingPad pad = (TileEntityAdvLandingPad) dock;
+            for (ILandingPadAttachable te : pad.getConnectedTiles()) {
+                if (te instanceof TileMissionControlStation) {
+                    mcsPos = ((TileMissionControlStation) te).getPos();
+                    return;
+                }
+            }
+        }
+
+        if(isEPPadTile((TileEntity) dock)) {
+            TileEntityTier2LandingPad pad = (TileEntityTier2LandingPad) dock;
+            for (ILandingPadAttachable te : pad.getConnectedTiles()) {
+                if (te instanceof TileMissionControlStation) {
+                    mcsPos = ((TileMissionControlStation) te).getPos();
+                    return;
+                }
             }
         }
     }
@@ -171,6 +196,25 @@ public class EntityMiningRocket extends EntityCargoRocket implements IGRAutoRock
             }
         }
         super.setLaunchPhase(phase);
+    }
+    private static boolean isGSPadTile(TileEntity tile) {
+        boolean result = false;
+        if(GalacticResearch.hooks.GalaxySpaceLoaded) {
+            result = tile instanceof TileEntityAdvLandingPad;
+        }
+        return result;
+    }
+
+    private static boolean isEPPadTile(TileEntity tile) {
+        boolean result = false;
+        if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
+            result = tile instanceof TileEntityTier2LandingPad;
+        }
+        return result;
+    }
+
+    public boolean isDockValid(IFuelDock dock) {
+        return dock instanceof TileEntityLandingPad || isGSPadTile((TileEntity) dock) || isEPPadTile((TileEntity) dock);
     }
 
     @Override

@@ -2,6 +2,8 @@ package igentuman.galacticresearch.common.tile;
 
 import appeng.core.worlddata.WorldData;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
+import com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad;
+import galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.block.BlockTelescope;
@@ -30,6 +32,7 @@ import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
+import micdoodle8.mods.galacticraft.core.tile.TileEntityMulti;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
@@ -611,9 +614,66 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         return this.getStackInSlot(0);
     }
 
+    public boolean connectToPad(TileEntityMulti te)
+    {
+        TileEntity main = world.getTileEntity(te.mainBlockPosition);
+        if(main instanceof TileEntityLandingPad) {
+            ((TileEntityLandingPad) main).getConnectedTiles();
+            return true;
+        }
+
+        if(GalacticResearch.hooks.GalaxySpaceLoaded) {
+            if(main instanceof TileEntityAdvLandingPad) {
+                ((TileEntityAdvLandingPad) main).getConnectedTiles();
+                return true;
+            }
+        }
+
+        if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
+            if(main instanceof TileEntityTier2LandingPad) {
+                ((TileEntityTier2LandingPad) main).getConnectedTiles();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void updatePadConnection()
+    {
+        TileEntity te = world.getTileEntity(getPos().north(1));
+        boolean tmpConnection;
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        te = world.getTileEntity(getPos().south(1));
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        te = world.getTileEntity(getPos().west(1));
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        te = world.getTileEntity(getPos().east(1));
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        attachedDock = null;
+    }
+    public int refreshCountdown = 40;
 
     public void update() {
         super.update();
+        if(refreshCountdown > 0) {
+            refreshCountdown--;
+        } else {
+            refreshCountdown = 40;
+            updatePadConnection();
+        }
         if (!this.getWorld().isRemote) {
             if(btnCooldown > 0) btnCooldown--;
             if(getEnergyStoredGC() < 100) {
@@ -973,7 +1033,11 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     @Override
     public boolean canAttachToLandingPad(IBlockAccess iBlockAccess, BlockPos blockPos) {
         TileEntity tile = world.getTileEntity(blockPos);
-        return tile instanceof TileEntityLandingPad;
+        boolean flag = tile instanceof TileEntityLandingPad || isGSPadTile(tile) || isEPPadTile(tile);
+        if(flag) {
+            setAttachedPad((IFuelDock) tile);
+        }
+        return flag;
     }
 
     public BlockPos getPadCords()
@@ -987,8 +1051,24 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public void setAttachedPad(IFuelDock pad) {
         this.attachedDock = pad;
-        BlockPos bp = ((TileEntityLandingPad) attachedDock).getPos();
+        BlockPos bp = ((TileEntity) attachedDock).getPos();
         padCords = bp.getX()+","+bp.getY()+","+bp.getZ();
+    }
+
+    private static boolean isGSPadTile(TileEntity tile) {
+        boolean result = false;
+        if(GalacticResearch.hooks.GalaxySpaceLoaded) {
+            result = tile instanceof TileEntityAdvLandingPad;
+        }
+        return result;
+    }
+
+    private static boolean isEPPadTile(TileEntity tile) {
+        boolean result = false;
+        if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
+            result = tile instanceof TileEntityTier2LandingPad;
+        }
+        return result;
     }
 
     public IGRAutoRocket getRocket()
@@ -996,6 +1076,13 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         if (attachedDock instanceof TileEntityLandingPad)
         {
             TileEntityLandingPad pad = ((TileEntityLandingPad) attachedDock);
+            IDockable rocket = pad.getDockedEntity();
+            if (rocket instanceof IGRAutoRocket)
+            {
+                return (IGRAutoRocket) rocket;
+            }
+        } else if(isGSPadTile((TileEntity) attachedDock)) {
+            TileEntityAdvLandingPad pad = ((TileEntityAdvLandingPad) attachedDock);
             IDockable rocket = pad.getDockedEntity();
             if (rocket instanceof IGRAutoRocket)
             {

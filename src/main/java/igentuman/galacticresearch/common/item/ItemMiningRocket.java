@@ -1,5 +1,10 @@
 package igentuman.galacticresearch.common.item;
 
+import com.mjr.extraplanets.blocks.ExtraPlanets_Blocks;
+import com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad;
+import galaxyspace.core.GSBlocks;
+import galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad;
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType.EnumRocketType;
 import micdoodle8.mods.galacticraft.api.item.IHoldableItem;
@@ -51,6 +56,24 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
 
     }
 
+    public boolean isAdvancedPad(Block id, int meta)
+    {
+        boolean isGSPad = false;
+        if(GalacticResearch.hooks.GalaxySpaceLoaded) {
+            isGSPad = id == GSBlocks.ADVANCED_LANDING_PAD && meta == 0;
+        }
+        return isGSPad;
+    }
+
+    public boolean isTier2Pad(Block id, int meta)
+    {
+        boolean isEPPad = false;
+        if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
+            isEPPad = id == ExtraPlanets_Blocks.ADVANCED_LAUCHPAD && meta == 0;
+        }
+        return isEPPad;
+    }
+
     @Override
     public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
@@ -68,16 +91,14 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
             float centerY = -1;
             float centerZ = -1;
 
-            for (int i = -1; i < 2; i++)
-            {
-                for (int j = -1; j < 2; j++)
-                {
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
                     BlockPos pos1 = pos.add(i, 0, j);
                     IBlockState state = worldIn.getBlockState(pos1);
                     final Block id = state.getBlock();
                     int meta = id.getMetaFromState(state);
 
-                    if (id == GCBlocks.landingPadFull && meta == 0)
+                    if (id == GCBlocks.landingPadFull && meta == 0 || isAdvancedPad(id, meta) || isTier2Pad(id, meta))
                     {
                         padFound = true;
                         tile = worldIn.getTileEntity(pos.add(i, 0, j));
@@ -124,6 +145,16 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
             {
                 return false;
             }
+        } else if(isGSPadTile(tile)) {
+            if (((TileEntityAdvLandingPad) tile).getDockedEntity() != null) {
+                return false;
+            }
+        }
+        else if(isEPPadTile(tile)) {
+                if (((TileEntityTier2LandingPad) tile).getDockedEntity() != null)
+                {
+                    return false;
+                }
         } else
         {
             return false;
@@ -143,6 +174,22 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
         }
 
         return true;
+    }
+
+    private static boolean isGSPadTile(TileEntity tile) {
+        boolean result = false;
+        if(GalacticResearch.hooks.GalaxySpaceLoaded) {
+            result = tile instanceof TileEntityAdvLandingPad;
+        }
+        return result;
+    }
+
+    private static boolean isEPPadTile(TileEntity tile) {
+        boolean result = false;
+        if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
+            result = tile instanceof TileEntityTier2LandingPad;
+        }
+        return result;
     }
 
     @Override
@@ -174,6 +221,7 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
             EntityMiningRocket rocket = new EntityMiningRocket(FMLClientHandler.instance().getWorldClient(), 0, 0, 0);
             tooltip.add(GCCoreUtil.translate("gui.message.fuel.name") + ": " + par1ItemStack.getTagCompound().getInteger("RocketFuel") + " / " + rocket.fuelTank.getCapacity());
         }
+        tooltip.add(EnumColor.AQUA + "\u00a7o" + GCCoreUtil.translate("gui.tier1_pad.desc"));
     }
 
     @Override

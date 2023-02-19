@@ -19,6 +19,7 @@ advancement.galacticresearch.mining_rocket.desc=Craft Mining Rocket
 advancement.galacticresearch.satellite_rocket.name=It's time to explore some planets
 advancement.galacticresearch.satellite_rocket.desc=Craft Satellite Rocket
 
+gui.tier1_pad.desc=Place on Tier1 Launch Pad
 gui.mission_control_station.wrong_rocket=Wrong Rocket
 gui.mission_control_station=Mission Control Station
 gui.mission_control_station.mission=Current Mission:

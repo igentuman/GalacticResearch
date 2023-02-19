@@ -179,6 +179,7 @@ public class ItemSatelliteRocket extends Item implements IHoldableItem, ISortabl
             EntitySatelliteRocket rocket = new EntitySatelliteRocket(FMLClientHandler.instance().getWorldClient(), 0, 0, 0, EnumRocketType.values()[par1ItemStack.getItemDamage()]);
             tooltip.add(GCCoreUtil.translate("gui.message.fuel.name") + ": " + par1ItemStack.getTagCompound().getInteger("RocketFuel") + " / " + rocket.fuelTank.getCapacity());
         }
+        tooltip.add(EnumColor.AQUA + "\u00a7o" + GCCoreUtil.translate("gui.tier1_pad.desc"));
     }
 
     @Override

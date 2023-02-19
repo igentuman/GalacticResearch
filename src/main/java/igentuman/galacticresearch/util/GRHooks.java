@@ -15,12 +15,14 @@ public final class GRHooks {
     public boolean ExtraPlanetsLoaded = false;
     public boolean IELoaded = false;
     public boolean AE2Loaded = false;
+    public boolean GalaxySpaceLoaded = false;
 
     public void hookPreInit() {
         CCLoaded = Loader.isModLoaded("computercraft");
         CraftTweakerLoaded = Loader.isModLoaded("crafttweaker");
         OCLoaded = Loader.isModLoaded("opencomputers");
         ExtraPlanetsLoaded = Loader.isModLoaded("extraplanets");
+        GalaxySpaceLoaded = Loader.isModLoaded("galaxyspace");
         IELoaded = Loader.isModLoaded("immersiveengineering");
         AE2Loaded = Loader.isModLoaded("appliedenergistics2");
 

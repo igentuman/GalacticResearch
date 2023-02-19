@@ -19,6 +19,7 @@ advancement.galacticresearch.mining_rocket.desc=Скрафти Добывающ�
 advancement.galacticresearch.satellite_rocket.name=Пора исследовать немного планет
 advancement.galacticresearch.satellite_rocket.desc=Скрафти спутниковую ракету
 
+gui.tier1_pad.desc=Устанавливается на площадку 1го уровня
 gui.mission_control_station.wrong_rocket=Не тот тип ракеты
 gui.mission_control_station=Станция Контроля Миссий
 gui.mission_control_station.mission=Текущая миссия:
