@@ -452,7 +452,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         World worldIn = WorldUtil.getWorldForDimensionServer(Integer.parseInt(currentStation));
 
         List<String> result = new ArrayList<>();
-
+        if(!(worldIn.provider instanceof IGalacticraftWorldProvider)) return;
         int spacing = ((IGalacticraftWorldProvider)worldIn.provider).getDungeonSpacing();
 
         int x = MathHelper.floor(getLocatorXCord());
