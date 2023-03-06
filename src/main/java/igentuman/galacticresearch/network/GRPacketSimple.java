@@ -4,6 +4,7 @@ import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import igentuman.galacticresearch.common.tile.TileLaunchpadTower;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import io.netty.buffer.ByteBuf;
@@ -160,6 +161,23 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                         machine.changeMultiplier();
                     }
                     break;
+                case TOGGLE_AUTOMATIC_MOUNTING:
+                    if (tileAt instanceof TileLaunchpadTower) {
+                        TileLaunchpadTower machine = (TileLaunchpadTower)tileAt;
+                        machine.toggleAutomount();
+                    }
+                    break;
+                case MOUNT_ROCKET:
+                    if (tileAt instanceof TileLaunchpadTower) {
+                        TileLaunchpadTower machine = (TileLaunchpadTower)tileAt;
+                        machine.mount();
+                    }
+                    break;
+                case UNMOUNT_ROCKET:
+                    if (tileAt instanceof TileLaunchpadTower) {
+                        TileLaunchpadTower machine = (TileLaunchpadTower)tileAt;
+                        machine.unmount();
+                    }
                 case PREV_MISSION_BUTTON:
                     if (tileAt instanceof TileMissionControlStation) {
                         TileMissionControlStation machine = (TileMissionControlStation)tileAt;
@@ -220,7 +238,6 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                     }
                     break;
             }
-
         }
     }
 
@@ -237,11 +254,12 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
 
     }
 
-
     public static enum EnumSimplePacket {
-
         SYNC_PLAYER_SPACE_DATA(Side.CLIENT, String.class),
         PREV_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        UNMOUNT_ROCKET(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        MOUNT_ROCKET(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        TOGGLE_AUTOMATIC_MOUNTING(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         NEXT_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         EDIT_LOCATOR_CORDS(Side.SERVER, new Class[]{BlockPos.class, Integer.class, Integer.class}),
         ACTIVATE_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),

@@ -1,9 +1,10 @@
 package igentuman.galacticresearch.common.tile;
 
 import com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad;
+import com.mojang.authlib.GameProfile;
 import galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad;
 import igentuman.galacticresearch.GalacticResearch;
-import igentuman.galacticresearch.common.entity.IGRAutoRocket;
+import igentuman.galacticresearch.util.GrFakePlayer;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;
 import micdoodle8.mods.galacticraft.api.tile.IDisableableMachine;
@@ -16,7 +17,6 @@ import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti.EnumBlockMultiType;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
-import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalElectrical;
 import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
 import micdoodle8.mods.galacticraft.core.tile.IMultiBlock;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
@@ -25,48 +25,50 @@ import micdoodle8.mods.miccore.Annotations;
 import micdoodle8.mods.miccore.Annotations.NetworkedField;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory implements ILandingPadAttachable, IMultiBlock, IDisableableMachine, IInventoryDefaults, ISidedInventory, IConnector
 {
 
-    public float targetAngle;
-    @NetworkedField(targetSide = Side.CLIENT) public boolean disabled = false;
-    @NetworkedField(targetSide = Side.CLIENT) public int disableCooldown = 0;
 
     private boolean initialised = false;
     private AxisAlignedBB renderAABB;
     private Object attachedDock;
+    public float cPos = -0.5f;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @NetworkedField(targetSide = Side.CLIENT)
+    public boolean disabled = false;
+
+    @NetworkedField(targetSide = Side.CLIENT)
+    public int disableCooldown = 0;
+
+    @NetworkedField(targetSide = Side.CLIENT)
+    public boolean autoMount = false;
+
+    @NetworkedField(targetSide = Side.CLIENT)
     private String padCords = "";
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @NetworkedField(targetSide = Side.CLIENT)
     public boolean hasRocket = false;
-    public float cPos = -0.5f;
+    private int mountCountdown = 10;
+
 
     public TileLaunchpadTower()
     {
@@ -76,14 +78,16 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         inventory = NonNullList.withSize(15, ItemStack.EMPTY);
     }
 
-    public float rotation(float partial)
+    public void handleAutomount()
     {
-        return (this.ticks + partial) / 12;
-    }
-
-    public float elevation(float partial)
-    {
-        return (MathHelper.sin(rotation(partial) / 40) + 1.0F) * 22.5F;
+        if(!autoMount) return;
+        if(getEnergyStoredGC() > 300) {
+            if(mountCountdown > 40) {
+                mount();
+                mountCountdown = 0;
+            }
+            mountCountdown++;
+        }
     }
 
     @Override
@@ -103,6 +107,7 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
             {
                 this.disableCooldown--;
             }
+            handleAutomount();
         } else {
             updateCpos();
         }
@@ -132,11 +137,11 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
 
     private void updateCpos()
     {
-        if(hasRocket && cPos > -0.3f) {
-            cPos-=0.03;
+        if(hasRocket && cPos > -0.25f) {
+            cPos-=0.05;
         }
         if(!hasRocket && cPos < 0.1F) {
-            cPos+=0.03;
+            cPos+=0.05;
         }
     }
 
@@ -207,10 +212,9 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         super.readFromNBT(nbt);
         this.storage.setCapacity(nbt.getFloat("maxEnergy"));
         this.padCords = nbt.getString("padCords");
-        this.targetAngle = nbt.getFloat("targetAngle");
         this.setDisabled(0, nbt.getBoolean("disabled"));
         this.disableCooldown = nbt.getInteger("disabledCooldown");
-
+        this.autoMount = nbt.getBoolean("autoMount");
         this.initialised = false;
     }
 
@@ -220,10 +224,9 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         super.writeToNBT(nbt);
         nbt.setFloat("maxEnergy", this.getMaxEnergyStoredGC());
         nbt.setString("padCords", this.padCords);
-        nbt.setFloat("targetAngle", this.targetAngle);
+        nbt.setBoolean("autoMount", this.autoMount);
         nbt.setInteger("disabledCooldown", this.disableCooldown);
         nbt.setBoolean("disabled", this.getDisabled(0));
-
         return nbt;
     }
 
@@ -263,7 +266,7 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
 
     @Override
     public EnumFacing getFront() {
-        return EnumFacing.NORTH;
+        return EnumFacing.SOUTH;
     }
 
     @Override
@@ -272,9 +275,8 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         return this.disabled;
     }
 
-    @Override
     public boolean shouldUseEnergy() {
-        return false;
+        return !this.getDisabled(0);
     }
 
     public int getScaledElecticalLevel(int i)
@@ -283,22 +285,32 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
     }
 
     public boolean canInsertItem(int slotID, ItemStack itemstack, EnumFacing side) {
-        return slotID != 0 || ItemElectricBase.isElectricItem(itemstack.getItem());
+        return (slotID != 0 && (side.equals(EnumFacing.WEST)) && itemstack.getItem().getTranslationKey().contains("rocket") && slotID < 8) || (side.equals(EnumFacing.SOUTH) && ItemElectricBase.isElectricItem(itemstack.getItem()));
     }
 
     public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing side) {
-        return false;
+        return side.equals(EnumFacing.DOWN) || side.equals(EnumFacing.EAST);
     }
 
     @Override
     public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
     {
-        return slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem());
+        return (slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem())) || (slotID < 8 && itemstack.getItem().getTranslationKey().contains("rocket"));
     }
 
     @Override
     public int[] getSlotsForFace(EnumFacing side)
     {
+        switch (side) {
+            case WEST:
+                return new int[] {1,2,3,4,5,6,7};
+            case EAST:
+                return new int[] {8,9,10,11,12,13,14};
+            case DOWN:
+                return new int[] {8,9,10,11,12,13,14};
+            case SOUTH:
+                return new int[] {0};
+        }
         return new int[]
         {0};
     }
@@ -369,5 +381,62 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
             setAttachedPad((IFuelDock) tile);
         }
         return flag;
+    }
+
+    public void toggleAutomount() {
+        autoMount = !autoMount;
+        markDirty();
+    }
+
+    public void mount() {
+        boolean hasRocket = false;
+        int ts = 0;
+        for(int i = 1; i < inventory.size()/2+1; i++) {
+            if(!inventory.get(i).isEmpty()) {
+                hasRocket = true;
+                ts=i;
+                break;
+            }
+        }
+        if(!hasRocket) return;
+        if(attachedDock == null) return;
+        EntitySpaceshipBase rocket = getRocket();
+        if(rocket != null) return;
+        ItemStack toPlace = inventory.get(ts);
+        IFuelDock dock = ((IFuelDock)attachedDock);
+        FakePlayer fplayer = new FakePlayer((WorldServer) world, GrFakePlayer.getProfile());
+        fplayer.setHeldItem(EnumHand.MAIN_HAND, toPlace);
+        BlockPos padPos = ((TileEntity) attachedDock).getPos();
+        EnumActionResult result = fplayer.interactionManager.processRightClickBlock(
+                fplayer, world, toPlace, EnumHand.MAIN_HAND, padPos,EnumFacing.DOWN, (float)padPos.getX(), (float)padPos.getY(), (float)padPos.getZ());
+        if(result.equals(EnumActionResult.SUCCESS)) {
+            inventory.set(ts,ItemStack.EMPTY);
+        }
+        //dock.dockEntity(toPlace.getItem());
+    }
+
+    public void unmount() {
+        boolean hasSpace = false;
+        int ts = 0;
+        for(int i = inventory.size()/2+1; i < inventory.size(); i++) {
+            if(inventory.get(i).isEmpty()) {
+                hasSpace = true;
+                ts=i;
+                break;
+            }
+        }
+        if(!hasSpace) return;
+        if(attachedDock == null) return;
+        EntitySpaceshipBase rocket = getRocket();
+        if(rocket == null) return;
+        List<ItemStack> tmp = new ArrayList<>();
+        List<ItemStack> drops = rocket.getItemsDropped(tmp);
+        for(ItemStack st: drops) {
+            if(st.getItem().getTranslationKey().contains("rocket")) {
+                inventory.set(ts,st);
+                rocket.setDead();
+                return;
+            }
+        }
     }
 }

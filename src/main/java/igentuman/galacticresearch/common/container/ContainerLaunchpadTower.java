@@ -17,19 +17,19 @@ public class ContainerLaunchpadTower extends Container {
     private TileBaseElectricBlock tileEntity;
     private boolean locked;
 
-    public ContainerLaunchpadTower(InventoryPlayer par1InventoryPlayer, IInventory cargoLoader) {
-        this.tileEntity = (TileBaseElectricBlock)cargoLoader;
+    public ContainerLaunchpadTower(InventoryPlayer par1InventoryPlayer, IInventory launchpadTower) {
+        this.tileEntity = (TileBaseElectricBlock)launchpadTower;
         if (this.tileEntity instanceof ILockable) {
             this.locked = ((ILockable)this.tileEntity).getLocked();
         }
 
-        this.addSlotToContainer(new SlotSpecific(cargoLoader, 0, 10, 27, new Class[]{IItemElectric.class}));
+        this.addSlotToContainer(new SlotSpecific(launchpadTower, 0, 10, 27, new Class[]{IItemElectric.class}));
 
         int var6;
         int var7;
         for(var6 = 0; var6 < 2; ++var6) {
             for(var7 = 0; var7 < 7; ++var7) {
-                this.addSlotToContainer(new Slot(cargoLoader, var7 + var6 * 7 + 1, 38 + var7 * 18, 27 + var6 * 18));
+                this.addSlotToContainer(new Slot(launchpadTower, var7 + var6 * 7 + 1, 38 + var7 * 18, 27 + var6 * 18));
             }
         }
 

@@ -1,4 +1,5 @@
 tile.telescope.name=Telescope
+tile.launchpad_tower.name=Launchpad Tower
 tile.mission_control_station.name=Mission Control Station
 
 container.mission_control_station.name=Mission Control Station
@@ -69,6 +70,9 @@ gui.dropdown.ae2_meteorite=AE2 Meteorite
 gui.dropdown.boss_dungeon=Boss Dungeon
 gui.dropdown.none=None
 gui.dropdown.temple=Temple
+gui.checkbox.automount=Automount Rockets
+gui.button.mount=Mount
+gui.button.unmount=Unmount
 
 overworld.name=Earth
 planet.overworld=Earth
