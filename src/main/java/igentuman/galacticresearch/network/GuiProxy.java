@@ -1,12 +1,15 @@
 package igentuman.galacticresearch.network;
 
 import igentuman.galacticresearch.GalacticResearch;
+import igentuman.galacticresearch.client.gui.GuiLaunchpadTower;
 import igentuman.galacticresearch.client.gui.MCS.GuiMissionControlStation;
 import igentuman.galacticresearch.client.gui.GuiTelescope;
 import igentuman.galacticresearch.client.gui.MCS.GuiMissionControlStationLocator;
+import igentuman.galacticresearch.common.container.ContainerLaunchpadTower;
 import igentuman.galacticresearch.common.container.ContainerMissionControlStation;
 import igentuman.galacticresearch.common.container.ContainerTelescope;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import igentuman.galacticresearch.common.tile.TileLaunchpadTower;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerRocketInventory;
@@ -24,6 +27,9 @@ public class GuiProxy implements IGuiHandler {
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TileLaunchpadTower) {
+            return new ContainerLaunchpadTower(player.inventory, (TileLaunchpadTower) te);
+        }
         if (te instanceof TileTelescope) {
             ((TileTelescope) te).dimension = player.dimension;
             return new ContainerTelescope(player.inventory, (TileTelescope) te);
@@ -39,6 +45,10 @@ public class GuiProxy implements IGuiHandler {
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
+
+        if (te instanceof TileLaunchpadTower) {
+            return new GuiLaunchpadTower(player.inventory, (TileLaunchpadTower) te);
+        }
         if (te instanceof TileTelescope) {
             ((TileTelescope) te).dimension = player.dimension;
             return new GuiTelescope(player.inventory, (TileTelescope) te);

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GPG",
+    "XBX",
+    "VWV"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:stone"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "compressedAluminum"
+    },
+    "B": {
+      "item": "galacticraftcore:steel_pole"
+    },
+    "X": {
+      "type": "forge:ore_dict",
+      "ore": "compressedBronze"
+    },
+    "V": {
+      "item": "galacticraftcore:aluminum_wire",
+      "data": 0
+    },
+    "W": {
+      "item": "galacticraftcore:view_screen"
+    }
+  },
+
+  "result": {
+    "item": "galacticresearch:launchpad_tower"
+  }
+}

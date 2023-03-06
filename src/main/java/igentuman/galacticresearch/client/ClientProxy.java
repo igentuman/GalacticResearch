@@ -6,12 +6,16 @@ import igentuman.galacticresearch.client.model.ItemModelMiningRocket;
 import igentuman.galacticresearch.client.model.ItemModelSatelliteRocket;
 import igentuman.galacticresearch.client.render.entity.RenderMiningRocket;
 import igentuman.galacticresearch.client.render.entity.RenderSatelliteRocket;
+import igentuman.galacticresearch.client.render.tile.TileLaunchpadTowerRender;
 import igentuman.galacticresearch.client.screen.GameScreenMission;
 import igentuman.galacticresearch.client.screen.GameScreenTelescope;
 import igentuman.galacticresearch.common.CommonProxy;
 import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
+import igentuman.galacticresearch.common.tile.TileLaunchpadTower;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
+import micdoodle8.mods.galacticraft.core.client.render.tile.TileEntityDishRenderer;
+import micdoodle8.mods.galacticraft.core.tile.TileEntityDish;
 import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -21,6 +25,7 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -52,6 +57,7 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent e)
     {
         super.init(e);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileLaunchpadTower.class, new TileLaunchpadTowerRender());
         GalacticraftRegistry.registerScreen(new GameScreenMission());
         GalacticraftRegistry.registerScreen(new GameScreenTelescope());
     }
@@ -83,6 +89,7 @@ public class ClientProxy extends CommonProxy {
     public void loadTextures(TextureStitchEvent.Pre event) {
         registerTexture(event, "mining_rocket");
         registerTexture(event, "satellite_rocket");
+       // registerTexture(event, "tower");
     }
 
 }

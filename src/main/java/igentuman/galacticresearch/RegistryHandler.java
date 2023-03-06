@@ -29,6 +29,9 @@ import java.util.List;
 @Mod.EventBusSubscriber
 public class RegistryHandler {
 
+    @ObjectHolder("galacticresearch:launchpad_tower")
+    public static Block LAUNCHPAD_TOWER = new BlockLaunchpadTower("launchpad_tower");
+
     @ObjectHolder("galacticresearch:telescope")
     public static Block TELESCOPE = new BlockTelescope();
 
@@ -72,6 +75,7 @@ public class RegistryHandler {
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(TELESCOPE);
+        event.getRegistry().register(LAUNCHPAD_TOWER);
         event.getRegistry().register(MISSION_CONTROL_STATION);
 
 
@@ -85,6 +89,11 @@ public class RegistryHandler {
                 TELESCOPE.getRegistryName()
         );
 
+        GameRegistry.registerTileEntity(
+                TileLaunchpadTower.class,
+                LAUNCHPAD_TOWER.getRegistryName()
+        );
+
     }
 
     @SubscribeEvent
@@ -92,6 +101,7 @@ public class RegistryHandler {
         event.getRegistry().register(MINING_ROCKET_SCHEMATIC);
         event.getRegistry().register(new ItemBlock(MISSION_CONTROL_STATION).setRegistryName(MISSION_CONTROL_STATION.getRegistryName()));
         event.getRegistry().register(new ItemBlock(TELESCOPE).setRegistryName(TELESCOPE.getRegistryName()));
+        event.getRegistry().register(new ItemBlock(LAUNCHPAD_TOWER).setRegistryName(LAUNCHPAD_TOWER.getRegistryName()));
         event.getRegistry().register(SATELLITE_ROCKET);
         event.getRegistry().register(MINING_ROCKET);
         event.getRegistry().register(ITEM_PROBE);
@@ -102,6 +112,7 @@ public class RegistryHandler {
     public void registerModels(ModelRegistryEvent event) {
         registerItemModel(Item.getItemFromBlock(MISSION_CONTROL_STATION), 0, "inventory");
         registerItemModel(Item.getItemFromBlock(TELESCOPE), 0, "inventory");
+        registerItemModel(Item.getItemFromBlock(LAUNCHPAD_TOWER), 0, "inventory");
         registerItemModel(ITEM_PROBE, 0, "inventory");
         registerItemModel(MINING_ROCKET_SCHEMATIC, 0, "inventory");
         registerItemModel(SATELLITE_ROCKET, 0, "inventory");

@@ -1,0 +1,13 @@
+{
+    "forge_marker": 1,
+    "parent": "block/cube",
+    "textures": {
+        "particle": "galacticresearch:model/tower_main",
+        "down": "galacticresearch:model/tower_main",
+        "up": "galacticresearch:model/tower_main",
+        "north": "galacticresearch:model/tower_main",
+        "east": "galacticresearch:model/tower_main",
+        "south": "galacticresearch:model/tower_main",
+        "west": "galacticresearch:model/tower_main"
+    }
+}

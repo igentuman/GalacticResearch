@@ -33,7 +33,7 @@ repositories {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.1"
+version = "1.0.2"
 group = "igentuman.galacticresearch"
 archivesBaseName = "GalacticResearch"
 
@@ -88,19 +88,19 @@ configurations {
 dependencies {
     shade "com.github.MJaroslav.Reflectors:library:v4"
     compileOnly "org.jetbrains:annotations:17.0.0"
-    implementation "curse.maven:immersive-engineering-231951:2974106"
-    implementation "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
+    compileOnly "curse.maven:immersive-engineering-231951:2974106"
+    compileOnly "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
-    implementation "curse.maven:ae2-extended-life-570458:3791235"
-    implementation "curse.maven:asmodeuscore-303101:3873588"
-    implementation "curse.maven:galaxy-space-addon-for-galacticraft-238770:3873609"
-    implementation "curse.maven:cc-tweaked-282001:2992872"
-    implementation "curse.maven:extraplanets-241291:4366814"
-    deobfCompile "li.cil.oc:OpenComputers:${oc_version}"
+    compileOnly "curse.maven:ae2-extended-life-570458:3791235"
+    compileOnly "curse.maven:asmodeuscore-303101:3873588"
+    compileOnly "curse.maven:galaxy-space-addon-for-galacticraft-238770:3873609"
+    compileOnly "curse.maven:cc-tweaked-282001:2992872"
+    compileOnly "curse.maven:extraplanets-241291:4366814"
+    compileOnly "li.cil.oc:OpenComputers:${oc_version}"
     deobfProvided "mezz.jei:jei_1.12.2:${jei_version}:api"
     implementation "mezz.jei:jei_1.12.2:${jei_version}"
     runtime "mezz.jei:jei_1.12.2:${jei_version}"
-    implementation "com.mjr.mjrlegendslib:MJRLegendsLib:1.12.2-1.2.1:dev"
+    compileOnly "com.mjr.mjrlegendslib:MJRLegendsLib:1.12.2-1.2.1:dev"
 }
 
 processResources {
