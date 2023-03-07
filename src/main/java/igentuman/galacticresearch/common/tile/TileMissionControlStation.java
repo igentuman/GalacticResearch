@@ -611,12 +611,14 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         TileEntity main = world.getTileEntity(te.mainBlockPosition);
         if(main instanceof TileEntityLandingPad) {
             ((TileEntityLandingPad) main).getConnectedTiles();
+            if(attachedDock == null) setAttachedPad((IFuelDock) main);
             return true;
         }
 
         if(GalacticResearch.hooks.GalaxySpaceLoaded) {
             if(main instanceof TileEntityAdvLandingPad) {
                 ((TileEntityAdvLandingPad) main).getConnectedTiles();
+                if(attachedDock == null) setAttachedPad((IFuelDock) main);
                 return true;
             }
         }
@@ -624,6 +626,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
             if(main instanceof TileEntityTier2LandingPad) {
                 ((TileEntityTier2LandingPad) main).getConnectedTiles();
+                if(attachedDock == null) setAttachedPad((IFuelDock) main);
                 return true;
             }
         }
@@ -1075,6 +1078,13 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             }
         } else if(isGSPadTile((TileEntity) attachedDock)) {
             TileEntityAdvLandingPad pad = ((TileEntityAdvLandingPad) attachedDock);
+            IDockable rocket = pad.getDockedEntity();
+            if (rocket instanceof IGRAutoRocket)
+            {
+                return (IGRAutoRocket) rocket;
+            }
+        } else if(isEPPadTile((TileEntity) attachedDock)) {
+            TileEntityTier2LandingPad pad = ((TileEntityTier2LandingPad) attachedDock);
             IDockable rocket = pad.getDockedEntity();
             if (rocket instanceof IGRAutoRocket)
             {

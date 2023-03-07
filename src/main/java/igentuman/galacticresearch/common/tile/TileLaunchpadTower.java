@@ -90,11 +90,18 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         }
     }
 
+    protected int refreshCountdown = 40;
+
     @Override
     public void update()
     {
         super.update();
-
+        if(refreshCountdown > 0) {
+            refreshCountdown--;
+        } else {
+            refreshCountdown = 40;
+            updatePadConnection();
+        }
         if (!this.initialised)
         {
             this.initialised = this.initialiseMultiTiles(this.getPos(), this.world);
@@ -172,7 +179,7 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
     @Override
     public void getPositions(BlockPos placedPosition, List<BlockPos> positions)
     {
-        int buildHeight = this.world.getHeight() - 1;
+        int buildHeight = this.world.getHeight() - 2;
         int y = placedPosition.getY();
 
         if (++y > buildHeight)
@@ -180,6 +187,8 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
             return;
         }
         positions.add(new BlockPos(placedPosition.getX(), y, placedPosition.getZ()));
+        positions.add(new BlockPos(placedPosition.getX(), y+1, placedPosition.getZ()));
+        positions.add(new BlockPos(placedPosition.getX(), y+2, placedPosition.getZ()));
 
     }
 
@@ -194,7 +203,7 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         {
             IBlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.DISH_LARGE)
+            if (stateAt.getBlock().equals(GCBlocks.fakeBlock) && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.SOLAR_PANEL_0)
             {
                 if (this.world.isRemote && this.world.rand.nextDouble() < 0.05D)
                 {
@@ -346,6 +355,60 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         return result;
     }
 
+    public boolean connectToPad(TileEntityMulti te)
+    {
+        TileEntity main = world.getTileEntity(te.mainBlockPosition);
+        if(main instanceof TileEntityLandingPad) {
+            ((TileEntityLandingPad) main).getConnectedTiles();
+            if(attachedDock == null) setAttachedPad((IFuelDock) main);
+            return true;
+        }
+
+        if(GalacticResearch.hooks.GalaxySpaceLoaded) {
+            if(main instanceof TileEntityAdvLandingPad) {
+                ((TileEntityAdvLandingPad) main).getConnectedTiles();
+                if(attachedDock == null) setAttachedPad((IFuelDock) main);
+                return true;
+            }
+        }
+
+        if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
+            if(main instanceof TileEntityTier2LandingPad) {
+                ((TileEntityTier2LandingPad) main).getConnectedTiles();
+                if(attachedDock == null) setAttachedPad((IFuelDock) main);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void updatePadConnection()
+    {
+        TileEntity te = world.getTileEntity(getPos().north(1));
+        boolean tmpConnection;
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        te = world.getTileEntity(getPos().south(1));
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        te = world.getTileEntity(getPos().west(1));
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        te = world.getTileEntity(getPos().east(1));
+        if(te instanceof TileEntityMulti) {
+            tmpConnection = connectToPad((TileEntityMulti) te);
+            if(tmpConnection) return;
+        }
+        attachedDock = null;
+    }
+
     public EntitySpaceshipBase getRocket()
     {
         if (attachedDock instanceof TileEntityLandingPad)
@@ -358,6 +421,13 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
             }
         } else if(isGSPadTile((TileEntity) attachedDock)) {
             TileEntityAdvLandingPad pad = ((TileEntityAdvLandingPad) attachedDock);
+            IDockable rocket = pad.getDockedEntity();
+            if (rocket instanceof EntitySpaceshipBase)
+            {
+                return (EntitySpaceshipBase) rocket;
+            }
+        } else if(isEPPadTile((TileEntity) attachedDock)) {
+            TileEntityTier2LandingPad pad = ((TileEntityTier2LandingPad) attachedDock);
             IDockable rocket = pad.getDockedEntity();
             if (rocket instanceof EntitySpaceshipBase)
             {
@@ -376,7 +446,7 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
     @Override
     public boolean canAttachToLandingPad(IBlockAccess iBlockAccess, BlockPos blockPos) {
         TileEntity tile = world.getTileEntity(blockPos);
-        boolean flag = tile instanceof TileEntityLandingPad;
+        boolean flag = tile instanceof TileEntityLandingPad || isGSPadTile(tile) || isEPPadTile(tile);
         if(flag) {
             setAttachedPad((IFuelDock) tile);
         }
