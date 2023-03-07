@@ -152,7 +152,7 @@ public class GREventHandler
     @SubscribeEvent
     public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         PlayerSpaceData stats = event.player.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
-        for(String m: ModConfig.researchSystem.default_researched_bodies) {
+        for(String m: ModConfig.researchSystem.default_researched_objects) {
             assert stats != null;
             stats.addMission(m);
         }
@@ -174,7 +174,7 @@ public class GREventHandler
             int tick = player.ticksExisted - 1;
             if (tick % 30 == 0) {
                 PlayerSpaceData stats = player.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
-                for (String m : ModConfig.researchSystem.default_researched_bodies) {
+                for (String m : ModConfig.researchSystem.default_researched_objects) {
                     assert stats != null;
                     stats.addMission(m);
                 }

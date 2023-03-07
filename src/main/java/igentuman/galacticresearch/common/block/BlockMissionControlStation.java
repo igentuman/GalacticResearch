@@ -4,6 +4,8 @@ package igentuman.galacticresearch.common.block;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
+import micdoodle8.mods.galacticraft.core.GCItems;
+import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -22,6 +24,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -107,6 +111,16 @@ public class BlockMissionControlStation extends BlockHorizontal {
 
         if(worldIn.isRemote) {
             return true;
+        }
+
+        ItemStack held = playerIn.inventory.getCurrentItem();
+        if (!held.isEmpty() && held.getItem() == GCItems.basicItem && held.getItemDamage() == 19) {
+            NBTTagCompound fmData = held.getTagCompound();
+            if (fmData != null && fmData.hasKey("teledishPos")) {
+                ((TileMissionControlStation)te).bindTeleDish(fmData.getIntArray("teledishPos"));
+                playerIn.sendMessage(new TextComponentTranslation("message.teledish_set"));
+                return true;
+            }
         }
 
         playerIn.openGui(GalacticResearch.instance, 2, worldIn, pos.getX(), pos.getY(), pos.getZ());

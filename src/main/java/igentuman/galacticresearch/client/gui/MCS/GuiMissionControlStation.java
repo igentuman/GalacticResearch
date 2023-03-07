@@ -5,6 +5,7 @@ import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.container.ContainerMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.network.GRPacketSimple;
+import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.gui.container.GuiContainerGC;
@@ -109,6 +110,10 @@ public class GuiMissionControlStation extends GuiContainerGC {
         help.add(GCCoreUtil.translate("gui.help.mcs.desc.0"));
         help.add(GCCoreUtil.translate("gui.help.mcs.desc.1"));
         help.add(GCCoreUtil.translate("gui.help.mcs.desc.2"));
+        if(GalaxyRegistry.getRegisteredSolarSystems().size() > 1) {
+            help.add(GCCoreUtil.translate("gui.help.mcs.desc.3"));
+            help.add(GCCoreUtil.translate("gui.help.mcs.desc.4"));
+        }
 
         this.helpRegion.tooltipStrings = help;
         this.helpRegion.xPosition = guiLeft + 156;
@@ -161,6 +166,9 @@ public class GuiMissionControlStation extends GuiContainerGC {
         String planet = I18n.format("planet."+curMission);
         if(planet.equals("planet."+curMission)) {
             planet = I18n.format("moon."+curMission);
+        }
+        if(planet.equals("moon."+curMission)) {
+            planet = I18n.format("solarsystem."+curMission);
         }
         if(curMission.contains("ASTEROID-")) {
             planet = curMission;

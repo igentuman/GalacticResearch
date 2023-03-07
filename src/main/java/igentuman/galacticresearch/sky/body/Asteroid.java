@@ -23,7 +23,7 @@ public class Asteroid extends Researchable {
     }
 
     public float getSize() {
-        return size;
+        return 16;
     }
 
     private int nameToSeed()
@@ -45,7 +45,7 @@ public class Asteroid extends Researchable {
 
     public Asteroid(String name)
     {
-        super(new Planet(name).setRelativeSize(16).setRelativeOrbitTime(20));
+        super(new Planet(name).setRelativeSize(1).setRelativeOrbitTime(20));
         this.x = initialX();
         this.y = initialY();
     }

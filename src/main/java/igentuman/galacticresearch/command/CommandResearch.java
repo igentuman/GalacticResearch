@@ -4,6 +4,9 @@ import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.network.GRPacketSimple;
+import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
+import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
+import micdoodle8.mods.galacticraft.api.galaxies.SolarSystem;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
@@ -49,6 +52,18 @@ public class CommandResearch extends CommandBase {
 		if(r.equals("reset")) {
 			cap.unlocked_missions = "";
 			notifyCommandListener(sender, this, "message.research.reset");
+		} if(r.equals("objects")) {
+			String objects = "";
+			for(SolarSystem body: GalaxyRegistry.getRegisteredSolarSystems().values()) {
+				objects += body.getName() + ", ";
+			}
+			for(CelestialBody body: GalaxyRegistry.getRegisteredPlanets().values()) {
+				objects += body.getName() + ", ";
+			}
+			for(CelestialBody body: GalaxyRegistry.getRegisteredMoons().values()) {
+				objects += body.getName() + ", ";
+			}
+			notifyCommandListener(sender, this, "message.research.objects", objects);
 		} else {
 			if(!cap.getUnlockedMissions().contains(r)) {
 				cap.addMission(r);

@@ -20,6 +20,7 @@ import io.netty.buffer.ByteBuf;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
+import micdoodle8.mods.galacticraft.api.galaxies.*;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;
 import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
@@ -28,6 +29,7 @@ import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
+import micdoodle8.mods.galacticraft.core.tile.TileEntityDish;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityMulti;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -58,6 +60,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class TileMissionControlStation extends TileBaseElectricBlockWithInventory implements ISidedInventory, ILandingPadAttachable, IComputerIntegration {
+
+    private BlockPos dishPos;
+    private int fetchCounter = 0;
 
     @Override
     public String[] getMethods() {
@@ -283,6 +288,11 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             targetSide = Side.CLIENT
     )
     public String currentStation = "";
+
+    @Annotations.NetworkedField(
+            targetSide = Side.CLIENT
+    )
+    public String teleDishPos = "";
 
     @Annotations.NetworkedField(
             targetSide = Side.CLIENT
@@ -537,14 +547,14 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             }
             for (String mission : getMissions()) {
                 if (isMissionComplete(mission)) {
-                    if (!cap.getUnlockedMissions().contains(mission)) {
-                        cap.addMission(mission);
-                        player.addExperience(10);
-                        String planetLocalized = I18n.format("planet."+mission);
-                        if(planetLocalized.equals("planet."+mission)) {
-                            planetLocalized = I18n.format("moon."+mission);
+                    setMissionToPlayer(mission, player, cap);
+                    CelestialBody p = GalaxyRegistry.getRegisteredPlanets().get(mission);
+                    if(p instanceof Planet) {
+                        if(ModConfig.researchSystem.research_moons_with_parent_planet) {
+                            for(Moon m: GalaxyRegistry.getMoonsForPlanet((Planet) p)) {
+                                setMissionToPlayer(m.getName(), player, cap);
+                            }
                         }
-                        player.sendMessage(new TextComponentString(I18n.format("message.analyzed.planet", planetLocalized)));
                     }
                 }
             }
@@ -552,6 +562,21 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
         } catch (NullPointerException e) {
             GalacticResearch.instance.logger.log(Level.ERROR, "Analyze missions capability error");
+        }
+    }
+
+    private void setMissionToPlayer(String mission, EntityPlayer player, PlayerSpaceData cap) {
+        if (!cap.getUnlockedMissions().contains(mission)) {
+            cap.addMission(mission);
+            player.addExperience(10);
+            String planetLocalized = I18n.format("planet."+mission);
+            if(planetLocalized.equals("planet."+mission)) {
+                planetLocalized = I18n.format("moon."+mission);
+            }
+            if(planetLocalized.equals("moon."+mission)) {
+                planetLocalized = I18n.format("solarsystem."+mission);
+            }
+            player.sendMessage(new TextComponentString(I18n.format("message.analyzed.planet", planetLocalized)));
         }
     }
 
@@ -564,7 +589,16 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     {
         TileTelescope te = getTelescope();
         if(te == null) return;
-        missions = te.getResearchedBodies();
+        for(String body: te.getResearchedBodiesArray()) {
+            if(!missions.contains(body)) {
+                if(missions.length() < 1) {
+                    missions += body;
+
+                } else {
+                    missions += "," + body;
+                }
+            }
+        }
         for(String m: getMissions()) {
             if(missionsDataMap.containsKey(m)) continue;
             missionsDataMap.put(m, -1);
@@ -661,6 +695,34 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     }
     public int refreshCountdown = 40;
 
+    public boolean hasTeleDish()
+    {
+        if(dishPos == null) return false;
+        TileEntity te = world.getTileEntity(dishPos);
+        return te instanceof TileEntityDish;
+    }
+
+    public void fetchSolarSystems()
+    {
+        if(!hasTeleDish()) return;
+        fetchCounter++;
+        if(fetchCounter > 200) {
+            fetchCounter = 0;
+            int lim = Math.min(4, GalacticResearch.skyModel.getCurrentSystemBodies(GCCoreUtil.getDimensionID(world)).size() / 2);
+            if (missionsDataMap.size() < lim) return;
+            Random r = new Random(ticks);
+            for (SolarSystem sys : GalaxyRegistry.getRegisteredSolarSystems().values()) {
+                if (!missionsDataMap.containsKey(sys.getName())) {
+                    if (r.nextInt(100) < 5) {
+                        missions += "," + sys.getName();
+                        missionsDataMap.put(sys.getName(), -1);
+                        serializeMissionData();
+                    }
+                }
+            }
+        }
+    }
+
     public void update() {
         super.update();
         if(refreshCountdown > 0) {
@@ -679,6 +741,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             }
             doLocate();
             fetchMissions();
+            fetchSolarSystems();
             updateRocketState();
             removeAsteroidMissions(true);
             updateMissionsStateCounter();
@@ -804,7 +867,9 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         }
         r.setAutolaunchSetting(EntityAutoRocket.EnumAutoLaunch.INSTANT);
         r.setLaunchPhase(EntitySpaceshipBase.EnumLaunchPhase.IGNITED);
-        setMissionInfo(currentMission, 0);
+        if(missionsDataMap.get(currentMission) < 0) {
+            setMissionInfo(currentMission, 0);
+        }
         return true;
     }
 
@@ -995,6 +1060,11 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         this.missions = nbt.getString("missions");
         this.stations = nbt.getString("stations");
         this.missionsData = nbt.getString("missionsData");
+        this.teleDishPos = nbt.getString("teleDishPos");
+        String[] parts = teleDishPos.split(",");
+        if(parts.length == 3) {
+            dishPos = new BlockPos(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+        }
         unserializeMissionData();
     }
 
@@ -1012,6 +1082,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         nbt.setString("currentMission", this.currentMission);
         nbt.setString("missions", this.missions);
         nbt.setString("missionsData", this.missionsData);
+        nbt.setString("teleDishPos", this.teleDishPos);
         return nbt;
     }
 
@@ -1098,5 +1169,10 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             }
         }
         return null;
+    }
+
+    public void bindTeleDish(int[] teledishPos) {
+        this.teleDishPos = teledishPos[0]+","+teledishPos[1]+","+teledishPos[2];
+        dishPos = new BlockPos(teledishPos[0], teledishPos[1], teledishPos[2]);
     }
 }

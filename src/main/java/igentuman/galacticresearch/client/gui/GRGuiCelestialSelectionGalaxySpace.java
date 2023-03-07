@@ -15,9 +15,7 @@ import asmodeuscore.core.configs.AsmodeusConfig;
 import asmodeuscore.core.network.packet.ACPacketSimple;
 import asmodeuscore.core.network.packet.ACPacketSimple.ACEnumSimplePacket;
 import asmodeuscore.core.proxy.ClientProxy;
-import asmodeuscore.core.utils.ACCompatibilityManager;
 import asmodeuscore.core.utils.Utils;
-import asmodeuscore.core.utils.UtilsGC;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.IOException;
@@ -25,7 +23,6 @@ import java.nio.FloatBuffer;
 import java.util.*;
 import java.util.Map.Entry;
 
-import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
@@ -247,7 +244,7 @@ public class GRGuiCelestialSelectionGalaxySpace extends NewGuiCelestialSelection
 	private boolean isUnlocked(String name, PlayerClientSpaceData stats)
 	{
 		return stats.getUnlockedMissions().contains(name.toLowerCase()) ||
-				Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name.toLowerCase());
+				Arrays.asList(ModConfig.researchSystem.default_researched_objects).contains(name.toLowerCase());
 	}
 
 	private void refreshBodies() {
@@ -270,30 +267,22 @@ public class GRGuiCelestialSelectionGalaxySpace extends NewGuiCelestialSelection
 			}
 
 			if (solarSystem.getUnlocalizedParentGalaxyName().equals(this.galaxy)) {
-				if (ACCompatibilityManager.isPlanetProgressionLoaded()) {
-					if (UtilsGC.hasUnlocks(player, solarSystem)) {
-						if (solarSystem.getUnlocalizedParentGalaxyName().equals(this.galaxy)) {
-							this.starlist.add(solarSystem);
-						}
-
-						this.bodiesToRender.add(solarSystem.getMainStar());
-					}
-				} else {
+				if(isUnlocked(solarSystem.getName(), stats)) {
 					if (solarSystem.getUnlocalizedParentGalaxyName().equals(this.galaxy)) {
 						this.starlist.add(solarSystem);
 					}
-
 					this.bodiesToRender.add(solarSystem.getMainStar());
 				}
 			}
 		}
+
 
 		var2 = GalaxyRegistry.getRegisteredPlanets().values().iterator();
 
 		while(var2.hasNext()) {
 			Planet planet = (Planet)var2.next();
 			if (planet.getParentSolarSystem().getUnlocalizedParentGalaxyName().equals(this.galaxy)) {
-				if(isUnlocked(planet.getName(), stats)) {
+				if(isUnlocked(planet.getName(), stats) && isUnlocked(planet.getParentSolarSystem().getName(), stats)) {
 					this.bodiesToRender.add(planet);
 				}
 			}
@@ -304,7 +293,7 @@ public class GRGuiCelestialSelectionGalaxySpace extends NewGuiCelestialSelection
 		while(var2.hasNext()) {
 			Moon moon = (Moon)var2.next();
 			if (moon.getParentPlanet().getParentSolarSystem().getUnlocalizedParentGalaxyName().equals(this.galaxy)) {
-				if(isUnlocked(moon.getName(), stats)) {
+				if(isUnlocked(moon.getName(), stats) && isUnlocked(moon.getParentPlanet().getParentSolarSystem().getName(), stats)) {
 					this.bodiesToRender.add(moon);
 				}
 			}
@@ -315,13 +304,7 @@ public class GRGuiCelestialSelectionGalaxySpace extends NewGuiCelestialSelection
 		while(var2.hasNext()) {
 			Satellite satellite = (Satellite)var2.next();
 			if (satellite.getParentPlanet().getParentSolarSystem().getUnlocalizedParentGalaxyName().equals(this.galaxy)) {
-				if (ACCompatibilityManager.isPlanetProgressionLoaded()) {
-					if (UtilsGC.isReasearched(player, satellite.getParentPlanet())) {
-						this.bodiesToRender.add(satellite);
-					}
-				} else {
-					this.bodiesToRender.add(satellite);
-				}
+				this.bodiesToRender.add(satellite);
 			}
 		}
 

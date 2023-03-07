@@ -49,6 +49,10 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
             return Reflectors.reflectClass(basicClass, transformedName, GameScreenCelestialReflector.class.getName());
         }
 
+        if (transformedName.equals("micdoodle8.mods.galacticraft.core.items.ItemBasic")) {
+            return Reflectors.reflectClass(basicClass, transformedName, ItemBasicReflector.class.getName());
+        }
+
 
         return basicClass;
     }

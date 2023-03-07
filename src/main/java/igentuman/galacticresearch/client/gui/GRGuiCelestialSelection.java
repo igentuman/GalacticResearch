@@ -28,7 +28,7 @@ public class GRGuiCelestialSelection extends GuiCelestialSelection {
 	private boolean isUnlocked(String name, PlayerClientSpaceData stats)
 	{
 		return stats.getUnlockedMissions().contains(name.toLowerCase()) ||
-				Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name.toLowerCase());
+				Arrays.asList(ModConfig.researchSystem.default_researched_objects).contains(name.toLowerCase());
 	}
 
 	@Override

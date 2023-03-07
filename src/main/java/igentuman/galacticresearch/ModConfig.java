@@ -39,12 +39,41 @@ public class ModConfig {
         })
         public boolean research_moons_with_parent_planet = false;
 
-        @Config.Name("default_researched_bodies")
+        @Config.Name("default_researched_objects")
         @Config.Comment({
-                "List of body name key's which are will be researched by default"
+                "List of objects what are researched by default. You can check object names by running command /research objects",
+                "You need to keep at least one planet for solar system, and one solar system, so when you research solar system there will be at least one planet to fly"
         })
-        public String[] default_researched_bodies = new String[]{
-                "overworld"
+        public String[] default_researched_objects = new String[]{
+                "overworld",
+                "sol",
+                "proxima_b",
+                "tauceti_f",
+                "centauri_b",
+                "barnarda_c",
+                "kepler22b",
+                "tatooine",
+                "crait",
+                "aqua",
+                "kepler62b",
+                "kepler62c",
+                "kepler62d",
+                "kepler62e",
+                "kepler62f",
+                "kepler69b",
+                "kepler69c",
+                "kepler47b",
+                "kepler47c",
+                "jetraruta",
+                "ketherth",
+                "moswion",
+                "qustroithea",
+                "xovis",
+                "brajutov",
+                "oarilia",
+                "speshani16",
+                "struronides",
+                "trars9"
         };
 
         @Config.Name("required_observation_time")

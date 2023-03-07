@@ -242,7 +242,7 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
     @Override
     public EnumSet<EnumFacing> getElectricalInputDirections()
     {
-        return EnumSet.noneOf(EnumFacing.class);
+        return EnumSet.range(EnumFacing.DOWN, EnumFacing.EAST);
     }
 
     @Override

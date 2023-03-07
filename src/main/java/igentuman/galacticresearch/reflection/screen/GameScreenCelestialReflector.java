@@ -52,7 +52,7 @@ public class GameScreenCelestialReflector {
             stats = playerBaseClient.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
         }
         return stats.getUnlockedMissions().contains(name.toLowerCase()) ||
-                Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name.toLowerCase());
+                Arrays.asList(ModConfig.researchSystem.default_researched_objects).contains(name.toLowerCase());
     }
 
     public static void drawCelestialBodiesQ(CelestialBody body, float ticks)

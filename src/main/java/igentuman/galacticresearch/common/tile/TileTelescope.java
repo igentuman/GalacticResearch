@@ -221,7 +221,7 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
         List<Researchable> bodies = SkyModel.get().getCurrentSystemBodies(dimension);
         if(bodies == null) return;
         for (Researchable b: bodies) {
-            if(Arrays.stream(ModConfig.researchSystem.default_researched_bodies).anyMatch(s -> s.equals(b.getName()))) {
+            if(Arrays.stream(ModConfig.researchSystem.default_researched_objects).anyMatch(s -> s.equals(b.getName()))) {
                 continue;
             }
             float x = b.getX();
@@ -242,7 +242,11 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
 
                     observationTime++;
                     if(observationTime/20 >= ModConfig.researchSystem.required_observation_time) {
-                        researchedBodies += ","+curObserveBody;
+                        if(researchedBodies.length() < 1) {
+                            researchedBodies += curObserveBody;
+                        } else {
+                            researchedBodies += "," + curObserveBody;
+                        }
                         observationTime = 0;
                         curObserveBody = "";
                         curBodyRelativeY = 0;

@@ -200,7 +200,9 @@ public class EntitySatelliteRocket extends EntityAutoRocket implements IRocketTy
         TileMissionControlStation te = getMCS();
         if(te != null) {
             if(!isResearching) {
-                te.setMissionInfo(mission, 1);
+                if(te.getMissionInfo(mission) < 1) {
+                    te.setMissionInfo(mission, 1);
+                }
                 isResearching = true;
             }
         }

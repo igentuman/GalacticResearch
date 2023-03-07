@@ -369,7 +369,6 @@ public class GuiTelescope extends GuiContainerGC {
     {
         int progress = tile.getObservationProgress();
         this.drawTexturedModalRect(guiLeft+8, guiTop + 150, 0, 249, Math.min(scale(progress,159), 159), 7);
-
     }
 
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
@@ -378,7 +377,7 @@ public class GuiTelescope extends GuiContainerGC {
         String statusLine = I18n.format("gui.telescope.status.idle");
         if(!tile.curObserveBody.isEmpty()) {
             String planet = "";
-            if(tile.curObserveBody.contains("ASTEROID-")) {
+            if(tile.curObserveBody.toUpperCase().contains("ASTEROID-")) {
                 planet = "ASTEROID";
             } else {
                 planet = I18n.format("planet."+tile.curObserveBody);
