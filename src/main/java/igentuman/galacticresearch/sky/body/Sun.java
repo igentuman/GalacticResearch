@@ -1,16 +1,15 @@
 package igentuman.galacticresearch.sky.body;
 
-import igentuman.galacticresearch.sky.SkyItem;
+import micdoodle8.mods.galacticraft.api.galaxies.Planet;
 import net.minecraft.client.Minecraft;
 
 public class Sun extends Researchable {
 
     private int x;
     private int y;
-    private SkyItem body;
     private int size;
 
-    public int getSize() {
+    public float getSize() {
         return size;
     }
 
@@ -18,19 +17,9 @@ public class Sun extends Researchable {
         this.size = size;
     }
 
-    public SkyItem getBody() {
-        return body;
-    }
-
-    public void setBody(SkyItem body) {
-        this.body = body;
-    }
-
-
-    public Sun(SkyItem body)
+    public Sun()
     {
-        super(body);
-        this.body = body;
+        super(new Planet("sun").setRelativeSize(16).setRelativeOrbitTime(20));
     }
 
     public boolean isVisible()

@@ -168,7 +168,7 @@ public class GameScreenTelescope implements IGameScreen
 
     private void drawCelestialBodies(CelestialBody body)
     {
-        List<Researchable> researchables = GalacticResearch.skyModel.getObjectsToResearch(body.getDimensionID());
+        List<Researchable> researchables = GalacticResearch.skyModel.getCurrentSystemBodies(body.getDimensionID());
         for(Researchable res: researchables) {
             if(telescope.isBodyVisible(res, TileTelescope.viewportSize, TileTelescope.viewportSize)) {
                 float xScaled = (res.getX()-telescope.xAngle)/TileTelescope.viewportSize*frameBx;

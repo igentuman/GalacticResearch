@@ -173,7 +173,7 @@ public class GuiTelescope extends GuiContainerGC {
             float x = viewportX(star.getX());
             float y = viewportY(star.getY());
             int offset = star.getColor()*3;
-            this.drawTexturedModalRect(x*2+sh, y*2+sh, 0, 201 + offset, star.getSize(), star.getSize());
+            this.drawTexturedModalRect((x*2+sh), y*2+sh, 0, 201 + offset, (int)star.getSize(), (int)star.getSize());
         }
         sh+=0.033;
 
@@ -183,7 +183,7 @@ public class GuiTelescope extends GuiContainerGC {
 
     public void renderPlanets()
     {
-        List<Researchable> bodies = SkyModel.get().getObjectsToResearch(tile.dimension);
+        List<Researchable> bodies = SkyModel.get().getCurrentSystemBodies(tile.dimension);
         if(bodies == null) return;
 
         for(ISkyBody researchable: bodies) {
@@ -207,13 +207,13 @@ public class GuiTelescope extends GuiContainerGC {
     {
         float x = viewportX(res.guiX(lastTickWTime, ticks));
         float y = viewportY(res.guiY(lastTickWTime, ticks));
-        float scale = (float)res.getSize()/256;
+        float scale = res.getSize()/256;
         int yOffset = res.yTexOffset();
-        if(res.getBody().getName().equals("moon")) {
+        if(res.getName().equals("moon")) {
             yOffset = WorldUtil.getMoonPhase() * 32;
         }
-        float centerX = x+(float)res.getSize()/2;
-        float centerY = y+(float)res.getSize()/2;
+        float centerX = x+res.getSize()/2;
+        float centerY = y+res.getSize()/2;
 
         GlStateManager.translate(centerX, centerY, 0f);
         GlStateManager.scale(scale, scale, scale);
@@ -247,7 +247,7 @@ public class GuiTelescope extends GuiContainerGC {
     public void renderBody(Researchable res)
     {
         GlStateManager.pushMatrix();
-        if(res.getBody().getName().contains("ASTEROID-")) {
+        if(res.getName().contains("ASTEROID-")) {
             renderAsteroid(res);
         } else {
             renderScaledBody(res);

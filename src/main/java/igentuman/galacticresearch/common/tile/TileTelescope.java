@@ -19,7 +19,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -219,10 +218,10 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
 
     public void observe()
     {
-        List<Researchable> bodies = SkyModel.get().getObjectsToResearch(dimension);
+        List<Researchable> bodies = SkyModel.get().getCurrentSystemBodies(dimension);
         if(bodies == null) return;
         for (Researchable b: bodies) {
-            if(Arrays.stream(ModConfig.researchSystem.default_researched_bodies).anyMatch(s -> s.equals(b.getBody().getName()))) {
+            if(Arrays.stream(ModConfig.researchSystem.default_researched_bodies).anyMatch(s -> s.equals(b.getName()))) {
                 continue;
             }
             float x = b.getX();
@@ -232,10 +231,10 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
                     x+b.getSize()/2 > xAngle + padding && x < (xAngle + viewportSize-padding-b.getSize()) &&
                     y+b.getSize()/2 > yAngle + padding && y < (yAngle + viewportSize-padding-b.getSize())
                ) {
-                if(!isBodyResearched(b.getBody().getName())) {
-                    if(!curObserveBody.equals(b.getBody().getName())) {
+                if(!isBodyResearched(b.getName())) {
+                    if(!curObserveBody.equals(b.getName())) {
                         observationTime = 0;
-                        curObserveBody = b.getBody().getName();
+                        curObserveBody = b.getName();
                         looseCounter = 100;
                     }
                     curBodyRelativeY = y-(yAngle+viewportSize/2-b.getSize()/2);

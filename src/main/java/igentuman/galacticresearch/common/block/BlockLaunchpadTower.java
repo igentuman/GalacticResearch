@@ -16,6 +16,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +28,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BlockLaunchpadTower extends BlockTileGC implements IShiftDescription, IPartialSealableBlock, ISortableBlock
 {
@@ -115,17 +123,6 @@ public class BlockLaunchpadTower extends BlockTileGC implements IShiftDescriptio
     @Override
     public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-//        IBlockState state = world.getBlockState(pos);
-//        int original = state.getBlock().getMetaFromState(state);
-//        int change = world.getBlockState(pos).getValue(FACING).rotateY().getHorizontalIndex();
-
-//        TileEntity te = world.getTileEntity(pos);
-//        if (te instanceof TileBaseUniversalElectrical)
-//        {
-//            ((TileBaseUniversalElectrical) te).updateFacing();
-//        }
-//
-//        world.setBlockState(pos, state.getBlock().getStateFromMeta(change), 3);
         return true;
     }
 
@@ -151,7 +148,17 @@ public class BlockLaunchpadTower extends BlockTileGC implements IShiftDescriptio
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate("tile.radio_telescope.description");
+        return GCCoreUtil.translate("description.launchpad_tower");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack itemStack, @Nullable World world, List<String> currentTooltip, ITooltipFlag flag) {
+        super.addInformation(itemStack, world, currentTooltip, flag);
+        String[] parts = I18n.format("description.launchpad_tower", 123).split("\\\\n");
+        for(String line: parts) {
+            currentTooltip.add(TextFormatting.AQUA + line);
+        }
     }
 
     @Override

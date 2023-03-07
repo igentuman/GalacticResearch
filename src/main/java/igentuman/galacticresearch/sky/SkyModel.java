@@ -1,13 +1,11 @@
 package igentuman.galacticresearch.sky;
 
-import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.sky.body.Asteroid;
-import igentuman.galacticresearch.sky.body.ISkyBody;
 import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.sky.body.Star;
+import micdoodle8.mods.galacticraft.api.galaxies.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SkyModel {
@@ -17,10 +15,6 @@ public class SkyModel {
     public long seed;
     private Star[] stars;
     private List<Asteroid> asteroids = new ArrayList<>();
-    private SkyItem currentBody;
-    private int curDim;
-    List<SkyItem> bodies;
-    List<Researchable> researchables;
 
     private static SkyModel instance;
 
@@ -37,7 +31,7 @@ public class SkyModel {
     {
         int i = 0;
         for(Asteroid a: asteroids) {
-            if(a.getBody().getName().equals(name)) {
+            if(a.getName().equals(name)) {
                 asteroids.remove(i);
                 return;
             }
@@ -58,61 +52,39 @@ public class SkyModel {
         return instance;
     }
 
-    public void initBodies()
+    public SolarSystem getSolarSystemByCelestialBody(CelestialBody body)
     {
-        bodies = ModConfig.researchSystem.getListOfResearchable();
-        //TODO add an event
-        for (SkyItem body: bodies) {
-            body.init();
+        if(body instanceof Planet) {
+            return ((Planet) body).getParentSolarSystem();
         }
-    }
-
-    public List<Researchable> getResearchables()
-    {
-        if(researchables == null) {
-            researchables = new ArrayList<>();
-            for(SkyItem b: getBodies()) {
-                researchables.add(new Researchable(b));
-            }
+        if(body instanceof Moon) {
+            return ((Moon) body).getParentPlanet().getParentSolarSystem();
         }
-        return researchables;
-    }
-
-    public SkyItem getBodyByDIM(int dim)
-    {
-        for(SkyItem b: getBodies()) {
-            if(Arrays.stream(b.getDimensions()).anyMatch(v -> v == dim)) {
-                return b;
-            }
+        if(body instanceof Satellite) {
+            return ((Satellite) body).getParentPlanet().getParentSolarSystem();
         }
         return null;
     }
 
-    public List<Researchable> getObjectsToResearch(int dim)
+    public List<Researchable> getCurrentSystemBodies(int dim)
     {
         List<Researchable> res = new ArrayList<>();
-        String whiteListed = "";
-        String blackListed = "";
-        SkyItem b = getBodyByDIM(dim);
-        if(b == null) {
+        CelestialBody body = GalaxyRegistry.getCelestialBodyFromDimensionID(dim);
+        SolarSystem solar = getSolarSystemByCelestialBody(body);
+        if(solar == null) {
             return res;
         }
-        if(b.parentInstance != null) {
-            whiteListed = b.getParent();
-            blackListed = b.getName();
-            b = b.parentInstance;
-        }
-        for(Researchable r: getResearchables()) {
-
-            if(b.getParent().equals(r.getBody().parent) ||
-                    b.getName().equals(r.getBody().parent)
-            ) {
-                if(r.getBody().getName().equals(blackListed)) continue;
-                if(b.getName().equals(r.getBody().getName()) && !r.getBody().getName().equals(whiteListed)) continue;
-                res.add(r);
+        for(Planet pl: GalaxyRegistry.getPlanetsForSolarSystem(solar)) {
+            if(!pl.equals(body)) {
+                res.add(Researchable.get(pl.getName()));
+            } else {
+                for(Moon moon: GalaxyRegistry.getMoonsForPlanet(pl)) {
+                    res.add(Researchable.get(moon.getName()));
+                }
             }
         }
         res.addAll(asteroids);
+
         return res;
     }
 
@@ -127,11 +99,4 @@ public class SkyModel {
         return stars;
     }
 
-    public List<SkyItem> getBodies()
-    {
-        if(bodies == null) {
-            initBodies();
-        }
-        return bodies;
-    }
 }

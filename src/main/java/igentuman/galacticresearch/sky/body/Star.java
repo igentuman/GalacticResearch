@@ -90,7 +90,7 @@ public class Star implements ISkyBody {
         return true;
     }
 
-    public int getSize()
+    public float getSize()
     {
         return size;
     }

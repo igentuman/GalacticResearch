@@ -52,8 +52,7 @@ public class GameScreenCelestialReflector {
             stats = playerBaseClient.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
         }
         return stats.getUnlockedMissions().contains(name.toLowerCase()) ||
-                Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name.toLowerCase()) ||
-                !GalacticResearch.skyModel.getBodies().stream().anyMatch(body -> body.getName().equals(name.toLowerCase()) || body.getParent().equals(name.toLowerCase()));
+                Arrays.asList(ModConfig.researchSystem.default_researched_bodies).contains(name.toLowerCase());
     }
 
     public static void drawCelestialBodiesQ(CelestialBody body, float ticks)

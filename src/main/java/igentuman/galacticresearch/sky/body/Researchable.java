@@ -1,22 +1,60 @@
 package igentuman.galacticresearch.sky.body;
 
 import igentuman.galacticresearch.GalacticResearch;
-import igentuman.galacticresearch.client.gui.GuiTelescope;
+import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.sky.SkyModel;
-import igentuman.galacticresearch.sky.SkyItem;
 import igentuman.galacticresearch.util.WorldUtil;
+import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
+import micdoodle8.mods.galacticraft.api.galaxies.Moon;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public class Researchable implements ISkyBody {
 
+    protected String name;
+    protected Researchable parent;
+    protected CelestialBody body;
     protected int x;
     protected int y;
-    protected SkyItem body;
+    protected float size;
+    protected float rarity;
     protected int speed = 0;
     protected ResourceLocation texture;
+    protected Random rand;
+    protected static HashMap<String, Researchable> cache = new HashMap<>();
+
+    public Researchable(CelestialBody planet) {
+        this.size = ModConfig.researchSystem.getSizes().getOrDefault(planet.getName(), 16);
+
+        this.rarity = planet.getRelativeOrbitTime();
+        this.name = planet.getName();
+        this.x = initialX();
+        this.y = initialY();
+        this.body = planet;
+        if(planet instanceof Moon) {
+            this.parent = Researchable.get(((Moon) planet).getParentPlanet().getName());
+        }
+    }
+
+    public Researchable getParent()
+    {
+        return parent;
+    }
+
+    public static Researchable get(String name)
+    {
+        if(!cache.keySet().contains(name)) {
+            if(GalaxyRegistry.getRegisteredPlanets().get(name) == null) {
+                cache.put(name, new Researchable(GalaxyRegistry.getRegisteredMoons().get(name)));
+            } else {
+                cache.put(name, new Researchable(GalaxyRegistry.getRegisteredPlanets().get(name)));
+            }
+        }
+        return cache.get(name);
+    }
 
     public float guiX(long lastTime, float ticks)
     {
@@ -56,58 +94,47 @@ public class Researchable implements ISkyBody {
 
     public boolean isVerticalReversed()
     {
-        Random r = new Random(SkyModel.get().seed+nameToSeed()+body.getRarity()+WorldUtil.getDay());
+        Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity+WorldUtil.getDay()));
         return r.nextInt(10) < 3;
     }
 
     public boolean isHorizontalReversed()
     {
-        Random r = new Random(SkyModel.get().seed+nameToSeed()+body.getRarity()+WorldUtil.getDay()+100);
+        Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity+WorldUtil.getDay()+100));
         return r.nextInt(10) < 4;
     }
 
-    public int getSize() {
-        return body.getSize();
-    }
-
-    public SkyItem getBody() {
-        return body;
+    public float getSize() {
+        return size;
     }
 
     private int nameToSeed()
     {
-       return body.getName().hashCode();
+        return name.hashCode();
     }
 
     private int initialX()
     {
-        long seed = SkyModel.get().seed + (long) body.getZIndex() + nameToSeed();
+        long seed = SkyModel.get().seed + nameToSeed();
         return new Random(seed).nextInt(SkyModel.width);
     }
 
     private int initialY()
     {
-        long seed = SkyModel.get().seed + (long) body.getZIndex()/2 + nameToSeed();
+        long seed = (SkyModel.get().seed + nameToSeed())/2;
         return new Random(seed).nextInt(SkyModel.height);
-    }
-
-    public Researchable(SkyItem body)
-    {
-        this.body = body;
-        this.x = initialX();
-        this.y = initialY();
     }
 
     public boolean isVisible()
     {
-        Random r = new Random(SkyModel.get().seed+nameToSeed()+body.getRarity()+ WorldUtil.getDay());
-        return r.nextInt((int) (10 / (1 / (double)body.getRarity()))) < body.getRarity()*100;
+        Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity+WorldUtil.getDay()));
+        return r.nextInt((int) (10 / (1 / (double)rarity))) < rarity*100;
     }
 
     public int speed()
     {
         if(speed == 0) {
-            Random r = new Random(SkyModel.get().seed+nameToSeed()+body.getRarity());
+            Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity));
             speed = r.nextInt(20);
         }
         return Math.max(5, speed);
@@ -135,16 +162,16 @@ public class Researchable implements ISkyBody {
 
     public ResourceLocation getTexture() {
         if(texture == null) {
-            if(body.getName().equals("moon")) {
-                texture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/"+body.getName()+".png");
+            if(name.equals("moon")) {
+                texture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/"+name+".png");
                 return texture;
             }
-            if(GalaxyRegistry.getRegisteredPlanets().keySet().contains(body.getName())) {
-                texture = GalaxyRegistry.getRegisteredPlanets().get(body.getName()).getBodyIcon();
-            } else if(GalaxyRegistry.getRegisteredMoons().keySet().contains(body.getName())) {
-                texture = GalaxyRegistry.getRegisteredMoons().get(body.getName()).getBodyIcon();
+            if(GalaxyRegistry.getRegisteredPlanets().keySet().contains(name)) {
+                texture = GalaxyRegistry.getRegisteredPlanets().get(name).getBodyIcon();
+            } else if(GalaxyRegistry.getRegisteredMoons().keySet().contains(name)) {
+                texture = GalaxyRegistry.getRegisteredMoons().get(name).getBodyIcon();
             } else {
-                texture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/"+body.getName()+".png");
+                texture = new ResourceLocation(GalacticResearch.MODID, "textures/gui/planets/"+name+".png");
             }
         }
         return texture;
@@ -153,5 +180,9 @@ public class Researchable implements ISkyBody {
     public int yTexOffset()
     {
         return 0;
+    }
+
+    public String getName() {
+        return name;
     }
 }

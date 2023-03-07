@@ -14,6 +14,7 @@ message.mining_asteroid.cleared=All asteroids were removed
 
 description.telescope=Research planets
 description.mission_control_station=Controls Rocket Missions and Connects to Space Stations
+description.launchpad_tower=Can mount/unmount rockets. Input on left side. Output on right and bottom
 
 advancement.galacticresearch.mining_rocket.name=Space mining
 advancement.galacticresearch.mining_rocket.desc=Craft Mining Rocket

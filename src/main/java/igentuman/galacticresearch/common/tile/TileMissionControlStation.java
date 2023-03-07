@@ -9,7 +9,6 @@ import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.block.BlockTelescope;
 import igentuman.galacticresearch.common.capability.PlayerSpaceData;
 import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
-import igentuman.galacticresearch.common.data.DimensionProvider;
 import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.entity.IGRAutoRocket;
@@ -18,11 +17,9 @@ import igentuman.galacticresearch.network.GRPacketSimple;
 import igentuman.galacticresearch.util.GRSounds;
 import igentuman.galacticresearch.util.Util;
 import io.netty.buffer.ByteBuf;
-import li.cil.repack.org.luaj.vm2.ast.Str;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
-import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;
 import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
@@ -51,10 +48,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.village.Village;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.WoodlandMansion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
@@ -311,8 +306,6 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public HashMap<String, Integer> missionsDataMap = new HashMap<>();
 
-    public DimensionProvider dimensionProvider;
-
     private TileTelescope telescope;
 
     public Object attachedDock;
@@ -326,7 +319,6 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         super("container.mission_control_staion.name");
         this.storage.setMaxExtract(45.0F);
         this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
-        dimensionProvider = new DimensionProvider(this);
         locationCords = new int[] {getPos().getX(), getPos().getZ()};
         locatorCords = getPos().getX() +","+ getPos().getZ();
     }

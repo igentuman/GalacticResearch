@@ -11,7 +11,7 @@ public interface ISkyBody {
 
     boolean isVisible();
 
-    int getSize();
+    float getSize();
 
     default long clientTime()
     {

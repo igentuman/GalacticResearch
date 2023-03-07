@@ -1,8 +1,5 @@
 package igentuman.galacticresearch;
 
-import igentuman.galacticresearch.sky.SkyItem;
-import igentuman.galacticresearch.util.GRHooks;
-import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import net.minecraftforge.common.config.Config;
 import org.apache.logging.log4j.Level;
 
@@ -16,53 +13,35 @@ public class ModConfig {
     public static Machines machines = new Machines();
     public static Tweaks tweaks = new Tweaks();
     public static Locator locator = new Locator();
+    public static HashMap<String, Integer> sizes = new HashMap<>();
 
     public static class ResearchSystemSettings {
 
-        @Config.Name("researchable_bodies")
+        @Config.Name("body_size")
         @Config.Comment({
-                "Define all researchable solar bodies",
-                "All other bodies, not defined in the list will be researched by default",
-                "Format: nameKey, zIndex, rarity,size, dimension ids (separated by ;), parent planet nameKey",
-                "(texture for the body location: galacticresearch:textures/gui/planets/nameKey.png)",
-                "(translation key for bodies: planet.nameKey)",
-                "parent planet field used to set child planets only observable in dimmension of parent planet (except sun, all planets with parent sun can be observed anywhere)"
-        })
-        public String[] researchable_bodies = new String[]{
-     //     name        zindex  rarity  size    dim        parent
-            "mercury,   1,      100,    16,     -13,        sun",
-            "venus,     2,      70,     20,     -31;5,      sun",
-            "overworld, 3,      50,     16,      0;3,       sun",
-            "moon,      1,      10,     32,     -28,        overworld",
-            "mars,      4,      30,     20,     -29;4,      sun",
-            "phobos,    1,      15,     16,     -1012,      mars",
-            "deimos,    2,      15,     16,     -1013,      mars",
-            "asteroids, 5,      30,     16,     -30,        sun",
-            "ceres,     6,      35,     16,     -1007,      sun",
-            "jupiter,   7,      30,     32,     -15;-1501,  sun",
-            "io,        1,      30,     16,     -1014,      jupiter",
-            "europa,    2,      30,     16,     -1015,      jupiter",
-            "ganymede,  3,      30,     16,     -1016,      jupiter",
-            "callisto,  4,      30,     16,     -1022,      jupiter",
-            "saturn,    8,      40,     28,     -16,        sun",
-            "enceladus, 2,      40,     18,     -1017,      saturn",
-            "titan,     6,      40,     15,     -1018,      saturn",
-            "uranus,    9,      70,     16,     -17,        sun",
-            "miranda,   1,      65,     16,     -1024,      uranus",
-            "oberon,    5,      40,     16,     -1019,      uranus",
-            "neptune,   10,     60,     16,     -18,        sun",
-            "proteus,   1,      55,     16,     -1020,      neptune",
-            "triton,    2,      55,     16,     -1018,      neptune",
-            "pluto,     11,     120,    16,     -1008,      sun",
-            "kuiperbelt, 12,    50,     16,     -1009,      sun",
-            "haumea,    13,     160,    16,     -1023,      sun"
+                "All bodies have size of 16 by default",
+                "You can personailze body size here, just type body name key and the size",
+                "This only affects telescope"
+                       })
+        public String[] body_size = new String[]{
+     //     name        size
+            "venus,      20",
+            "moon,       32",
+            "mars,       20",
+            "jupiter,    32",
+            "saturn,     28",
+            "enceladus,  18"
         };
 
-
+        @Config.Name("research_moons_with_parent_planet")
+        @Config.Comment({
+                "If true, moons will be automatically researched when you research the parent planet"
+        })
+        public boolean research_moons_with_parent_planet = false;
 
         @Config.Name("default_researched_bodies")
         @Config.Comment({
-                "List of body nameKey's which are will be researched by default"
+                "List of body name key's which are will be researched by default"
         })
         public String[] default_researched_bodies = new String[]{
                 "overworld"
@@ -86,50 +65,27 @@ public class ModConfig {
         })
         public boolean galaxy_space_integration = true;
 
-        protected SkyItem parseBodyLine(String line)
+        protected void parseBodyLine(String line)
         {
-            if(line.isEmpty()) return null;
+            if(line.isEmpty()) return;
             String[] parts = line.split(",");
             String name = parts[0].trim();
-            int zIndex = Integer.parseInt(parts[1].trim());
-            int rarity = Integer.parseInt(parts[2].trim());
-            int size = Integer.parseInt(parts[3].trim());
-            String[] dimensionIds = parts[4].trim().split(";");
-            int[] dims = new int[dimensionIds.length];
-            int i = 0;
-            for (String dim : dimensionIds) {
-                dims[i] = Integer.parseInt(dim.trim());
-            }
-            String parent = "";
-            if (parts.length > 5) {
-                parent = parts[5].trim();
-            }
-            return new SkyItem(name, zIndex, rarity, size, dims, parent);
+            int size = Integer.parseInt(parts[1].trim());
+            sizes.put(name,size);
         }
 
-        public boolean isRegistered(String name)
+        public HashMap<String, Integer> getSizes()
         {
-            return GalaxyRegistry.getRegisteredPlanets().keySet().contains(name) ||
-                    GalaxyRegistry.getRegisteredMoons().keySet().contains(name);
-
-        }
-
-        public List<SkyItem> getListOfResearchable()
-        {
-            List<SkyItem> list = new ArrayList<>();
-            for (String bodyLine: researchable_bodies) {
-                try {
-                    SkyItem item = parseBodyLine(bodyLine.trim());
-                    if(item != null) {
-                        if(isRegistered(item.getName())) { //add only registered bodies
-                            list.add(item);
-                        }
+            if(sizes.size() == 0) {
+                for (String line : body_size) {
+                    try {
+                        parseBodyLine(line);
+                    } catch (ArrayIndexOutOfBoundsException | NullPointerException er) {
+                        GalacticResearch.instance.logger.log(Level.ERROR, er.getLocalizedMessage());
                     }
-                } catch (ArrayIndexOutOfBoundsException|NullPointerException er) {
-                    GalacticResearch.instance.logger.log(Level.ERROR, er.getLocalizedMessage());
                 }
             }
-            return list;
+            return sizes;
         }
     }
 

@@ -13,6 +13,7 @@ message.mining_asteroid.cleared=Все астероиды удалены
 
 description.telescope=Наблюдение за небесными телами
 description.mission_control_station=Управляет полётом ракет
+description.launchpad_tower=Устанавливает/убирает ракеты с площадки. Вход предметов слева. Выход справа и снизу.
 
 advancement.galacticresearch.mining_rocket.name=Космический майнинг
 advancement.galacticresearch.mining_rocket.desc=Скрафти Добывающую ракету
@@ -69,6 +70,9 @@ gui.dropdown.ae2_meteorite=AE2 Метеорит
 gui.dropdown.boss_dungeon=Данж с боссом
 gui.dropdown.none=(выбрать)
 gui.dropdown.temple=Пирамида
+gui.checkbox.automount=Автоустановка ракет
+gui.button.mount=Установить
+gui.button.unmount=Убрать
 
 overworld.name=Земля
 planet.overworld=Земля
