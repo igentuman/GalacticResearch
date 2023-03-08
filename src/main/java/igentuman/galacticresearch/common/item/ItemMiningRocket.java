@@ -221,6 +221,7 @@ public class ItemMiningRocket extends Item implements IHoldableItem, ISortableIt
             EntityMiningRocket rocket = new EntityMiningRocket(FMLClientHandler.instance().getWorldClient(), 0, 0, 0);
             tooltip.add(GCCoreUtil.translate("gui.message.fuel.name") + ": " + par1ItemStack.getTagCompound().getInteger("RocketFuel") + " / " + rocket.fuelTank.getCapacity());
         }
+        tooltip.add(EnumColor.YELLOW + "\u00a7o" + GCCoreUtil.translate("gui.mining_rocket.desc"));
         tooltip.add(EnumColor.AQUA + "\u00a7o" + GCCoreUtil.translate("gui.tier1_pad.desc"));
     }
 

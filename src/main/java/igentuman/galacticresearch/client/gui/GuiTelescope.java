@@ -5,6 +5,7 @@ import igentuman.galacticresearch.common.container.ContainerTelescope;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import igentuman.galacticresearch.network.GRPacketSimple;
 import igentuman.galacticresearch.sky.SkyModel;
+import igentuman.galacticresearch.sky.body.Asteroid;
 import igentuman.galacticresearch.sky.body.ISkyBody;
 import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.sky.body.Star;
@@ -225,13 +226,15 @@ public class GuiTelescope extends GuiContainerGC {
         this.drawTexturedModalRect(x, y, 0, yOffset, (int) Math.min(viewportBondX/scale, (float)res.getSize()/scale), (int) Math.min(viewportBondY/scale, (float)res.getSize()/scale));
     }
 
-    public void renderAsteroid(Researchable res)
+    public void renderAsteroid(Asteroid res)
     {
 
         float x = viewportX(res.guiX(lastTickWTime, ticks));
         float y = viewportY(res.guiY(lastTickWTime, ticks));
-        float centerX = x+(float)res.getSize()/2;
-        float centerY = y+(float)res.getSize()/2;
+        float centerX = x+res.getSize()/2;
+        float centerY = y+res.getSize()/2;
+        int yOffset = res.yTexOffset();
+
         GlStateManager.translate(centerX, centerY, 0f);
         GlStateManager.rotate(Minecraft.getMinecraft().world.getTotalWorldTime(), 1, 0, 45);
         GlStateManager.translate(-centerX, -centerY, 0f);
@@ -239,7 +242,7 @@ public class GuiTelescope extends GuiContainerGC {
         float viewportBondX = ((guiLeft + 6) + viewportSize) - viewportX(res.getX())+6;
         float viewportBondY = ((guiTop + 24) + viewportSize) - viewportY(res.getY())+6;
 
-        drawTexturedModalRect(x, y, 0, 0, (int) Math.min(viewportBondX, (float)res.getSize()), (int) Math.min(viewportBondY, (float)res.getSize()));
+        drawTexturedModalRect(x, y, 0, yOffset, (int) Math.min(viewportBondX, (float)res.getSize()), (int) Math.min(viewportBondY, (float)res.getSize()));
 
     }
 
@@ -247,8 +250,8 @@ public class GuiTelescope extends GuiContainerGC {
     public void renderBody(Researchable res)
     {
         GlStateManager.pushMatrix();
-        if(res.getName().contains("ASTEROID-")) {
-            renderAsteroid(res);
+        if(res.getName().toUpperCase().contains("ASTEROID-")) {
+            renderAsteroid((Asteroid) res);
         } else {
             renderScaledBody(res);
         }
@@ -288,7 +291,7 @@ public class GuiTelescope extends GuiContainerGC {
         String[] bodies = tile.getResearchedBodiesArray();
 
         for(String name: bodies) {
-            if(name.contains("ASTEROID-")) {
+            if(name.toUpperCase().contains("ASTEROID-")) {
                 lines.add(name);
             } else {
                 String planet = I18n.format("planet."+name);

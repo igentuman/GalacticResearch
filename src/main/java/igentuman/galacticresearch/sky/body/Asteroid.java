@@ -28,7 +28,7 @@ public class Asteroid extends Researchable {
 
     private int nameToSeed()
     {
-       return body.getName().hashCode();
+       return Math.abs(body.getName().hashCode());
     }
 
     private int initialX()
@@ -52,14 +52,14 @@ public class Asteroid extends Researchable {
 
     public boolean isVisible()
     {
-        Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity+ WorldUtil.getDay()));
-        return r.nextInt((int) (10 / (1 / (double)rarity))) < rarity*100;
+        Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/100+rarity+ WorldUtil.getDay()));
+        return r.nextInt((int) (10 / (1 / (double)rarity))) < rarity*500;
     }
 
     public int speed()
     {
         if(speed == 0) {
-            Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity));
+            Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/50+rarity));
             speed = r.nextInt(20);
         }
         return Math.max(5, speed);

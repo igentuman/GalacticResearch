@@ -1,29 +1,7 @@
-newmtl None
+# Made in Blockbench 4.6.4
+newmtl m_a24bc8b8-27bf-9e41-f192-a7d6203fab6b
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 d 1.000000
 map_Kd galacticresearch:blocks/mining_rocket
-
-newmtl None_NONE
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-d 1.000000
-map_Kd galacticresearch:blocks/mining_rocket
-
-newmtl None_uv.png
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-d 1.000000
-map_Kd galacticresearch:blocks/mining_rocket
-
-newmtl None_uv.png.004
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-d 1.000000
-map_Kd galacticresearch:blocks/mining_rocket
-
-newmtl None_uv.png.005
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-d 1.000000
-map_Kd galacticresearch:blocks/mining_rocket
+newmtl none

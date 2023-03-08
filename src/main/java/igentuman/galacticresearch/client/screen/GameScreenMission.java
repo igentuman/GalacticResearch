@@ -143,7 +143,7 @@ public class GameScreenMission implements IGameScreen
             TileMissionControlStation mcs = getMissionControlCenter(telemeter);
             if (mcs != null) {
                 if (mcs.getRocket() == null) {
-                    if (mcs.currentMission.contains("ASTEROID-")) {
+                    if (mcs.currentMission.toUpperCase().contains("ASTEROID-")) {
                         entity = new EntityMiningRocket(telemeter.getWorld());
                     } else if (!mcs.currentMission.isEmpty()) {
                         entity = new EntitySatelliteRocket(telemeter.getWorld());
@@ -157,7 +157,7 @@ public class GameScreenMission implements IGameScreen
                 strName = mcs.currentMission;
                 if(!strName.isEmpty()) {
                     status = mcs.getMissionStatusKey(mcs.currentMission);
-                    if(!strName.contains("ASTEROID-")) {
+                    if(!strName.toUpperCase().contains("ASTEROID-")) {
                         String tmp = I18n.format("planet."+strName);
                         if(tmp.equals(strName)) {
                             tmp = I18n.format("moon."+strName);
@@ -169,7 +169,7 @@ public class GameScreenMission implements IGameScreen
                     int percent = 0;
                     if(state > 0) {
                         percent = mcs.getMissonPercent(mcs.currentMission);
-                        if(strName.contains("ASTEROID-")) {
+                        if(strName.toUpperCase().contains("ASTEROID-")) {
                             int mined = GalacticResearch.spaceMineProvider.getOreCnt(strName)/100*percent;
                             if(mined > 0)
                             str[2] = I18n.format("screen.mined_blocks", mined);
@@ -225,7 +225,7 @@ public class GameScreenMission implements IGameScreen
         float Yoffset = (sizeY - borders - textHeightPixels * scaleText) / 2 + scaleText;
         int whiteColour = ColorUtil.to32BitColor(255, 240, 216, 255);
         String title = "";
-        if(strName.contains("ASTEROID-")) {
+        if(strName.toUpperCase().contains("ASTEROID-")) {
             title = I18n.format("screen.title.mining");
         } else {
             title = I18n.format("screen.title.research");

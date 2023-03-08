@@ -11,7 +11,7 @@ import java.util.List;
 public class SkyModel {
     public static int width = 1200;
     public static int height = 1200;
-    private static int starsDensity = 5000;
+    private static int starsDensity = 2000;
     public long seed;
     private Star[] stars;
     private List<Asteroid> asteroids = new ArrayList<>();

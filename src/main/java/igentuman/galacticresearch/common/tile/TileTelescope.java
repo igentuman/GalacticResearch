@@ -309,7 +309,7 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     public void clearAsteroids()
     {
         for (String m: getResearchedBodiesArray()) {
-            if(!m.contains("ASTEROID-")) continue;
+            if(!m.toUpperCase().contains("ASTEROID-")) continue;
             if(!GalacticResearch.spaceMineProvider.getMissions().containsKey(m)) {
                 deleteResearch(m);
             }

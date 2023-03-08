@@ -803,7 +803,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     public void removeAsteroidMissions(boolean check)
     {
         for(String m: getMissions()) {
-            if(!m.contains("ASTEROID-")) continue;
+            if(!m.toUpperCase().contains("ASTEROID-")) continue;
             if(check) {
                 if (!GalacticResearch.spaceMineProvider.getMissions().containsKey(m)) {
                     missionsDataMap.remove(m);
@@ -825,7 +825,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         for(String s: tmp) {
             try {
                 int v = missionsDataMap.get(s);
-                if (s.contains("ASTEROID-")) {
+                if (s.toUpperCase().contains("ASTEROID-")) {
                     if (v == -3) continue;
                     if (GalacticResearch.spaceMineProvider.getMissions().size() == 0) {
                         removeAsteroidMissions(false);
@@ -892,11 +892,11 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         } else {
             rocketState = 0;
         }
-        if(currentMission.contains("ASTEROID-") && !(r instanceof EntityMiningRocket)) {
+        if(currentMission.toUpperCase().contains("ASTEROID-") && !(r instanceof EntityMiningRocket)) {
             rocketState = -2;
         }
 
-        if(!currentMission.contains("ASTEROID-") && !(r instanceof EntitySatelliteRocket)) {
+        if(!currentMission.toUpperCase().contains("ASTEROID-") && !(r instanceof EntitySatelliteRocket)) {
             rocketState = -2;
         }
     }

@@ -19,7 +19,7 @@ public class InventorySchematicMiningRocket implements IInventory
 
     public InventorySchematicMiningRocket(Container par1Container)
     {
-        this.stacks = NonNullList.withSize(10, ItemStack.EMPTY);
+        this.stacks = NonNullList.withSize(14, ItemStack.EMPTY);
         this.eventHandler = par1Container;
         this.inventoryWidth = 5;
     }

@@ -170,7 +170,7 @@ public class GuiMissionControlStation extends GuiContainerGC {
         if(planet.equals("moon."+curMission)) {
             planet = I18n.format("solarsystem."+curMission);
         }
-        if(curMission.contains("ASTEROID-")) {
+        if(curMission.toUpperCase().contains("ASTEROID-")) {
             planet = curMission;
         }
         this.fontRenderer.drawString(I18n.format(planet), 22, 39, 4210752);

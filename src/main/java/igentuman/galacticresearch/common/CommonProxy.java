@@ -66,9 +66,13 @@ public class CommonProxy implements ISidedProxy {
         input.put(4, new ItemStack(MarsItems.marsItemBasic, 1, 3));
         input.put(5, new ItemStack(MarsItems.marsItemBasic, 1, 3));
         input.put(6, new ItemStack(MarsItems.marsItemBasic, 1, 3));
-        input.put(7, new ItemStack(GCItems.partFins));
-        input.put(8, new ItemStack(AsteroidsItems.basicItem, 1, 1));
+        input.put(7, new ItemStack(MarsItems.marsItemBasic, 1, 3));
+        input.put(8, new ItemStack(MarsItems.marsItemBasic, 1, 3));
         input.put(9, new ItemStack(GCItems.partFins));
+        input.put(10, new ItemStack(GCItems.partFins));
+        input.put(11, new ItemStack(AsteroidsItems.basicItem, 1, 1));
+        input.put(12, new ItemStack(GCItems.partFins));
+        input.put(13, new ItemStack(GCItems.partFins));
         HashMap<Integer, ItemStack> input2;
 
         input2 = new HashMap<>(input);

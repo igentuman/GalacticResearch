@@ -20,7 +20,7 @@ public class Researchable implements ISkyBody {
     protected int x;
     protected int y;
     protected float size;
-    protected float rarity;
+    protected int rarity;
     protected int speed = 0;
     protected ResourceLocation texture;
     protected Random rand;
@@ -28,7 +28,7 @@ public class Researchable implements ISkyBody {
 
     public Researchable(CelestialBody planet) {
         this.size = ModConfig.researchSystem.getSizes().getOrDefault(planet.getName(), 16);
-        this.rarity = planet.getRelativeOrbitTime();
+        this.rarity = (int) Math.abs(planet.getRelativeOrbitTime());
         this.name = planet.getName();
         this.x = initialX();
         this.y = initialY();
@@ -93,13 +93,13 @@ public class Researchable implements ISkyBody {
 
     public boolean isVerticalReversed()
     {
-        Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity+WorldUtil.getDay()));
+        Random r = new Random((long) (SkyModel.get().seed/2+nameToSeed()+rarity+WorldUtil.getDay()));
         return r.nextInt(10) < 3;
     }
 
     public boolean isHorizontalReversed()
     {
-        Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity+WorldUtil.getDay()+100));
+        Random r = new Random((long) (SkyModel.get().seed/2+nameToSeed()+rarity+WorldUtil.getDay()+100));
         return r.nextInt(10) < 4;
     }
 
@@ -109,7 +109,7 @@ public class Researchable implements ISkyBody {
 
     private int nameToSeed()
     {
-        return name.hashCode();
+        return Math.abs(name.hashCode());
     }
 
     private int initialX()
@@ -126,14 +126,14 @@ public class Researchable implements ISkyBody {
 
     public boolean isVisible()
     {
-        Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity+WorldUtil.getDay()));
+        Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/1000+rarity+WorldUtil.getDay()));
         return r.nextInt((int) (10 / (1 / (double)rarity))) < rarity*100;
     }
 
     public int speed()
     {
         if(speed == 0) {
-            Random r = new Random((long) (SkyModel.get().seed+nameToSeed()+rarity));
+            Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/1000+rarity));
             speed = r.nextInt(20);
         }
         return Math.max(5, speed);
