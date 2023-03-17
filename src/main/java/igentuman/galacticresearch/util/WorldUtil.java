@@ -1,6 +1,8 @@
 package igentuman.galacticresearch.util;
 
 import igentuman.galacticresearch.GalacticResearch;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class WorldUtil {
 
@@ -19,11 +21,18 @@ public class WorldUtil {
 
     public static long totalTIme()
     {
-        return GalacticResearch.server.getEntityWorld().getTotalWorldTime();
+        try {
+            if (FMLCommonHandler.instance().getSide().isClient()) {
+                return Minecraft.getMinecraft().world.getTotalWorldTime();
+            }
+            return GalacticResearch.server.getEntityWorld().getTotalWorldTime();
+        } catch (NullPointerException ignore) {
+            return 0;
+        }
     }
 
     public static int getMoonPhase()
     {
-        return GalacticResearch.server.getEntityWorld().getMoonPhase();
+        return Minecraft.getMinecraft().world.getMoonPhase();
     }
 }

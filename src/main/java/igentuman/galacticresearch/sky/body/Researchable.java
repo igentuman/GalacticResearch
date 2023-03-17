@@ -93,13 +93,13 @@ public class Researchable implements ISkyBody {
 
     public boolean isVerticalReversed()
     {
-        Random r = new Random((long) (SkyModel.get().seed/2+nameToSeed()+rarity+WorldUtil.getDay()));
+        Random r = new Random((long) (SkyModel.get().seed/2+nameToSeed()+rarity()+WorldUtil.getDay()));
         return r.nextInt(10) < 3;
     }
 
     public boolean isHorizontalReversed()
     {
-        Random r = new Random((long) (SkyModel.get().seed/2+nameToSeed()+rarity+WorldUtil.getDay()+100));
+        Random r = new Random((long) (SkyModel.get().seed/2+nameToSeed()+rarity()+WorldUtil.getDay()+100));
         return r.nextInt(10) < 4;
     }
 
@@ -126,14 +126,19 @@ public class Researchable implements ISkyBody {
 
     public boolean isVisible()
     {
-        Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/1000+rarity+WorldUtil.getDay()));
-        return r.nextInt((int) (10 / (1 / (double)rarity))) < rarity*100;
+        Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/1000+rarity()+WorldUtil.getDay()));
+        return r.nextInt((int) (10 / (1 / (double)rarity()))) < rarity()*100;
+    }
+
+    public int rarity()
+    {
+        return Math.min(2, Math.abs(rarity));
     }
 
     public int speed()
     {
         if(speed == 0) {
-            Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/1000+rarity));
+            Random r = new Random((long) (SkyModel.get().seed/20+nameToSeed()/1000+rarity()));
             speed = r.nextInt(20);
         }
         return Math.max(5, speed);
