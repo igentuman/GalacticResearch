@@ -15,6 +15,7 @@ import igentuman.galacticresearch.common.capability.SpaceCapabilityHandler;
 import igentuman.galacticresearch.common.capability.SpaceDataProvider;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.network.GRPacketSimple;
+import igentuman.galacticresearch.util.Util;
 import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
 import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection;
@@ -157,7 +158,9 @@ public class GREventHandler
                         new Object[] { GalacticResearch.skyModel.seed }),
                 (EntityPlayerMP) event.player
         );
-
+        GalacticResearch.instance.logger.error("Sky seed: " + GalacticResearch.skyModel.seed);
+        GalacticResearch.spaceMineProvider.syncToPlayer((EntityPlayerMP) event.player);
+        GalacticResearch.instance.logger.error("Asteoids: " + Util.serializeMap(GalacticResearch.spaceMineProvider.getMissions()));
         PlayerSpaceData stats = event.player.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
         for(String m: ModConfig.researchSystem.default_researched_objects) {
             assert stats != null;

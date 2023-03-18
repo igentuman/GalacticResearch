@@ -105,4 +105,8 @@ public class SkyModel {
         Random r = new Random(GalacticResearch.server.getEntityWorld().getSeed()/10);
         setSeed(r.nextLong());
     }
+
+    public void removeAsteroids() {
+        asteroids.clear();
+    }
 }

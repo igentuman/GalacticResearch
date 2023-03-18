@@ -3,11 +3,13 @@ package igentuman.galacticresearch.network;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.client.capability.PlayerClientSpaceData;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
+import igentuman.galacticresearch.common.data.SpaceMineProvider;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.tile.TileLaunchpadTower;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import igentuman.galacticresearch.sky.SkyModel;
+import igentuman.galacticresearch.util.Util;
 import igentuman.galacticresearch.util.WorldUtil;
 import io.netty.buffer.ByteBuf;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
@@ -109,6 +111,10 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                 break;
             case SKY_SEED:
                 SkyModel.get().setSeed((Long) data.get(0));
+                break;
+            case SYNC_ASTEROIDS:
+                HashMap<String, Integer> missions = Util.unserializeMap((String) data.get(0));
+                SpaceMineProvider.get().setMissions(missions);
                 break;
         }
     }
@@ -266,6 +272,7 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
     public static enum EnumSimplePacket {
         WORLD_TIME(Side.CLIENT, Long.class),
         SKY_SEED(Side.CLIENT, Long.class),
+        SYNC_ASTEROIDS(Side.CLIENT, String.class),
         SYNC_PLAYER_SPACE_DATA(Side.CLIENT, String.class),
         PREV_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         UNMOUNT_ROCKET(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),

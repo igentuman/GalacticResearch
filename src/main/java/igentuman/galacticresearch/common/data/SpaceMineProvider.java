@@ -2,8 +2,11 @@ package igentuman.galacticresearch.common.data;
 
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
+import igentuman.galacticresearch.network.GRPacketSimple;
 import igentuman.galacticresearch.util.StackUtil;
+import igentuman.galacticresearch.util.Util;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.TextComponentString;
@@ -17,6 +20,8 @@ public class SpaceMineProvider {
     public HashMap<ItemStack, Integer> ores = new HashMap<>();
     public int generateCounter;
     private WorldSaveDataGR dataHolder = null;
+
+    private boolean hasChanges = false;
 
     public boolean isMissionInProgress(String mission)
     {
@@ -32,6 +37,7 @@ public class SpaceMineProvider {
 
     public void removeMissions()
     {
+        GalacticResearch.skyModel.removeAsteroids();
         missions.clear();
         saveData();
     }
@@ -51,11 +57,13 @@ public class SpaceMineProvider {
                 tmp.put(m, missions.get(m));
             } else {
                 GalacticResearch.skyModel.removeAsteroid(m);
+                hasChanges = true;
             }
         }
         if(!toDelete.isEmpty() && tmp.size() > ModConfig.machines.mining_missions_limit) {
             tmp.remove(toDelete);
             GalacticResearch.skyModel.removeAsteroid(toDelete);
+            hasChanges = true;
         }
         missions = tmp;
     }
@@ -68,6 +76,10 @@ public class SpaceMineProvider {
     public void setMissions(HashMap<String, Integer> m)
     {
         missions = m;
+        GalacticResearch.skyModel.removeAsteroids();
+        for(String name: missions.keySet()) {
+            GalacticResearch.skyModel.addAsteroid(name);
+        }
     }
 
     private WorldSaveDataGR dataHolder()
@@ -82,11 +94,14 @@ public class SpaceMineProvider {
 
     public void saveData()
     {
-        dataHolder().save(GalacticResearch.server.getEntityWorld());
+        if(GalacticResearch.server != null) {
+            dataHolder().save(GalacticResearch.server.getEntityWorld());
+        }
     }
 
     public void updateMissions()
     {
+        if(GalacticResearch.server == null) return;
         dataHolder();
         generateCounter--;
         if(generateCounter <= 0) {
@@ -95,6 +110,7 @@ public class SpaceMineProvider {
             generateCounter = 1000000/ModConfig.machines.mining_asteroids_popularity;
             saveData();
         }
+        syncToAll();
     }
 
     public static SpaceMineProvider get() {
@@ -144,6 +160,7 @@ public class SpaceMineProvider {
             if(left > 0) {
                 left--;
                 missions.replace(mission, left);
+                hasChanges = true;
                 return randomOre(mission);
             }
         }
@@ -194,6 +211,29 @@ public class SpaceMineProvider {
         if(ModConfig.machines.announce_asteroids) {
             GalacticResearch.server.getPlayerList().sendMessage(new TextComponentString("Asteroid detected on sky"));
         }
+        hasChanges = true;
         return name + " ("+cnt+")";
+    }
+
+    public void syncToPlayer(EntityPlayerMP player) {
+        GalacticResearch.packetPipeline.sendTo(
+                new GRPacketSimple(
+                        GRPacketSimple.EnumSimplePacket.SYNC_ASTEROIDS,
+                        GCCoreUtil.getDimensionID(player.world),
+                        new Object[] { Util.serializeMap(getMissions()) }),
+                player
+        );
+    }
+
+    public void syncToAll() {
+        if(hasChanges) {
+            hasChanges = false;
+            GalacticResearch.packetPipeline.sendToAll(
+                    new GRPacketSimple(
+                            GRPacketSimple.EnumSimplePacket.SYNC_ASTEROIDS,
+                            0,
+                            new Object[]{Util.serializeMap(getMissions())})
+            );
+        }
     }
 }
