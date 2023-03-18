@@ -18,7 +18,6 @@ import igentuman.galacticresearch.network.GRPacketSimple;
 import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
 import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection;
-import micdoodle8.mods.galacticraft.core.client.screen.GameScreenCelestial;
 import micdoodle8.mods.galacticraft.core.entities.EntityBossBase;
 import micdoodle8.mods.galacticraft.core.event.EventLandingPadRemoval;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -151,6 +150,14 @@ public class GREventHandler
 
     @SubscribeEvent
     public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+        GalacticResearch.packetPipeline.sendTo(
+                new GRPacketSimple(
+                        GRPacketSimple.EnumSimplePacket.SKY_SEED,
+                        GCCoreUtil.getDimensionID(event.player.world),
+                        new Object[] { GalacticResearch.skyModel.seed }),
+                (EntityPlayerMP) event.player
+        );
+
         PlayerSpaceData stats = event.player.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
         for(String m: ModConfig.researchSystem.default_researched_objects) {
             assert stats != null;
@@ -189,10 +196,20 @@ public class GREventHandler
             }
         }
     }
-
+    public long tickSent = 0;
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event)
     {
         GalacticResearch.spaceMineProvider.updateMissions();
+        if(GalacticResearch.server != null) {
+            if(tickSent == GalacticResearch.server.getEntityWorld().getTotalWorldTime()) return;
+            tickSent = GalacticResearch.server.getEntityWorld().getTotalWorldTime();
+            GalacticResearch.packetPipeline.sendToAll(
+                    new GRPacketSimple(
+                            GRPacketSimple.EnumSimplePacket.WORLD_TIME,
+                            0,
+                            new Object[]{tickSent})
+            );
+        }
     }
 }

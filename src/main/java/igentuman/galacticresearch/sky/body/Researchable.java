@@ -28,7 +28,7 @@ public class Researchable implements ISkyBody {
 
     public Researchable(CelestialBody planet) {
         this.size = ModConfig.researchSystem.getSizes().getOrDefault(planet.getName(), 16);
-        this.rarity = (int) Math.abs(planet.getRelativeOrbitTime());
+        this.rarity = (int) Math.abs(Math.max(5, planet.getRelativeOrbitTime()*10));
         this.name = planet.getName();
         this.x = initialX();
         this.y = initialY();

@@ -38,7 +38,7 @@ public class GalacticResearch
     @Mod.Instance(MODID)
     public static GalacticResearch instance;
     public static MinecraftServer server;
-    public static SkyModel skyModel;
+    public static SkyModel skyModel = SkyModel.get();
     public static SpaceMineProvider spaceMineProvider;
     public static GRChannelHandler packetPipeline;
     public static GRHooks hooks = new GRHooks();
@@ -63,22 +63,19 @@ public class GalacticResearch
     @EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
         server = ev.getServer();
-        skyModel = SkyModel.get();
         spaceMineProvider = SpaceMineProvider.get();
     }
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent ev) {
         server = ev.getServer();
-        skyModel = SkyModel.get();
         spaceMineProvider = SpaceMineProvider.get();
-        skyModel.setSeed(server.getEntityWorld().getSeed());
+        skyModel.initSeed();
     }
 
     @EventHandler
     public void onServerStopped(FMLServerStoppedEvent ev) {
         server = null;
-        skyModel = null;
     }
 
     @EventHandler

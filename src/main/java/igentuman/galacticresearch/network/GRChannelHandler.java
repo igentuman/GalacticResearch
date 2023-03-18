@@ -6,14 +6,18 @@ import io.netty.channel.ChannelHandlerContext;
 import java.util.EnumMap;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.IPacket;
+import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler.OutboundTarget;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class GRChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket> {
@@ -29,6 +33,8 @@ public class GRChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket> {
         return channelHandler;
     }
 
+
+
     public void encodeInto(ChannelHandlerContext ctx, IPacket msg, ByteBuf target) throws Exception {
         msg.encodeInto(target);
     }
@@ -42,12 +48,23 @@ public class GRChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket> {
 
     }
 
+    public void sendToAll(IMessage message) {
+        ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(OutboundTarget.ALL);
+        ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).writeOutbound(new Object[]{message});
+    }
+
     public void sendToAll(IPacket message) {
         ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(OutboundTarget.ALL);
         ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).writeOutbound(new Object[]{message});
     }
 
     public void sendTo(IPacket message, EntityPlayerMP player) {
+        ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(OutboundTarget.PLAYER);
+        ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+        ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).writeOutbound(new Object[]{message});
+    }
+
+    public void sendTo(IMessage message, EntityPlayerMP player) {
         ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(OutboundTarget.PLAYER);
         ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
         ((FMLEmbeddedChannel)this.channels.get(Side.SERVER)).writeOutbound(new Object[]{message});

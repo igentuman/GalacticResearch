@@ -7,6 +7,8 @@ import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.tile.TileLaunchpadTower;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
+import igentuman.galacticresearch.sky.SkyModel;
+import igentuman.galacticresearch.util.WorldUtil;
 import io.netty.buffer.ByteBuf;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.NetworkUtil;
@@ -93,13 +95,20 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
     @SideOnly(Side.CLIENT)
     @Override
     public void handleClientSide(EntityPlayer entityPlayer) {
-        PlayerClientSpaceData stats = null;
-        if (entityPlayer instanceof EntityPlayerSP) {
-            stats = entityPlayer.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
-        }
+
         switch (this.type) {
             case SYNC_PLAYER_SPACE_DATA:
+                PlayerClientSpaceData stats = null;
+                if (entityPlayer instanceof EntityPlayerSP) {
+                    stats = entityPlayer.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
+                }
                 stats.unlocked_missions = (String) data.get(0);
+                break;
+            case WORLD_TIME:
+                WorldUtil.setWorldTime((Long) data.get(0));
+                break;
+            case SKY_SEED:
+                SkyModel.get().setSeed((Long) data.get(0));
                 break;
         }
     }
@@ -255,6 +264,8 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
     }
 
     public static enum EnumSimplePacket {
+        WORLD_TIME(Side.CLIENT, Long.class),
+        SKY_SEED(Side.CLIENT, Long.class),
         SYNC_PLAYER_SPACE_DATA(Side.CLIENT, String.class),
         PREV_MISSION_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         UNMOUNT_ROCKET(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),

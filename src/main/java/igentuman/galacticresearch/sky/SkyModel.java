@@ -1,5 +1,6 @@
 package igentuman.galacticresearch.sky;
 
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.sky.body.Asteroid;
 import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.sky.body.Star;
@@ -7,6 +8,7 @@ import micdoodle8.mods.galacticraft.api.galaxies.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SkyModel {
     public static int width = 1200;
@@ -99,4 +101,8 @@ public class SkyModel {
         return stars;
     }
 
+    public void initSeed() {
+        Random r = new Random(GalacticResearch.server.getEntityWorld().getSeed()/10);
+        setSeed(r.nextLong());
+    }
 }

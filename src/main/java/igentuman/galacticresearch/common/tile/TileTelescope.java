@@ -6,6 +6,7 @@ import igentuman.galacticresearch.common.block.BlockTelescope;
 import igentuman.galacticresearch.integration.computer.IComputerIntegration;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.sky.body.Researchable;
+import igentuman.galacticresearch.util.WorldUtil;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
@@ -70,49 +71,31 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
         return new Object[] {true};
     }
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public float xAngle = viewportSize;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public float yAngle = viewportSize;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public int dimension;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public int movementAmplifier = 1;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public int observationTime = 0;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public String curObserveBody = "";
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public float curBodyRelativeY = 0;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public float curBodyRelativeX = 0;
 
-    @Annotations.NetworkedField(
-            targetSide = Side.CLIENT
-    )
+    @Annotations.NetworkedField(targetSide = Side.CLIENT)
     public String researchedBodies = "";
 
     public int operationCooldown = 10;

@@ -65,7 +65,7 @@ public class Star implements ISkyBody {
 
     public long time()
     {
-        return WorldUtil.getDayTime();
+        return WorldUtil.getClientDayTime();
     }
 
 
