@@ -857,13 +857,18 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
 
     public boolean activateMission()
     {
-        if(rocketState != 1) return false;
+        if(
+                currentMission.isEmpty()
+                || rocketState != 1
+                || !missionsDataMap.containsKey(currentMission)) {
+            return false;
+        }
         IGRAutoRocket r = getRocket();
         if(r == null) {
             return false;
         }
         if(r instanceof IGRAutoRocket) {
-            ((IGRAutoRocket) r).setMission(currentMission);
+            r.setMission(currentMission);
         }
         r.setAutolaunchSetting(EntityAutoRocket.EnumAutoLaunch.INSTANT);
         r.setLaunchPhase(EntitySpaceshipBase.EnumLaunchPhase.IGNITED);
