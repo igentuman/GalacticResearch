@@ -4,6 +4,7 @@ package igentuman.galacticresearch.common.block;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.tile.TileTelescope;
+import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -44,7 +45,7 @@ public class BlockTelescope extends BlockHorizontal {
         this.setResistance(17.5f);
         this.setTranslationKey("telescope");
         this.setRegistryName(GalacticResearch.MODID, "telescope");
-        this.setCreativeTab(CreativeTabs.DECORATIONS);
+        this.setCreativeTab(GalacticraftCore.galacticraftBlocksTab);
         this.setTickRandomly(false);
     }
 

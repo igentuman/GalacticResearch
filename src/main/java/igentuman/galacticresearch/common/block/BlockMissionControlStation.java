@@ -5,6 +5,7 @@ import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import micdoodle8.mods.galacticraft.core.GCItems;
+import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
@@ -45,7 +46,7 @@ public class BlockMissionControlStation extends BlockHorizontal {
         this.setResistance(17.5f);
         this.setTranslationKey("mission_control_station");
         this.setRegistryName(GalacticResearch.MODID, "mission_control_station");
-        this.setCreativeTab(CreativeTabs.DECORATIONS);
+        this.setCreativeTab(GalacticraftCore.galacticraftBlocksTab);
     }
 
     @Override

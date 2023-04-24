@@ -61,7 +61,7 @@ public class GuiMissionControlStation extends GuiContainerGC {
             btnClick(selectedButton);
             selectedButton = null;
         }
-        if(tile.rocketState != 1 && !tile.currentMission.isEmpty()) {
+        if(tile.rocketState != 1 || tile.currentMission.isEmpty()) {
             activateBtn.enabled = false;
         } else {
             activateBtn.enabled = true;
