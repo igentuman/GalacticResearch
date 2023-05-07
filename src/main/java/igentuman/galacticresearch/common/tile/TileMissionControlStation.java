@@ -37,7 +37,6 @@ import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.MapGenDungeon;
 import micdoodle8.mods.miccore.Annotations;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
@@ -50,6 +49,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -569,14 +569,7 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         if (!cap.getUnlockedMissions().contains(mission)) {
             cap.addMission(mission);
             player.addExperience(10);
-            String planetLocalized = I18n.format("planet."+mission);
-            if(planetLocalized.equals("planet."+mission)) {
-                planetLocalized = I18n.format("moon."+mission);
-            }
-            if(planetLocalized.equals("moon."+mission)) {
-                planetLocalized = I18n.format("solarsystem."+mission);
-            }
-            player.sendMessage(new TextComponentString(I18n.format("message.analyzed.planet", planetLocalized)));
+            player.sendMessage(new TextComponentTranslation("message.analyzed.planet", mission));
         }
     }
 
