@@ -101,5 +101,6 @@ public class CommonProxy implements ISidedProxy {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         SpaceCapabilityHandler.register();
+        GalacticraftRegistry.registerScreensServer(GalacticraftRegistry.getMaxScreenTypes()+2);
     }
 }
