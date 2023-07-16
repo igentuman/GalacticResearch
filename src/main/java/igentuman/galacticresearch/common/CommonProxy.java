@@ -12,6 +12,7 @@ import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.recipe.NasaWorkbenchRecipe;
+import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +90,6 @@ public class CommonProxy implements ISidedProxy {
     @Override
     public void init(FMLInitializationEvent event)
     {
-
         addSatelliteRocketRecipe();
         addMiningRocketRecipe();
         SchematicRegistry.registerSchematicRecipe(new SchematicSatelliteRocket());
@@ -96,11 +97,14 @@ public class CommonProxy implements ISidedProxy {
         ItemMiningRocketSchematic.registerSchematicItems();
         RegistryHandler.registerEntities();
         GalacticraftRegistry.addDungeonLoot(2, new ItemStack(RegistryHandler.MINING_ROCKET_SCHEMATIC, 1, 0));
+        if (GCCoreUtil.getEffectiveSide() == Side.SERVER) {
+            GalacticraftRegistry.registerScreensServer(GalacticraftRegistry.getMaxScreenTypes() + 2);
+        }
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         SpaceCapabilityHandler.register();
-        GalacticraftRegistry.registerScreensServer(GalacticraftRegistry.getMaxScreenTypes()+2);
+
     }
 }
