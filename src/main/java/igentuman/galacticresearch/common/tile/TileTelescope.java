@@ -9,6 +9,7 @@ import igentuman.galacticresearch.sky.body.Researchable;
 import igentuman.galacticresearch.util.WorldUtil;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
+import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
 import micdoodle8.mods.miccore.Annotations;
@@ -21,6 +22,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -314,7 +316,15 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     }
 
     public int[] getSlotsForFace(EnumFacing side) {
-        return side != this.getElectricInputDirection() ? new int[]{0} : new int[0];
+        return  new int[]{0};
+    }
+
+    public boolean canConnect(EnumFacing direction, NetworkType type) {
+        if (direction != null && type == NetworkType.POWER) {
+            return getElectricalInputDirections().contains(direction);
+        } else {
+            return false;
+        }
     }
 
     public EnumFacing getElectricInputDirection() {
@@ -352,5 +362,11 @@ public class TileTelescope extends TileBaseElectricBlockWithInventory implements
     @ReplaceWith("byIndex()")
     public EnumFacing getFront() {
         return this.byIndex();
+    }
+
+    @Override
+    public EnumSet<EnumFacing> getElectricalInputDirections() {
+        EnumFacing facing = getWorld().getBlockState(getPos()).getValue(BlockTelescope.FACING);
+        return EnumSet.of(facing.rotateY(), facing.rotateYCCW());
     }
 }

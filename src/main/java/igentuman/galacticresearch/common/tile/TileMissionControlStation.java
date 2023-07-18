@@ -25,6 +25,7 @@ import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;
 import micdoodle8.mods.galacticraft.api.tile.IFuelDock;
 import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
+import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
@@ -967,11 +968,25 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
     }
 
     public int[] getSlotsForFace(@NotNull EnumFacing side) {
-        return side != this.getElectricInputDirection() ? new int[]{0} : new int[0];
+        return  new int[]{0};
     }
 
     public EnumFacing getElectricInputDirection() {
         return world.getBlockState(pos).getValue(BlockTelescope.FACING).getOpposite();
+    }
+
+    public boolean canConnect(EnumFacing direction, NetworkType type) {
+        if (direction != null && type == NetworkType.POWER) {
+            return getElectricalInputDirections().contains(direction);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public EnumSet<EnumFacing> getElectricalInputDirections() {
+        EnumFacing facing = getWorld().getBlockState(getPos()).getValue(BlockTelescope.FACING);
+        return EnumSet.of(facing.rotateY(), facing.rotateYCCW());
     }
 
     public void serializeMissionData()
