@@ -8,29 +8,6 @@ buildscript {
     }
 }
 
-repositories {
-    maven {
-        name 'MJRLegends'
-        url = "https://maven.mjrlegends.com/"
-    }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
-    maven {
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-    maven {
-        name = "CurseForge"
-        url = "https://www.cursemaven.com"
-    }
-}
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.0.6"
@@ -48,7 +25,6 @@ repositories {
         url 'https://minecraft.curseforge.com/api/maven/'
     }
     maven {url "http://maven.blamejared.com"}
-    maven {url "http://dvs1.progwml6.com/files/maven"}
     maven {
         url 'https://jitpack.io'
     }
@@ -70,10 +46,17 @@ repositories {
     maven {
         url 'https://maven.zerono.it'
     }
-
+    maven {
+        name = "CurseForge"
+        url = "https://www.cursemaven.com"
+    }
     maven {
         name 'MJRLegends'
         url = "https://maven.mjrlegends.com/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
     }
 }
 minecraft {
@@ -92,8 +75,8 @@ dependencies {
     compileOnly "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
     compileOnly "curse.maven:ae2-extended-life-570458:3791235"
-    compileOnly "curse.maven:asmodeuscore-303101:3873588"
-    compileOnly "curse.maven:galaxy-space-addon-for-galacticraft-238770:3873609"
+    compileOnly "curse.maven:asmodeuscore-303101:4663859"
+    compileOnly "curse.maven:galaxy-space-addon-for-galacticraft-238770:4719898"
     compileOnly "curse.maven:cc-tweaked-282001:2992872"
     compileOnly "curse.maven:extraplanets-241291:4366814"
     deobfCompile "curse.maven:opencomputers-223008:3994462"

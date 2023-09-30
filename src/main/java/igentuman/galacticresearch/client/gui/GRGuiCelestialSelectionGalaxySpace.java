@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.client.gui;
 
 import asmodeuscore.AsmodeusCore;
+import asmodeuscore.api.dimension.IAdvancedSpace;
 import asmodeuscore.api.dimension.IAdvancedSpace.StarClass;
 import asmodeuscore.api.dimension.IAdvancedSpace.TypeBody;
 import asmodeuscore.api.space.ICelestialRegistry;
@@ -757,13 +758,13 @@ public class GRGuiCelestialSelectionGalaxySpace extends NewGuiCelestialSelection
 					float f10 = (float)(size * 4);
 					if (data != null && data.getType() == TypeBody.STAR) {
 						if (data.getStarColor() != null) {
-							r = data.getStarColor().getColor().floatX() / 255.0F;
-							g = data.getStarColor().getColor().floatY() / 255.0F;
-							b = data.getStarColor().getColor().floatZ() / 255.0F;
+							r = data.getStarColor().getColor().getX() / 255.0F;
+							g = data.getStarColor().getColor().getX() / 255.0F;
+							b = data.getStarColor().getColor().getX() / 255.0F;
 							a = 0.7F;
 						}
 
-						if (data.getStarClass() == StarClass.BLACKHOLE) {
+						if (data.getStarType() == IAdvancedSpace.StarType.BLACKHOLE) {
 							a = 0.0F;
 							b = 0.0F;
 							g = 0.0F;
@@ -1065,7 +1066,7 @@ public class GRGuiCelestialSelectionGalaxySpace extends NewGuiCelestialSelection
 			GlStateManager.pushMatrix();
 			new Vector3f(0.0F, 0.0F, 0.0F);
 			BodiesData data = BodiesRegistry.getData(body);
-			if (body instanceof Star && data != null && data.getStarClass() == StarClass.BLACKHOLE) {
+			if (body instanceof Star && data != null && data.getStarType() == IAdvancedSpace.StarType.BLACKHOLE) {
 				Vector3f systemOffset = this.getCelestialBodyPosition((Star)body);
 				float size = (float)this.getWidthForCelestialBody(body) * 4.0F;
 				float xOffset = systemOffset.x;
