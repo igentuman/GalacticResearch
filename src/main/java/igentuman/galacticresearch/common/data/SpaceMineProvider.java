@@ -107,7 +107,7 @@ public class SpaceMineProvider {
         if(generateCounter <= 0) {
             deleteMissions();
             generateMission();
-            generateCounter = 1000000/ModConfig.machines.mining_asteroids_popularity;
+            generateCounter = 5000000/ModConfig.machines.mining_asteroids_popularity;
             saveData();
         }
         syncToAll();
@@ -116,7 +116,7 @@ public class SpaceMineProvider {
     public static SpaceMineProvider get() {
         if(instance == null) {
             instance = new SpaceMineProvider();
-            instance.generateCounter = 1000000/ModConfig.machines.mining_asteroids_popularity;
+            instance.generateCounter = 5000000/ModConfig.machines.mining_asteroids_popularity;
             ArrayList<Integer> list = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : ModConfig.machines.mineable_resources.entrySet()) {
                 list.add(entry.getValue());

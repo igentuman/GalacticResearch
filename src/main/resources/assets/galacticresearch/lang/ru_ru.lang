@@ -1,5 +1,6 @@
 tile.telescope.name=Телескоп
 tile.mission_control_station.name=Станция Контроля Миссий
+tile.rocket_assembler.name=Сборщик Ракет
 
 container.mission_control_station.name=Станция Контроля Миссий
 container.telescope.name=Телескоп

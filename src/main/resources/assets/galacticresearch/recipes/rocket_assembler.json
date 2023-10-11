@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GPG",
+    "XBX",
+    "VWV"
+  ],
+  "key": {
+    "P": {
+      "item": "galacticraftplanets:item_basic_asteroids",
+        "data": 5
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "compressedAluminum"
+    },
+    "B": {
+      "item": "galacticraftcore:rocket_workbench"
+    },
+    "X": {
+      "type": "forge:ore_dict",
+      "ore": "waferAdvanced"
+    },
+    "V": {
+      "item": "galacticraftcore:aluminum_wire",
+      "data": 3
+    },
+    "W": {
+      "item": "minecraft:chest"
+    }
+  },
+
+  "result": {
+    "item": "galacticresearch:rocket_assembler"
+  }
+}

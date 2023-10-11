@@ -6,7 +6,6 @@ import igentuman.galacticresearch.common.block.BlockTelescope;
 import igentuman.galacticresearch.integration.computer.IComputerIntegration;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.sky.body.Researchable;
-import igentuman.galacticresearch.util.WorldUtil;
 import micdoodle8.mods.galacticraft.annotations.ForRemoval;
 import micdoodle8.mods.galacticraft.annotations.ReplaceWith;
 import micdoodle8.mods.galacticraft.api.transmission.NetworkType;

@@ -1,6 +1,7 @@
 tile.telescope.name=Telescope
 tile.launchpad_tower.name=Launchpad Tower
 tile.mission_control_station.name=Mission Control Station
+tile.rocket_assembler.name=Rocket Assembler
 
 container.mission_control_station.name=Mission Control Station
 container.telescope.name=Telescope

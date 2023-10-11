@@ -7,6 +7,7 @@ import igentuman.galacticresearch.common.data.SpaceMineProvider;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.tile.TileLaunchpadTower;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
+import igentuman.galacticresearch.common.tile.TileRocketAssembler;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.util.Util;
@@ -158,6 +159,12 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
                         machine.rotateY(1);
                     }
                     break;
+                case ASSEMBLER_RECIPE:
+                    if (tileAt instanceof TileRocketAssembler) {
+                        TileRocketAssembler machine = (TileRocketAssembler)tileAt;
+                        machine.switchRecipe((Integer)this.data.get(1));
+                    }
+                    break;
                 case TELESCOPE_LEFT_BUTTON:
                     if (tileAt instanceof TileTelescope) {
                         TileTelescope machine = (TileTelescope)tileAt;
@@ -285,6 +292,7 @@ public class GRPacketSimple extends PacketBase implements Packet<INetHandler> {
         TELESCOPE_UP_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         MCS_LOCATE_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_DOWN_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
+        ASSEMBLER_RECIPE(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_LEFT_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_RIGHT_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),
         TELESCOPE_MULTIPLIER_BUTTON(Side.SERVER, new Class[]{BlockPos.class, Integer.class}),

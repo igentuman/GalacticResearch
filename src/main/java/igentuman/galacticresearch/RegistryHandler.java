@@ -5,7 +5,6 @@ import igentuman.galacticresearch.common.entity.EntityMiningRocket;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.item.*;
 import igentuman.galacticresearch.common.tile.*;
-import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -23,12 +22,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod.EventBusSubscriber
 public class RegistryHandler {
 
+    @ObjectHolder("galacticresearch:rocket_assembler")
+    public static Block ROCKET_ASSEMBLER = new BlockRocketAssembler();
     @ObjectHolder("galacticresearch:launchpad_tower")
     public static Block LAUNCHPAD_TOWER = new BlockLaunchpadTower("launchpad_tower");
 
@@ -74,9 +73,15 @@ public class RegistryHandler {
 
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> event) {
+        event.getRegistry().register(ROCKET_ASSEMBLER);
         event.getRegistry().register(TELESCOPE);
         event.getRegistry().register(LAUNCHPAD_TOWER);
         event.getRegistry().register(MISSION_CONTROL_STATION);
+
+        GameRegistry.registerTileEntity(
+                TileRocketAssembler.class,
+                ROCKET_ASSEMBLER.getRegistryName()
+        );
 
 
         GameRegistry.registerTileEntity(
@@ -99,6 +104,7 @@ public class RegistryHandler {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(MINING_ROCKET_SCHEMATIC);
+        event.getRegistry().register(new ItemBlock(ROCKET_ASSEMBLER).setRegistryName(ROCKET_ASSEMBLER.getRegistryName()));
         event.getRegistry().register(new ItemBlock(MISSION_CONTROL_STATION).setRegistryName(MISSION_CONTROL_STATION.getRegistryName()));
         event.getRegistry().register(new ItemBlock(TELESCOPE).setRegistryName(TELESCOPE.getRegistryName()));
         event.getRegistry().register(new ItemBlock(LAUNCHPAD_TOWER).setRegistryName(LAUNCHPAD_TOWER.getRegistryName()));
@@ -110,6 +116,7 @@ public class RegistryHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
+        registerItemModel(Item.getItemFromBlock(ROCKET_ASSEMBLER), 0, "inventory");
         registerItemModel(Item.getItemFromBlock(MISSION_CONTROL_STATION), 0, "inventory");
         registerItemModel(Item.getItemFromBlock(TELESCOPE), 0, "inventory");
         registerItemModel(Item.getItemFromBlock(LAUNCHPAD_TOWER), 0, "inventory");

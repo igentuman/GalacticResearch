@@ -2,15 +2,18 @@ package igentuman.galacticresearch.network;
 
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.client.gui.GuiLaunchpadTower;
+import igentuman.galacticresearch.client.gui.GuiRocketAssembler;
 import igentuman.galacticresearch.client.gui.MCS.GuiMissionControlStation;
 import igentuman.galacticresearch.client.gui.GuiTelescope;
 import igentuman.galacticresearch.client.gui.MCS.GuiMissionControlStationLocator;
 import igentuman.galacticresearch.common.container.ContainerLaunchpadTower;
 import igentuman.galacticresearch.common.container.ContainerMissionControlStation;
+import igentuman.galacticresearch.common.container.ContainerRocketAssembler;
 import igentuman.galacticresearch.common.container.ContainerTelescope;
 import igentuman.galacticresearch.common.entity.EntitySatelliteRocket;
 import igentuman.galacticresearch.common.tile.TileLaunchpadTower;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
+import igentuman.galacticresearch.common.tile.TileRocketAssembler;
 import igentuman.galacticresearch.common.tile.TileTelescope;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerRocketInventory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -27,6 +30,9 @@ public class GuiProxy implements IGuiHandler {
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TileRocketAssembler) {
+            return new ContainerRocketAssembler(player.inventory, (TileRocketAssembler) te);
+        }
         if (te instanceof TileLaunchpadTower) {
             return new ContainerLaunchpadTower(player.inventory, (TileLaunchpadTower) te);
         }
@@ -45,7 +51,9 @@ public class GuiProxy implements IGuiHandler {
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
-
+        if (te instanceof TileRocketAssembler) {
+            return new GuiRocketAssembler(player.inventory, (TileRocketAssembler) te);
+        }
         if (te instanceof TileLaunchpadTower) {
             return new GuiLaunchpadTower(player.inventory, (TileLaunchpadTower) te);
         }
