@@ -10,7 +10,7 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.7"
+version = "1.0.8"
 group = "igentuman.galacticresearch"
 archivesBaseName = "GalacticResearch"
 
@@ -78,12 +78,12 @@ dependencies {
     compileOnly "curse.maven:asmodeuscore-303101:4663859"
     compileOnly "curse.maven:galaxy-space-addon-for-galacticraft-238770:4719898"
     compileOnly "curse.maven:cc-tweaked-282001:2992872"
-    compileOnly "curse.maven:extraplanets-241291:4366814"
+    deobfCompile "curse.maven:extraplanets-241291:4756976"
     deobfCompile "curse.maven:opencomputers-223008:3994462"
     deobfProvided "mezz.jei:jei_1.12.2:${jei_version}:api"
     implementation "mezz.jei:jei_1.12.2:${jei_version}"
     runtime "mezz.jei:jei_1.12.2:${jei_version}"
-    compileOnly "com.mjr.mjrlegendslib:MJRLegendsLib:1.12.2-1.2.1:dev"
+    deobfCompile "com.mjr.mjrlegendslib:MJRLegendsLib:1.12.2-1.2.1:dev"
 }
 
 processResources {

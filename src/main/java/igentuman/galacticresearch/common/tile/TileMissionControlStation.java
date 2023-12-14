@@ -548,12 +548,16 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
             }
             for (String mission : getMissions()) {
                 if (isMissionComplete(mission)) {
-                    setMissionToPlayer(mission, player, cap);
+                    setMissionToPlayer(mission.toLowerCase(), player, cap);
                     CelestialBody p = GalaxyRegistry.getRegisteredPlanets().get(mission);
+                    if(p == null) {
+                        p = GalaxyRegistry.getRegisteredPlanets().get(mission.toLowerCase());
+                    }
                     if(p instanceof Planet) {
                         if(ModConfig.researchSystem.research_moons_with_parent_planet) {
                             for(Moon m: GalaxyRegistry.getMoonsForPlanet((Planet) p)) {
-                                setMissionToPlayer(m.getName(), player, cap);
+                                setMissionToPlayer(m.getName().toLowerCase(), player, cap);
+                                GalacticResearch.instance.logger.info(m.getName().toLowerCase());
                             }
                         }
                     }

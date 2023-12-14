@@ -3,6 +3,7 @@ package igentuman.galacticresearch.command;
 import igentuman.galacticresearch.GalacticResearch;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -10,7 +11,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import org.jetbrains.annotations.NotNull;
 
-public class CommandAsteroids extends CommandTreeBase {
+public class CommandAsteroids extends CommandBase {
 
 	@Override
 	public @NotNull String getName() {

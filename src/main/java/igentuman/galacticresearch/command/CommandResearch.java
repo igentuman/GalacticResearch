@@ -42,7 +42,7 @@ public class CommandResearch extends CommandBase {
 			p.sendMessage(new TextComponentString(getUsage(sender)));
 			return;
 		}
-		String r = args[0];
+		String r = args[0].toLowerCase();
 		PlayerSpaceData cap = p.getCapability(SpaceCapabilityHandler.PLAYER_SPACE_DATA, null);
 
 		if (cap == null) {
@@ -67,6 +67,7 @@ public class CommandResearch extends CommandBase {
 		} else {
 			if(!cap.getUnlockedMissions().contains(r)) {
 				cap.addMission(r);
+				GalacticResearch.instance.logger.info(r.toLowerCase());
 				notifyCommandListener(sender, this, "message.research.added");
 			}
 		}

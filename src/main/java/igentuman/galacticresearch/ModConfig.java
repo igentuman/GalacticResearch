@@ -80,7 +80,7 @@ public class ModConfig {
         @Config.Comment({
                 "How long (seconds) you need to track and observe body in telescope to collect data "
         })
-        public int required_observation_time = 45;
+        public int required_observation_time = 40;
 
         @Config.Name("extraplanets_intergration")
         @Config.Comment({

@@ -80,7 +80,7 @@ public class GRGuiCelestialSelectionExtraPlanets extends CustomCelestialSelectio
 	}
 
 	@Override
-	public void func_73866_w_() {
+	public void initGui() {
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
 		EntityPlayerSP player = minecraft.player;
 		EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
@@ -127,6 +127,7 @@ public class GRGuiCelestialSelectionExtraPlanets extends CustomCelestialSelectio
 		GuiCelestialSelection.BORDER_EDGE_SIZE = GuiCelestialSelection.BORDER_SIZE / 4;
 	}
 
+	@Override
 	protected List<CelestialBody> getChildren(Object object) {
 		List<CelestialBody> bodyList = Lists.newArrayList();
 		Minecraft minecraft = FMLClientHandler.instance().getClient();
