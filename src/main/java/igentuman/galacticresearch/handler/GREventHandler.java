@@ -1,5 +1,6 @@
 package igentuman.galacticresearch.handler;
 
+import com.mjr.mjrlegendslib.item.BasicItem;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.ai.task.EntityAIPlayerNoFly;
@@ -21,6 +22,8 @@ import micdoodle8.mods.galacticraft.api.tile.ILandingPadAttachable;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection;
 import micdoodle8.mods.galacticraft.core.entities.EntityBossBase;
 import micdoodle8.mods.galacticraft.core.event.EventLandingPadRemoval;
+import micdoodle8.mods.galacticraft.core.items.ItemBasic;
+import micdoodle8.mods.galacticraft.core.tile.TileEntityDish;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCreeperBoss;
 import micdoodle8.mods.galacticraft.planets.venus.entities.EntitySpiderQueen;
@@ -32,12 +35,16 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -145,6 +152,25 @@ public class GREventHandler
     public void attachSpaceDataCapabilityClient(AttachCapabilitiesEvent<Entity> event) {
          if(event.getObject() instanceof EntityPlayerSP) {
             event.addCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_DATA_CLIENT_NAME, new SpaceClientDataProvider((EntityPlayerSP) event.getObject()));
+        }
+    }
+
+    @SubscribeEvent
+    public void playerRbmBlock(PlayerInteractEvent.RightClickBlock event) {
+        ItemStack stack = event.getItemStack();
+        if(stack.getItem() instanceof ItemBasic) {
+            if(stack.getItemDamage() == 19) {
+               TileEntity te = event.getEntityPlayer().world.getTileEntity(event.getPos());
+               if(te instanceof TileEntityDish) {
+                   if (stack.getTagCompound() == null) {
+                       stack.setTagCompound(new NBTTagCompound());
+                   }
+                   stack.getTagCompound().setIntArray("teledishPos", new int[]{event.getPos().getX(), event.getPos().getY(), event.getPos().getZ()});
+                   if(!event.getEntityPlayer().world.isRemote) {
+                       event.getEntityPlayer().sendMessage(new TextComponentString(GCCoreUtil.translate("message.teledish_assigned")));
+                   }
+               }
+            }
         }
     }
 

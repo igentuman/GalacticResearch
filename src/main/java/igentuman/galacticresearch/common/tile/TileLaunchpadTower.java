@@ -1,8 +1,5 @@
 package igentuman.galacticresearch.common.tile;
 
-import com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad;
-import com.mojang.authlib.GameProfile;
-import galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad;
 import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.util.GrFakePlayer;
 import micdoodle8.mods.galacticraft.api.entity.IDockable;
@@ -21,11 +18,9 @@ import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
 import micdoodle8.mods.galacticraft.core.tile.IMultiBlock;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityMulti;
-import micdoodle8.mods.miccore.Annotations;
 import micdoodle8.mods.miccore.Annotations.NetworkedField;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +28,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -342,7 +336,7 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
     private static boolean isGSPadTile(TileEntity tile) {
         boolean result = false;
         if(GalacticResearch.hooks.GalaxySpaceLoaded) {
-            result = tile instanceof TileEntityAdvLandingPad;
+            result = tile instanceof galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad;
         }
         return result;
     }
@@ -350,7 +344,8 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
     private static boolean isEPPadTile(TileEntity tile) {
         boolean result = false;
         if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
-            result = tile instanceof TileEntityTier2LandingPad;
+            result = tile instanceof com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad;
+            ;
         }
         return result;
     }
@@ -365,16 +360,16 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
         }
 
         if(GalacticResearch.hooks.GalaxySpaceLoaded) {
-            if(main instanceof TileEntityAdvLandingPad) {
-                ((TileEntityAdvLandingPad) main).getConnectedTiles();
+            if(main instanceof galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad) {
+                ((galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad) main).getConnectedTiles();
                 if(attachedDock == null) setAttachedPad((IFuelDock) main);
                 return true;
             }
         }
 
         if(GalacticResearch.hooks.ExtraPlanetsLoaded) {
-            if(main instanceof TileEntityTier2LandingPad) {
-                ((TileEntityTier2LandingPad) main).getConnectedTiles();
+            if(main instanceof com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad) {
+                ((com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad) main).getConnectedTiles();
                 if(attachedDock == null) setAttachedPad((IFuelDock) main);
                 return true;
             }
@@ -420,14 +415,14 @@ public class TileLaunchpadTower extends TileBaseElectricBlockWithInventory imple
                 return (EntitySpaceshipBase) rocket;
             }
         } else if(isGSPadTile((TileEntity) attachedDock)) {
-            TileEntityAdvLandingPad pad = ((TileEntityAdvLandingPad) attachedDock);
+            galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad pad = ((galaxyspace.systems.SolarSystem.planets.overworld.tile.TileEntityAdvLandingPad) attachedDock);
             IDockable rocket = pad.getDockedEntity();
             if (rocket instanceof EntitySpaceshipBase)
             {
                 return (EntitySpaceshipBase) rocket;
             }
         } else if(isEPPadTile((TileEntity) attachedDock)) {
-            TileEntityTier2LandingPad pad = ((TileEntityTier2LandingPad) attachedDock);
+            com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad pad = ((com.mjr.extraplanets.tileEntities.blocks.TileEntityTier2LandingPad) attachedDock);
             IDockable rocket = pad.getDockedEntity();
             if (rocket instanceof EntitySpaceshipBase)
             {

@@ -22,9 +22,13 @@ public class ItemBasicReflector {
 
     public static ActionResult<ItemStack> onItemRightClick(ItemBasic inst, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
+        playerIn.sendMessage(new TextComponentString("Ebat"));
+
         ItemStack itemStackIn = playerIn.getHeldItem(hand);
         if (itemStackIn.getItemDamage() == 19)
         {
+            playerIn.sendMessage(new TextComponentString("Ebat123"));
+
             if (playerIn instanceof EntityPlayerMP)
             {
                 GCPlayerStats stats = GCPlayerStats.get(playerIn);
@@ -38,6 +42,7 @@ public class ItemBasicReflector {
             }
             RayTraceResult r = playerIn.rayTrace(4,0);
             if(r.typeOfHit.equals(RayTraceResult.Type.BLOCK)) {
+                playerIn.sendMessage(new TextComponentString("Ebat3333"));
 
                 TileEntity te = worldIn.getTileEntity(r.getBlockPos());
 
