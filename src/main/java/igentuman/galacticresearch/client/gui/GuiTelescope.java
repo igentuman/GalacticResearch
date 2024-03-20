@@ -164,7 +164,6 @@ public class GuiTelescope extends GuiContainerGC {
         Star[] stars = SkyModel.get().getStars();
         if(stars == null) return;
         GlStateManager.scale(0.5, 0.5, 0.5);
-
         for(Star star: stars) {
             if(star.equals(stars[0]) && (curStar[0] != star.getX() || curStar[1] != star.getY())) {
                 curStar[0] = star.getX();
@@ -178,14 +177,35 @@ public class GuiTelescope extends GuiContainerGC {
             this.drawTexturedModalRect((x*2+sh), y*2+sh, 0, 201 + offset, (int)star.getSize(), (int)star.getSize());
         }
         sh+=0.033;
-
+        GL11.glColor4f(1f, 1f, 1f, 1f);
         GlStateManager.scale(2, 2, 2);
     }
 
+    private void renderFastScope() {
+        final List<Researchable> bodies = SkyModel.get().getCurrentSystemBodies(tile.dimension);
+        if(bodies == null) return;
+
+
+        for(ISkyBody researchable: bodies) {
+            if(researchable == null) continue;
+            Researchable res = (Researchable) researchable;
+            if(!res.isVisible()) {
+               continue;
+            }
+
+            GlStateManager.disableDepth();
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+
+            renderSmallBody(res);
+
+            GlStateManager.enableDepth();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+    }
 
     public void renderPlanets()
     {
-        List<Researchable> bodies = SkyModel.get().getCurrentSystemBodies(tile.dimension);
+        final List<Researchable> bodies = SkyModel.get().getCurrentSystemBodies(tile.dimension);
         if(bodies == null) return;
 
         for(ISkyBody researchable: bodies) {
@@ -248,6 +268,16 @@ public class GuiTelescope extends GuiContainerGC {
     }
 
 
+    public void renderSmallBody(Researchable res)
+    {
+        GlStateManager.pushMatrix();
+        float x = (int)viewportX(res.getX()*0.037f + xAngle())+117;
+        float y = (int)viewportY(res.getY()*0.037f + yAngle())+65;
+        int size = res.getSize() > 16 ? res.getSize() > 28 ? 3 : 2 : 1;
+        GL11.glColor4f(0.7F, 0.7F, 0.7F, 0.7F);
+        this.drawTexturedModalRect(x, y, 0, 201, size, size);
+        GlStateManager.popMatrix();
+    }
     public void renderBody(Researchable res)
     {
         GlStateManager.pushMatrix();
@@ -321,7 +351,7 @@ public class GuiTelescope extends GuiContainerGC {
 
     private void addHelpRegion()
     {
-        List<String> help = new ArrayList();
+        List<String> help = new ArrayList<>();
         help.add(GCCoreUtil.translate("gui.help.desc.0"));
         help.add(GCCoreUtil.translate("gui.help.desc.1"));
         help.add(GCCoreUtil.translate("gui.help.desc.2"));
@@ -337,7 +367,7 @@ public class GuiTelescope extends GuiContainerGC {
 
     private void addElectricInfoRegion()
     {
-        List<String> electricityDesc = new ArrayList();
+        List<String> electricityDesc = new ArrayList<>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
         electricityDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.energy_storage.desc.1") + (int)Math.floor((double)this.tile.getEnergyStoredGC()) + " / " + (int)Math.floor((double)this.tile.getMaxEnergyStoredGC()));
         this.electricInfoRegion.tooltipStrings = electricityDesc;
@@ -347,7 +377,7 @@ public class GuiTelescope extends GuiContainerGC {
         this.electricInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.electricInfoRegion);
 
-        List<String> batterySlotDesc = new ArrayList();
+        List<String> batterySlotDesc = new ArrayList<>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.1"));
         this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 9, (this.height - this.ySize) / 2 + 26, 18, 18, batterySlotDesc, this.width, this.height, this));
@@ -393,11 +423,16 @@ public class GuiTelescope extends GuiContainerGC {
         }
         if(tile.getWorld().canSeeSky(tile.getPos())) {
             this.fontRenderer.drawString(I18n.format("gui.telescope.status", statusLine), 8, 141, 4210752);
+            fontRenderer.drawString(toPercent(xAngle()/(1200-viewportSize)) + " | " + toPercent(yAngle()/(1200-viewportSize)), 125, 80, 4210752);
         } else {
             this.fontRenderer.drawString(I18n.format("gui.telescope.sky_blocked"), 8, 141, ColorUtil.to32BitColor(255,255, 0, 0));
         }
         updateResearchedData();
         tickButtons();
+    }
+
+    private String toPercent(float v) {
+        return String.valueOf((int)(v*100)) + "%" ;
     }
 
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
@@ -406,7 +441,7 @@ public class GuiTelescope extends GuiContainerGC {
         int var5 = (this.width - this.xSize) / 2;
         int var6 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var5, var6 + 5, 0, 0, this.xSize, this.ySize);
-        List<String> electricityDesc = new ArrayList();
+        List<String> electricityDesc = new ArrayList<>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
         EnergyDisplayHelper.getEnergyDisplayTooltip(tile.getEnergyStoredGC(), tile.getMaxEnergyStoredGC(), electricityDesc);
         this.electricInfoRegion.tooltipStrings = electricityDesc;
@@ -423,9 +458,11 @@ public class GuiTelescope extends GuiContainerGC {
         }
         mc.getTextureManager().bindTexture(overlay);
         this.drawTexturedModalRect(var5, var6 + 5, 0, 0, this.xSize, this.ySize);
-
         mc.getTextureManager().bindTexture(guiTexture);
         renderFocusArea();
         renderProgressBar();
+        if(tile.getWorld().canSeeSky(tile.getPos())) {
+            renderFastScope();
+        }
     }
 }
