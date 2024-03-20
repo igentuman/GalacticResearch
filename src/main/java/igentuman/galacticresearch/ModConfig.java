@@ -175,6 +175,12 @@ public class ModConfig {
         @Config.Name("satellite_rocket_schematic_id")
         public int satellite_rocket_schematic_id = 9261;
 
+        @Config.Name("asteroid_spawn_delay")
+        @Config.Comment({
+                "Delay before asteroids will start appearing in sky (game days)"
+        })
+        public int asteroid_spawn_delay = 15;
+
         @Config.Name("satellite_mission_duration")
         @Config.Comment({
                 "How long it takes to unlock planets (seconds)"

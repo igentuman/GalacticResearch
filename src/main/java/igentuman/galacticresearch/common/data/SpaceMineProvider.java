@@ -102,6 +102,8 @@ public class SpaceMineProvider {
     public void updateMissions()
     {
         if(GalacticResearch.server == null) return;
+        int days = (int) (GalacticResearch.server.getEntityWorld().getTotalWorldTime() / 1728000);
+        if(days < ModConfig.machines.asteroid_spawn_delay) return;
         dataHolder();
         generateCounter--;
         if(generateCounter <= 0) {

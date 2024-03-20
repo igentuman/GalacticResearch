@@ -125,6 +125,7 @@ public class RegistryHandler {
         registerItemModel(Item.getItemFromBlock(TELESCOPE), 0, "inventory");
         registerItemModel(Item.getItemFromBlock(LAUNCHPAD_TOWER), 0, "inventory");
         registerItemModel(ITEM_PROBE, 0, "inventory");
+        registerItemModel(RESEARCH_PAPER, 0, "inventory");
         registerItemModel(MINING_ROCKET_SCHEMATIC, 0, "inventory");
         registerItemModel(SATELLITE_ROCKET, 0, "inventory");
         registerItemModel(MINING_ROCKET, 0, "inventory");
