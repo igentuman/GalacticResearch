@@ -2,6 +2,7 @@ package igentuman.galacticresearch.common.item;
 
 import igentuman.galacticresearch.ModConfig;
 import igentuman.galacticresearch.common.tile.TileMissionControlStation;
+import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +26,7 @@ public class ItemResearchPaper extends Item {
     public ItemResearchPaper() {
         setRegistryName("research_paper");
         setTranslationKey("research_paper");
+        this.setCreativeTab(GalacticraftCore.galacticraftItemsTab);
     }
 
     @Override

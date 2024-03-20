@@ -101,3 +101,12 @@ item.probe.name=Спутник
 item.mining_rocket_schematic.name=Схема Добывающей Ракеты
 
 schematic.mining_rocket.dungeon_level=Можно найти на Марсе
+tile.launchpad_tower.name=Пусковая башня
+
+message.research_paper_mission=Сохранены данные о миссии: %s
+message.research_paper_mission_not_completed=Миссия еще не завершена
+message.saved_mission_to_mcs=Данные были записаны в Станцию Контроля Миссий
+tooltip.research_paper_mission=Миссия: %s
+tooltip.research_paper_no_mission=Нет данных
+tooltip.how_to_use=Для сохранения/загрузки данных в Станцию Контроля Миссий, используйте ПКМ
+item.research_paper.name=Исследовательский Отчет
