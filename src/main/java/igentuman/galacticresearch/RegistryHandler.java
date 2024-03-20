@@ -46,6 +46,9 @@ public class RegistryHandler {
     @ObjectHolder("galacticresearch:probe")
     public static Item ITEM_PROBE = new Item().setRegistryName("probe").setTranslationKey("probe");
 
+    @ObjectHolder("galacticresearch:research_paper")
+    public static ItemResearchPaper RESEARCH_PAPER = new ItemResearchPaper();
+
     @ObjectHolder("galacticresearch:mining_rocket_schematic")
     public static Item MINING_ROCKET_SCHEMATIC = new ItemMiningRocketSchematic("mining_rocket_schematic");
 
@@ -111,6 +114,7 @@ public class RegistryHandler {
         event.getRegistry().register(SATELLITE_ROCKET);
         event.getRegistry().register(MINING_ROCKET);
         event.getRegistry().register(ITEM_PROBE);
+        event.getRegistry().register(RESEARCH_PAPER);
     }
 
     @SideOnly(Side.CLIENT)

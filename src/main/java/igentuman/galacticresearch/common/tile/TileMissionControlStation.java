@@ -604,6 +604,23 @@ public class TileMissionControlStation extends TileBaseElectricBlockWithInventor
         serializeMissionData();
     }
 
+    public void addResearchedMission(String name)
+    {
+        if(!missionsDataMap.containsKey(name)) {
+            missionsDataMap.put(name, 0);
+        }
+        missionsDataMap.replace(name, ModConfig.machines.satellite_mission_duration*20);
+        if(!missions.contains(name)) {
+            if(missions.length() < 1) {
+                missions += name;
+
+            } else {
+                missions += "," + name;
+            }
+        }
+        serializeMissionData();
+    }
+
     @Override
     public boolean canExtractItem(int slotID, @NotNull ItemStack itemstack, EnumFacing side)
     {

@@ -15,7 +15,13 @@ message.mining_asteroid.cleared=All asteroids were removed
 message.teledish_set=Dish was linked to Mission Control Center
 message.teledish_assigned=You can now link the Dish with Mission Control Center
 message.research.objects=Objects To Research: %s
+message.research_paper_mission=Added research paper for mission: %s
+message.research_paper_mission_not_completed=You need to complete mission first
+message.saved_mission_to_mcs=Mission data saved to Mission Control Station
 
+tooltip.research_paper_mission=Mission: %s
+tooltip.research_paper_no_mission=Empty Research Paper
+tooltip.how_to_use=You can save/load mission data by clicking on Mission Control Station
 description.telescope=Research planets
 description.mission_control_station=Controls Rocket Missions and Connects to Space Stations
 description.launchpad_tower=Can mount/unmount rockets. Input on left side. Output on right and bottom
@@ -96,6 +102,7 @@ screen.title.research=Research Mission
 entity.mining_rocket.name=Mining Rocket
 entity.satellite_rocket.name=Satellite Rocket
 
+item.research_paper.name=Research Paper
 item.satellite_rocket.name=Satellite Rocket
 item.mining_rocket.name=Mining Rocket
 item.probe.name=Probe
