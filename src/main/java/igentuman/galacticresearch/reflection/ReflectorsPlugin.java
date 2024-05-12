@@ -28,11 +28,6 @@ public class ReflectorsPlugin extends Reflectors.FMLLoadingPluginAdapter
             return Reflectors.reflectClass(basicClass, transformedName, TileEntityLandingPadReflector.class.getName());
         }
 
-        if (transformedName.equals("com.mjr.extraplanets.client.handlers.MainHandlerClient")) {
-            return Reflectors.reflectClass(basicClass, transformedName, MainHandlerClientReflector.class.getName());
-        }
-
-
         if (transformedName.equals("micdoodle8.mods.galacticraft.core.entities.EntitySkeletonBoss")) {
             return Reflectors.reflectClass(basicClass, transformedName, EntityBossSkeletonReflector.class.getName());
         }

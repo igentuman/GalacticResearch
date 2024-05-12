@@ -2,6 +2,7 @@ package igentuman.galacticresearch.client;
 
 import com.google.common.collect.ImmutableList;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
+import igentuman.galacticresearch.client.compat.ExtraPlanets;
 import igentuman.galacticresearch.client.model.ItemModelMiningRocket;
 import igentuman.galacticresearch.client.model.ItemModelSatelliteRocket;
 import igentuman.galacticresearch.client.render.entity.RenderMiningRocket;
@@ -72,6 +73,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntitySatelliteRocket.class, (RenderManager manager) -> new RenderSatelliteRocket(manager));
         RenderingRegistry.registerEntityRenderingHandler(EntityMiningRocket.class, (RenderManager manager) -> new RenderMiningRocket(manager));
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new ExtraPlanets());
         OBJLoader.INSTANCE.addDomain(MODID);
     }
 

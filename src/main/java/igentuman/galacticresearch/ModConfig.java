@@ -45,6 +45,7 @@ public class ModConfig {
                 "You need to keep at least one planet for solar system, and one solar system, so when you research solar system there will be at least one planet to fly"
         })
         public String[] default_researched_objects = new String[]{
+                "galaxy.milky_way",
                 "overworld",
                 "sol",
                 "proxima_b",

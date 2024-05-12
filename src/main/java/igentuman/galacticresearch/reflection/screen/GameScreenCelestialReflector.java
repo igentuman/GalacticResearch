@@ -29,6 +29,8 @@ import java.nio.DoubleBuffer;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import static igentuman.galacticresearch.util.PlayerUtil.isUnlocked;
+
 public class GameScreenCelestialReflector {
 
     private static float centreX;
@@ -41,19 +43,7 @@ public class GameScreenCelestialReflector {
     private static final float cos = MathHelper.cos(0.06981317F);
     private static final float sin = MathHelper.sin(0.06981317F);
 
-    private static boolean isUnlocked(String name)
-    {
-        Minecraft minecraft = FMLClientHandler.instance().getClient();
-        EntityPlayerSP player = minecraft.player;
-        EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
-        PlayerClientSpaceData stats = null;
 
-        if (player != null) {
-            stats = playerBaseClient.getCapability(SpaceClientCapabilityHandler.PLAYER_SPACE_CLIENT_DATA, null);
-        }
-        return stats.getUnlockedMissions().contains(name.toLowerCase()) ||
-                Arrays.asList(ModConfig.researchSystem.default_researched_objects).contains(name.toLowerCase());
-    }
 
     public static void drawCelestialBodiesQ(CelestialBody body, float ticks)
     {

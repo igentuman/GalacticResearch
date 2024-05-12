@@ -8,7 +8,6 @@ import igentuman.galacticresearch.network.GRChannelHandler;
 import igentuman.galacticresearch.network.GuiProxy;
 import igentuman.galacticresearch.sky.SkyModel;
 import igentuman.galacticresearch.util.GRHooks;
-import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
