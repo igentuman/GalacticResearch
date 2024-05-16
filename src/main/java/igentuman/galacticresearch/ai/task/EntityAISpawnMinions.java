@@ -1,28 +1,25 @@
 package igentuman.galacticresearch.ai.task;
 
 import com.google.common.base.Predicates;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedCreeper;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSkeleton;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSpider;
-import micdoodle8.mods.galacticraft.core.entities.EntitySkeletonBoss;
+import igentuman.galacticresearch.ai.task.minions.ExtraPlanetsMinions;
+import igentuman.galacticresearch.ai.task.minions.GalaxtSpaceMinions;
+import micdoodle8.mods.galacticraft.core.entities.*;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCreeperBoss;
 import micdoodle8.mods.galacticraft.planets.venus.entities.EntitySpiderQueen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import static igentuman.galacticresearch.GalacticResearch.hooks;
 
 public class EntityAISpawnMinions extends EntityAIBase {
     protected EntityLiving entity;
@@ -75,7 +72,16 @@ public class EntityAISpawnMinions extends EntityAIBase {
             } else if(entity instanceof EntitySpiderQueen) {
                 mob = new EntityEvolvedSpider(entity.world);
             }
-
+            if(entity == null) return;
+            if(mob == null && hooks.ExtraPlanetsLoaded) {
+                mob = ExtraPlanetsMinions.spawn(entity);
+            }
+            if(mob == null && hooks.GalaxySpaceLoaded) {
+                mob = GalaxtSpaceMinions.spawn(entity);
+            }
+            if(mob == null) {
+                mob = new EntityEvolvedZombie(entity.world);
+            }
             float range = 3F;
             mob.setPosition(entity.posX + 0.5 + Math.random() * range - range / 2, entity.posY + 1, entity.posZ + 0.5 + Math.random() * range - range / 2);
             mob.onInitialSpawn(entity.world.getDifficultyForLocation(new BlockPos(mob)), null);
