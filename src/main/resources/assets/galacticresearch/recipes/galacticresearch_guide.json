@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraftcore:basic_item",
+      "data": 13
+    },
+    {
+      "item": "minecraft:book"
+    }
+  ],
+  "result": {
+    "type": "forge:nbt",
+    "item": "patchouli:guide_book",
+    "nbt": {
+      "patchouli:book": "galacticresearch:galacticresearch_guide"
+    }
+  }
+}

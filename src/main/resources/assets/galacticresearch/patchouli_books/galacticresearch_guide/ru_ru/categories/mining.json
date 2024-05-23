@@ -1,0 +1,6 @@
+{
+  "name": "Космическая добыча",
+  "description": "Добываем ресурсы из астероидов",
+  "icon": "galacticresearch:mining_rocket",
+  "sortnum": 2
+}

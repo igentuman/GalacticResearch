@@ -1,0 +1,17 @@
+{
+  "name": "Telescope Computer Support",
+  "icon": "galacticresearch:telescope",
+  "category": "galacticresearch:automation",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:telescope",
+      "text": "С помощью компьтеров вы можете полностью управлять телескопом и собирать данные об объектах в автоматическом режиме."
+    },
+    {
+      "type": "text",
+      "text": "$(3)telescope.rotateTelescope(x, y)$() - Повернуть телескоп на указанный шаг x, y.$(br)$(br)$(3)telescope.getObservationStatus()$() - [object, progress, relative_x, relative_y] получить данные о наблюдаемом объекте. Если ничего не наблюдается, ответ будет пустым.$(br)$(br)$(3)telescope.getResearchedBodies()$() - Получить список объектов."
+    }
+  ]
+}

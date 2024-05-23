@@ -1,0 +1,22 @@
+{
+  "name": "Глубокий Космос",
+  "icon": "galacticraftcore:dishbase",
+  "category": "galacticresearch:galacticresearch",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:dishbase",
+      "text": "Для исследования глубокого Космоса нужно применить несколько другие шаги."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:basic_item:19",
+      "text": "Для начала ваша СКМ должна иметь минимум 3 выполненные миссии. Далее установите Антенну и привяжите ее к СКМ с помощью Частотного модуля."
+    },
+    {
+      "type": "text",
+      "text": "Антенна будет сканировать звездное небо и собирать данные. Как только она соберет достаточно данных, новая миссия появится в СКМ"
+    }
+  ]
+}

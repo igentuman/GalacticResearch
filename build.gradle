@@ -10,7 +10,7 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.1.1"
+version = "1.1.2"
 group = "igentuman.galacticresearch"
 archivesBaseName = "GalacticResearch"
 
@@ -58,6 +58,10 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+    maven {
+        name = "CyclopsMC"
+        url = "https://oss.jfrog.org/artifactory/simple/libs-release/"
+    }
 }
 minecraft {
     version = "1.12.2-14.23.5.2847"
@@ -71,6 +75,7 @@ configurations {
 dependencies {
     shade "com.github.MJaroslav.Reflectors:library:v4"
     compileOnly "org.jetbrains:annotations:17.0.0"
+    runtime "vazkii.patchouli:Patchouli:${patchouli_version}"
     compileOnly "curse.maven:immersive-engineering-231951:2974106"
     compileOnly "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "curse.maven:galacticraft-legacy-564236:3629659"
@@ -84,6 +89,7 @@ dependencies {
     implementation "mezz.jei:jei_1.12.2:${jei_version}"
     runtime "mezz.jei:jei_1.12.2:${jei_version}"
     deobfCompile "curse.maven:mjrlegendslib-284331:3344068"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
 }
 
 processResources {

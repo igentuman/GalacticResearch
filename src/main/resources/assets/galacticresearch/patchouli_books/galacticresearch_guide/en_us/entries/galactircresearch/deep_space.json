@@ -1,0 +1,22 @@
+{
+  "name": "Deep Space Exploration",
+  "icon": "galacticraftcore:dishbase",
+  "category": "galacticresearch:galacticresearch",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:dishbase",
+      "text": "You can research Deep Space. But this require different steps."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:basic_item:19",
+      "text": "First of all your MCS must have at least 3 completed missions. Next you need to place Teledish Antenna and link it to MCS using Frequency module."
+    },
+    {
+      "type": "text",
+      "text": "Next you need to wait when antenna will collect required amount of data and new mission will appear in MCS"
+    }
+  ]
+}

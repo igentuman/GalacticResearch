@@ -1,0 +1,6 @@
+{
+  "name": "Space Mining",
+  "description": "Getting resources from asteroids",
+  "icon": "galacticresearch:mining_rocket",
+  "sortnum": 2
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Useful Tips",
+  "icon": "galacticresearch:launchpad_tower",
+  "category": "galacticresearch:automation",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:research_paper",
+      "text": "You can save/load research mission to MCS with Research Paper. Holding Paper in your hand use it on MCS block."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:launchpad_tower",
+      "text": "Launchapd tower can be used to mount/dismount rockets. It can be used to store rockets."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:rocket_assembler",
+      "text": "Rocket Assembler can automatically build basic rockets. Simply select rocket type and supply materials."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:telescope",
+      "text": "When Telescope observing some body it will output redstone signal. Place comparator next to Telescope and connect it to Redstone Lanp and you will get simple alarm."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:view_screen",
+      "text": "You can output Telescope view to View Screen. Place Telemetry block next to Telescope. Connected to this telemetry block View Screen will be able to show Telescope view. Same with MCS."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Как исследовать?",
+  "icon": "galacticresearch:telescope",
+  "category": "galacticresearch:galacticresearch",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:telescope",
+      "text": "1. Используйте телескоп для сбора базовой информации об объектов на небе.$(br)"
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mission_control_station",
+      "text": "2.Установите Станцию контроля миссий (СКМ) рядом с блоком Телескопа. Телескоп будет загружать данные в СКМ.$(br)"
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:landing_pad",
+      "text": "3. Расположите пусковую площадку так, что бы она соприкосалась с СКМ."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:satellite_rocket",
+      "text": "4. Разместите Спутниковую ракету на площадке. Заправьте. И активируйте миссию исследования в СКМ.$(br)"
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mission_control_station",
+      "text": "5. Дождитесь окончания миссии и проанализируйте данные. Теперь вы можете лететь на планету, которую вы исследовали.$(br)"
+    }
+  ]
+}

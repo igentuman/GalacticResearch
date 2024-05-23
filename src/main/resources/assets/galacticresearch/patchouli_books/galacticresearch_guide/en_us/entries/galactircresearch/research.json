@@ -1,0 +1,33 @@
+{
+  "name": "How to explore?",
+  "icon": "galacticresearch:telescope",
+  "category": "galacticresearch:galacticresearch",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:telescope",
+      "text": "1. Use Telescope to find solar bodies and collect initial data.$(br)"
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mission_control_station",
+      "text": "2.Place Mission Control Station next to Telescope. So Telescope will upload observation data into MCS.$(br)"
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:landing_pad",
+      "text": "3. Install launching pad near by MCS. MCS has to be connected to launching pad."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:satellite_rocket",
+      "text": "4. Craft and place Satellite Rocket on launching pad. Supply fuel.$(br)5. In MCS GUI select the mission you want to start and activate it.$(br)"
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mission_control_station",
+      "text": "5. Wait until mission will be completed. Analyze completed missions data in MCS GUI"
+    }
+  ]
+}

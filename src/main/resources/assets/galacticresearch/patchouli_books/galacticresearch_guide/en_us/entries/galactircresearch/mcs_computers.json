@@ -1,0 +1,25 @@
+{
+  "name": "MCS Computer Support",
+  "icon": "galacticresearch:mission_control_station",
+  "category": "galacticresearch:automation",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mission_control_station",
+      "text": "MCS has full compatibility with ComputerCraft and OpenComputers. You can launch rockets, locate objects. Place computer or adapter next to MCS and use it."
+    },
+    {
+      "type": "text",
+      "text": "$(3)mission_control_station.getMissionsInfo()$() - Returns array of missions.$(br)$(br)$(3)mission_control_station.selectMission(name)$() - Select defined mission as current.$(br)$(br)$(3)mission_control_station.activateMission()$() - Same as if you click the button in MCS.$(br)$(3)mission_control_station.missionDuration()$() - Returns duration in ticks."
+    },
+    {
+      "type": "text",
+      "text": "$(3)mission_control_station.getSpaceStations()$() - Returns list of space stations.$(br)$(br)$(3)mission_control_station.getLocatableObjects()$() - Returns list of objects what can be located with MCS and Space Station.$(br)$(br)$(3)mission_control_station.selectSpaceStation(name)$() - Select defined space station for location."
+    },
+    {
+      "type": "text",
+      "text": "$(3)mission_control_station.selectObjectToLocate(name)$() - Select defined object for location.$(br)$(br)$(3)mission_control_station.locateObject()$() - Runs location procedure and returns result information.$(br)$(br)$(3)mission_control_station.getLocationData()$() - Returns location information.$(br)$(br)$(3)mission_control_station.setCoordinates(x, y)$() - Set relative coordinates to start location."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Telescope Computer Support",
+  "icon": "galacticresearch:telescope",
+  "category": "galacticresearch:automation",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:telescope",
+      "text": "Telescope has full compatibility with ComputerCraft and OpenComputers. You can rotate telescope and observe bodies."
+    },
+    {
+      "type": "text",
+      "text": "$(3)telescope.rotateTelescope(x, y)$() - Rotate telescope by specified x, y step.$(br)$(br)$(3)telescope.getObservationStatus()$() - [object, progress, relative_x, relative_y] Returns table with information of currently observed body. Empty response if nothing is observed.$(br)$(br)$(3)telescope.getResearchedBodies()$() - Returns list of all researched bodies."
+    }
+  ]
+}

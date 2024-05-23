@@ -1,0 +1,25 @@
+{
+  "name": "Locating objects",
+  "icon": "galacticresearch:mission_control_station",
+  "category": "galacticresearch:galacticresearch",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mission_control_station",
+      "text": "Mission Control Station can be used as link to your Space Stations. It can use Space Station to locate objects on the planets. Such like, villages, dungons, structures, ore veins..."
+    },
+    {
+      "type": "text",
+      "text": "You need to build a Space Station then get back to the planet."
+    },
+    {
+      "type": "text",
+      "text": "In MCS GUI select your space station and type of object you want to find."
+    },
+    {
+      "type": "text",
+      "text": "Space Station will start scanning the planet and will show you the location of the object. Closest to coordinates you've defined in MCS"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "MCS Computer Support",
+  "icon": "galacticresearch:mission_control_station",
+  "category": "galacticresearch:automation",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mission_control_station",
+      "text": "СКМ поддерживает работу через компоютеры. Computercraft и OpenComputers. Вы можете управлять миссиями, запускать их и искать объекты на планете."
+    },
+    {
+      "type": "text",
+      "text": "$(3)mission_control_station.getMissionsInfo()$() - Получить массив миссий.$(br)$(br)$(3)mission_control_station.selectMission(name)$() - Выбрать миссию как текущую.$(br)$(br)$(3)mission_control_station.activateMission()$() - Запустить ракету.$(br)$(3)mission_control_station.missionDuration()$() - Длительность в тиках."
+    },
+    {
+      "type": "text",
+      "text": "$(3)mission_control_station.getSpaceStations()$() - Массив орбитальных станций.$(br)$(br)$(3)mission_control_station.getLocatableObjects()$() - Список объектов для локации.$(br)$(br)$(3)mission_control_station.selectSpaceStation(name)$() - Выбрать орбитальную станцию."
+    },
+    {
+      "type": "text",
+      "text": "$(3)mission_control_station.selectObjectToLocate(name)$() - Выбрать объект для локации.$(br)$(br)$(3)mission_control_station.locateObject()$() - Запустить поиск объекта.$(br)$(br)$(3)mission_control_station.getLocationData()$() - Получить данные о локации.$(br)$(br)$(3)mission_control_station.setCoordinates(x, y)$() - Установить координаты для старта поиска."
+    }
+  ]
+}

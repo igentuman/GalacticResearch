@@ -1,0 +1,26 @@
+{
+  "name": "Mining Rocket and asteroids",
+  "icon": "galacticresearch:mining_rocket",
+  "category": "galacticresearch:mining",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Traveling in Space asteroids will approach your planet from time to time. So close that you can observe them, and send Mining Rocket to acquire large amount of resources."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticresearch:mining_rocket",
+      "text": "Mining rocket will fly to the asteroid. Mine it, and return back with stacks of ores and gems."
+    },
+    {
+      "type": "text",
+      "text": "The flow is the same as planet research. Just do not forget, mining rocket will get back to the same launch pad."
+    },
+    {
+      "type": "spotlight",
+      "item": "galacticraftcore:cargo:4",
+      "text": "Using Rocket Assembler, Cargo Unloader, Launch Pad Tower and computers you can fully automate this process."
+    }
+  ]
+}
