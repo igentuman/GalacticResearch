@@ -5,15 +5,12 @@ import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.Moon;
 import micdoodle8.mods.galacticraft.api.galaxies.Planet;
 import micdoodle8.mods.galacticraft.api.galaxies.SolarSystem;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static igentuman.galacticresearch.GalacticResearch.MODID;
 import static igentuman.galacticresearch.util.PlayerUtil.isUnlocked;
 
-@Mod.EventBusSubscriber(modid = MODID, value = Side.CLIENT)
 public class ExtraPlanets {
 
     @SubscribeEvent

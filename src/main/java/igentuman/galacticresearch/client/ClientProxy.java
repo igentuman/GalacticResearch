@@ -1,6 +1,7 @@
 package igentuman.galacticresearch.client;
 
 import com.google.common.collect.ImmutableList;
+import igentuman.galacticresearch.GalacticResearch;
 import igentuman.galacticresearch.client.capability.SpaceClientCapabilityHandler;
 import igentuman.galacticresearch.client.compat.ExtraPlanets;
 import igentuman.galacticresearch.client.model.ItemModelMiningRocket;
@@ -26,6 +27,7 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -73,7 +75,9 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntitySatelliteRocket.class, (RenderManager manager) -> new RenderSatelliteRocket(manager));
         RenderingRegistry.registerEntityRenderingHandler(EntityMiningRocket.class, (RenderManager manager) -> new RenderMiningRocket(manager));
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new ExtraPlanets());
+        if( Loader.isModLoaded("extraplanets")) {
+            MinecraftForge.EVENT_BUS.register(ExtraPlanets.class);
+        }
         OBJLoader.INSTANCE.addDomain(MODID);
     }
 

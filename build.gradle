@@ -83,7 +83,7 @@ dependencies {
     compileOnly "curse.maven:asmodeuscore-303101:4663859"
     compileOnly "curse.maven:galaxy-space-addon-for-galacticraft-238770:4719898"
     compileOnly "curse.maven:cc-tweaked-282001:2992872"
-    deobfCompile "curse.maven:extraplanets-241291:5339029"
+    compileOnly "curse.maven:extraplanets-241291:5339029"
     deobfCompile "curse.maven:opencomputers-223008:3994462"
     deobfProvided "mezz.jei:jei_1.12.2:${jei_version}:api"
     implementation "mezz.jei:jei_1.12.2:${jei_version}"
